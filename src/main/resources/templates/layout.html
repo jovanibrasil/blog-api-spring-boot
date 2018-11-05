@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+	<head th:fragment="site-head">
+		<link rel="stylesheet" href="../public/css/styles.css" th:href="@{/css/styles.css}" />
+		<link rel="icon" href="../public/img/favicon.ico" th:href="@{/img/favicon.ico}" />
+		<script src="../public/js/jquery-3.1.0.min.js" th:src="@{/js/jquery-3.1.0.min.js}"></script>
+		<script src="../public/js/blog-scripts.js" th:src="@{/js/blog-scripts.js}"></script>
+		<meta th:include="this::head" th:remove="tag"/>
+	</head>
+	<body>
+		<header th:fragment="site-header">
+			<a href="index.html" th:href="@{/}"><img src="../public/img/site-logo.png" th:src="@{/img/site-logo.png}" /></a>
+			<a href="index.html" th:href="@{/}">Início</a>
+			<a href="users/login.html" th:href="@{/users/login}">Login</a>
+			<a href="users/register.html" th:href="@{/users/register}">Registro</a>
+			<a href="posts/index.html" th:href="@{/posts}">Posts</a>
+			<a href="posts/create.html" th:href="@{/posts/create}">Criar Post</a>
+			<a href="users/index.html" th:href="@{/users}">Usuários</a>
+			<div id="logged-in-info">
+				<span>Hello, <b>(user)</b></span>
+				<form method="post" th:action="@{/user/logout}"></form>
+				<input type="submit" value="Logout"/>
+			</div>
+		</header>
+		<h1>Bem vindo!</h1>
+		<p>
+			Agora são: <b th:text="${execInfo.now.time}"></b>
+		</p>
+		<footer th:fragment="site-footer">
+			Meu blog em Spring Boot, MVC, JPA. Now is: <b th:text="${execInfo.now.time}"></b>
+		</footer>		
+	</body>
+
+</html>

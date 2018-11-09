@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import blog.forms.LoginForm;
+import blog.forms.SignUpForm;
 import blog.services.NotificationService;
 import blog.services.UserService;
 
@@ -18,7 +19,7 @@ import javax.validation.Valid;
 
 
 @Controller
-public class LoginController {
+public class SignUpController {
 
     @Autowired
     private UserService userService;
@@ -29,40 +30,28 @@ public class LoginController {
     @Autowired
     private DaoAuthenticationProvider daoAuthenticationProvider;
     
-    @RequestMapping("/users/login")
-    public String login(LoginForm loginForm) {
-        return "users/login";
+    @RequestMapping("/users/signup")
+    public String signup(SignUpForm signupForm) {
+        return "users/signup";
     }
 
-    @RequestMapping(value = "/users/login", method = RequestMethod.POST)
-    public String loginPage(@Valid LoginForm loginForm, BindingResult bindingResult) {
+    @RequestMapping(value = "/users/signup", method = RequestMethod.POST)
+    public String loginPage(@Valid SignUpForm signUpForm, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
              notifyService.addErrorMessafe("Please fill the form correctly!");
-             return "users/login";
+             return "users/signup";
         }
 
-        try {
-        	Authentication auth = new UsernamePasswordAuthenticationToken(
-		    		loginForm.getUserName(), loginForm.getPassword());
-		    Authentication authenticated = daoAuthenticationProvider.authenticate(auth);
-		    
-		    SecurityContextHolder.getContext().setAuthentication(authenticated);
-		      
-//		    if (!authenticated.isAuthenticated()) {
-//		         notifyService.addErrorMessafe("Invalid login!");
-		         //return "users/login";
-		    //}
+        //signUpForm.getUserName(), signUpForm.getPassword()
+          
+        if (!signUpForm.getPassword().equals(signUpForm.getPasswordConfirmation())) {
+             notifyService.addErrorMessafe("Registro inválido!");
+             return "users/signup";
+        }
 
-
-	        notifyService.addInfoMessage("Login successful");
-	        return "redirect:/";
-		    
-		} catch (Exception e) {
-			e.printStackTrace();
-	         notifyService.addErrorMessafe("Invalid login!");
-	         return "users/login";
-	    
-		}
+        userService.saveUser(signUpForm.getUserName(), signUpForm.getFullUserName(), signUpForm.getPassword());
         
+        notifyService.addInfoMessage("Registrado com sucesso");
+        return "redirect:/";
     }
 }

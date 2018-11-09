@@ -5,6 +5,9 @@ import java.util.Objects;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import blog.models.User;
@@ -16,6 +19,8 @@ public class UserServiceJpaImpl implements UserService {
     
 	@Autowired
 	private UserRepository userRepository;
+	@Autowired
+	BCryptPasswordEncoder passwordEncoder;
 	
 	@Override
 	public boolean authenticate(String username, String password) {
@@ -42,4 +47,23 @@ public class UserServiceJpaImpl implements UserService {
 	public void deleteById(Long id) {
 		this.userRepository.delete(id);
 	}
+
+	@Override
+	public UserDetails loadUserByUsername(String userName) throws UsernameNotFoundException {
+		User user = userRepository.findUserByName(userName);
+		System.out.println("-----------------_>" + user.getUserName() + "   " + user.getPasswordHash());
+		return new CustomUserDetails(user.getFullName(), user.getPassword(),
+				true, true, true, true, user.getAuthorities());
+	}
+
+	@Override
+	public void saveUser(String userName, String fullUserName, String password) {
+		User user = new User();
+		user.setUserName(userName);
+		user.setFullName(fullUserName);
+		user.setPasswordHash(passwordEncoder.encode(password));
+		this.userRepository.save(user);
+	}
+	
+	
 }

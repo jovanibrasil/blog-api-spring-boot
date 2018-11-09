@@ -1,5 +1,7 @@
 package blog.services;
 
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import blog.models.User;
@@ -35,6 +37,18 @@ public class UserServiceStubImpl implements UserService {
 
 	@Override
 	public void deleteById(Long id) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public UserDetails loadUserByUsername(String arg0) throws UsernameNotFoundException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void saveUser(String userName, String fullUserName, String Password) {
 		// TODO Auto-generated method stub
 		
 	}

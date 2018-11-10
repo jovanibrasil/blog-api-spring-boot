@@ -20,16 +20,18 @@ import org.springframework.security.core.userdetails.UserDetails;
 @Table(name="users")
 public class User implements UserDetails {
 	
+	private static final long serialVersionUID = -4524066694717395806L;
+
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
-	private Long id;
+	private Long userId;
 	
 	@Column(nullable=false, length=30, unique=true)
 	private String userName;
 	@Column(length=60)
 	private String passwordHash;
 	@Column(length=100)
-	private String fullName;
+	private String fullUserName;
 	
 	@OneToMany(mappedBy="author")
 	private Set<Post> posts = new HashSet<>();
@@ -38,13 +40,13 @@ public class User implements UserDetails {
 	
 	public User(Long id, String name, String fullName) {
 		super();
-		this.id = id;
+		this.userId = id;
 		this.userName = name;
-		this.fullName = fullName;
+		this.fullUserName = fullName;
 	}
 	
 	public Long getId() {
-		return id;
+		return userId;
 	}
 	public String getUserName() {
 		return userName;
@@ -52,14 +54,14 @@ public class User implements UserDetails {
 	public String getPasswordHash() {
 		return passwordHash;
 	}
-	public String getFullName() {
-		return fullName;
+	public String getFullUserName() {
+		return fullUserName;
 	}
 	public Set<Post> getPosts() {
 		return posts;
 	}
-	public void setId(Long id) {
-		this.id = id;
+	public void setUserId(Long id) {
+		this.userId = id;
 	}
 	public void setUserName(String name) {
 		this.userName = name;
@@ -68,8 +70,8 @@ public class User implements UserDetails {
 	public void setPasswordHash(String passwordHash) {
 		this.passwordHash = passwordHash;
 	}
-	public void setFullName(String fullName) {
-		this.fullName = fullName;
+	public void setFullUserName(String fullName) {
+		this.fullUserName = fullName;
 	}
 	public void setPosts(Set<Post> posts) {
 		this.posts = posts;
@@ -77,7 +79,7 @@ public class User implements UserDetails {
 
 	@Override
 	public String toString() {
-		return "User [id=" + id + ", userName=" + userName + ", passwordHash=" + passwordHash + ", fullName=" + fullName
+		return "User [id=" + userId + ", userName=" + userName + ", passwordHash=" + passwordHash + ", fullName=" + fullUserName
 				+ ", posts=" + posts + "]";
 	}
 
@@ -91,10 +93,7 @@ public class User implements UserDetails {
 		return this.passwordHash;
 	}
 
-	@Override
-	public String getUsername() {
-		return this.userName;
-	}
+	
 
 	@Override
 	public boolean isAccountNonExpired() {
@@ -113,8 +112,12 @@ public class User implements UserDetails {
 
 	@Override
 	public boolean isEnabled() {
-		// TODO Auto-generated method stub
-		return false;
+		return true;
+	}
+
+	@Override
+	public String getUsername() {
+		return this.userName;
 	}
 	
 }

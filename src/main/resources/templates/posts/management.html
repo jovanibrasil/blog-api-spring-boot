@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="layout::site-head">
+<title>Gerenciamento de Posts</title>
+</head>
+<body>
+	<header th:replace="layout::site-header"></header>
+
+	<h1>Gerenciamento de posts</h1>
+
+	<div>
+		<a href="posts/edit.html" th:href="@{/posts/create}">Criar novo Post</a>
+	</div>
+	
+	<!-- List user post -->
+
+	<main id="posts">	
+		<article th:each="p:${userPosts}">	
+			<h2 class="title" th:text="${p.title}">Título do post</h2>
+			
+		</article>
+	</main>
+
+	<footer th:replace="layout::site-footer"></footer>
+</body>
+
+</html>

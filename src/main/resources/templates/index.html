@@ -12,8 +12,7 @@
 				th:href="@{/posts/view/{id}/(id=${p.id})}">Posts recentes</a>
 		</aside>
 		
-		<main id="posts">
-		
+		<main id="posts">	
 			<article th:each="p:${latest3Posts}">	
 				<h2 class="title" th:text="${p.title}">Título do post</h2>
 				<div class="date">
@@ -22,8 +21,8 @@
 					<span th:if="${p.author}" th:remove="tag">
 						<i>Por</i>
 						<span 
-							 th:text="${p.author.fullName != null ?
-							  p.author.fullName : p.author.userName}"> Jovani Brasil
+							 th:text="${p.author.fullUserName != null ?
+							  p.author.fullUserName : p.author.userName}"> Jovani Brasil
 						</span>
 					</span>
 				</div>

@@ -51,8 +51,8 @@ public class UserServiceJpaImpl implements UserService {
 	@Override
 	public UserDetails loadUserByUsername(String userName) throws UsernameNotFoundException {
 		User user = userRepository.findUserByName(userName);
-		System.out.println("-----------------_>" + user.getUserName() + "   " + user.getPasswordHash());
-		return new CustomUserDetails(user.getFullName(), user.getPassword(),
+		//System.out.println("-----------------_>" + user.getId() + "   " + user.getPasswordHash());
+		return new CustomUserDetails(user.getId(), user.getFullUserName(), user.getPassword(),
 				true, true, true, true, user.getAuthorities());
 	}
 
@@ -60,7 +60,7 @@ public class UserServiceJpaImpl implements UserService {
 	public void saveUser(String userName, String fullUserName, String password) {
 		User user = new User();
 		user.setUserName(userName);
-		user.setFullName(fullUserName);
+		user.setFullUserName(fullUserName);
 		user.setPasswordHash(passwordEncoder.encode(password));
 		this.userRepository.save(user);
 	}

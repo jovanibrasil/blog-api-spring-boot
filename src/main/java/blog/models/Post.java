@@ -8,6 +8,7 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
@@ -18,7 +19,7 @@ public class Post {
 	
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
-	private Long id;
+	private Long postId;
 	@Column(nullable=false, length=300)
 	private String title;
 	// Lob: data should be represented as BLOB (binary data) in the database.
@@ -27,7 +28,8 @@ public class Post {
 	private String body;
 	// FetchType: JPA loads all data together or on-demand.
 	// In this case, author will be loaded on demand
-	@ManyToOne(optional=false, fetch=FetchType.LAZY)
+	@ManyToOne(fetch=FetchType.LAZY)
+	@JoinColumn(referencedColumnName="userId")
 	private User author;
 	
 	@Column(nullable=false)
@@ -36,14 +38,14 @@ public class Post {
 	public Post() {}
 	
 	public Post(Long id, String title, String body, User author) {
-		this.id = id;
+		this.postId = id;
 		this.title = title;
 		this.body = body;
 		this.author = author;
 	}
 
 	public Long getId() {
-		return id;
+		return postId;
 	}
 	public String getTitle() {
 		return title;
@@ -58,7 +60,7 @@ public class Post {
 		return date;
 	}
 	public void setId(Long id) {
-		this.id = id;
+		this.postId = id;
 	}
 	public void setTitle(String title) {
 		this.title = title;

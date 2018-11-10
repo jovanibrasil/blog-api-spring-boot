@@ -45,16 +45,17 @@ public class LoginController {
         	Authentication auth = new UsernamePasswordAuthenticationToken(
 		    		loginForm.getUserName(), loginForm.getPassword());
 		    Authentication authenticated = daoAuthenticationProvider.authenticate(auth);
-		    
 		    SecurityContextHolder.getContext().setAuthentication(authenticated);
 		      
-//		    if (!authenticated.isAuthenticated()) {
-//		         notifyService.addErrorMessafe("Invalid login!");
-		         //return "users/login";
-		    //}
-
+		    if (!authenticated.isAuthenticated()) {
+		         notifyService.addErrorMessafe("Invalid login!");
+		         return "users/login";
+		    }
 
 	        notifyService.addInfoMessage("Login successful");
+	        
+	        // TODO Redirect to last visited page
+	        
 	        return "redirect:/";
 		    
 		} catch (Exception e) {

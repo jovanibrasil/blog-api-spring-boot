@@ -1,5 +1,6 @@
 package blog.services;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,6 +46,11 @@ public class PostServiceJpaImpl implements PostService {
 	@Override
 	public void deleteById(Long id) {
 		this.postRepo.delete(id);
+	}
+
+	@Override
+	public List<Post> findPostsByUserId(Long userId) {
+		return this.postRepo.findPostsByUserId(userId);
 	}
 
 }

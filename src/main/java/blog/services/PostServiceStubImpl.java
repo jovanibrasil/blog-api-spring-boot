@@ -76,4 +76,10 @@ public class PostServiceStubImpl implements PostService {
 		throw new RuntimeException("Post not found "+ id);
 	}
 
+	@Override
+	public List<Post> findPostsByUserId(Long id) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }

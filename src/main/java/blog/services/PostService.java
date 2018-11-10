@@ -10,4 +10,5 @@ public interface PostService {
 	public Post create(Post post);
 	public Post edit(Post post);
 	public void deleteById(Long id);
+	public List<Post> findPostsByUserId(Long id);
 }

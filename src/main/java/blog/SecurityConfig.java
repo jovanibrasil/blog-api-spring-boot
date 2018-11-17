@@ -41,10 +41,15 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 			.and()
 			.authorizeRequests()
 			//.antMatchers("/", "/users/logout", "/users/login", "/posts/view/**")
-			.antMatchers("/", "/users/login", "/users/signup")
+			.antMatchers("/", "/users/login", "/users/signup", "/users/logout")
 			.permitAll()
-			.antMatchers("/users/*", "/posts/view/**")
+			.antMatchers("/users/*", "/posts/view/**", "/posts/management/**")
 			.fullyAuthenticated();
+//			.and()
+//			.logout()
+//			.logoutUrl("/users/logout")
+//			.invalidateHttpSession(true)
+//			.deleteCookies("JSESSIONID");
 	}
 	
 	@Bean // Insert DaoAuthenticationProvider in the context

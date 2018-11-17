@@ -27,6 +27,7 @@ public class PostManagementController {
 				CustomUserDetails customerDatails = (CustomUserDetails)auth.getPrincipal();
 				List<Post> posts = postService.findPostsByUserId(customerDatails.getUserId());
 				model.addAttribute("userPosts", posts);
+				model.addAttribute("lblHelloUserName", auth.getName());
 				return "/posts/management";
 			}else {
 				return "redirect:/users/login";

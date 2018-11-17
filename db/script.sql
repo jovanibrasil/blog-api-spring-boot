@@ -13,3 +13,6 @@ INSERT INTO `posts` (`id`, `author_id`, `title`, `body`, `date`) VALUES
     (5, 1, 'post5', 'teste', '2015-12-17'),
     (6, 2, 'post6', 'teste', '2015-12-17'),
     (7, 3, 'post7', 'teste', '2015-12-17');
+
+select * from users;
+select * from posts;

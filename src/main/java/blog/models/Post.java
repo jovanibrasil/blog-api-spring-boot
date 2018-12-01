@@ -12,6 +12,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
 @Entity
 @Table(name="posts")
@@ -22,13 +24,24 @@ public class Post {
 	private Long postId;
 	@Column(nullable=false, length=300)
 	private String title;
+	@Temporal(TemporalType.TIMESTAMP)
+	@Column(nullable=false)
+	private Date lastUpdateDate;
+	public Date getLastUpdateDate() {
+		return lastUpdateDate;
+	}
+
+	public void setLastUpdateDate(Date lastUpdateDate) {
+		this.lastUpdateDate = lastUpdateDate;
+	}
 	// Lob: data should be represented as BLOB (binary data) in the database.
 	// Any serializable data can be annotated with this notation.
 	@Lob @Column(nullable=false)
 	private String body;
 	// FetchType: JPA loads all data together or on-demand.
 	// In this case, author will be loaded on demand
-	@ManyToOne(fetch=FetchType.LAZY)
+	// Many posts to one user.
+	@ManyToOne(fetch=FetchType.EAGER)
 	@JoinColumn(referencedColumnName="userId")
 	private User author;
 	

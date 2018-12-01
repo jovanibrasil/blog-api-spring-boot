@@ -1,4 +1,4 @@
-package blog.controllers;
+package blog.presentation.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -10,10 +10,10 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
-import blog.forms.LoginForm;
-import blog.forms.SignUpForm;
-import blog.services.NotificationService;
-import blog.services.UserService;
+import blog.business.services.NotificationService;
+import blog.business.services.UserService;
+import blog.presentation.views.LoginForm;
+import blog.presentation.views.SignUpForm;
 
 import javax.validation.Valid;
 

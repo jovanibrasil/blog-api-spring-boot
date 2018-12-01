@@ -1,4 +1,4 @@
-package blog.services;
+package blog.business.services;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -8,8 +8,8 @@ import org.springframework.context.annotation.Primary;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
-import blog.models.Post;
-import blog.repositories.PostRepository;
+import blog.persistence.repositories.PostRepository;
+import blog.presentation.models.Post;
 
 @Service
 @Primary

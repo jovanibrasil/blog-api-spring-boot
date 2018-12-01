@@ -1,10 +1,10 @@
-package blog.services;
+package blog.business.services;
 
 import java.util.List;
 
 import org.springframework.security.core.userdetails.UserDetailsService;
 
-import blog.models.User;
+import blog.presentation.models.User;
 
 public interface UserService extends UserDetailsService {
 	boolean authenticate(String username, String password);

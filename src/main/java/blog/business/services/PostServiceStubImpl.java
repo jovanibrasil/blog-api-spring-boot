@@ -1,4 +1,4 @@
-package blog.services;
+package blog.business.services;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -7,8 +7,8 @@ import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 
-import blog.models.Post;
-import blog.models.User;
+import blog.presentation.models.Post;
+import blog.presentation.models.User;
 
 @Service
 public class PostServiceStubImpl implements PostService {

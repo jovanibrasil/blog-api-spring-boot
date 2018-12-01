@@ -1,4 +1,4 @@
-package blog.controllers;
+package blog.presentation.controllers;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -10,8 +10,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import blog.models.Post;
-import blog.services.PostService;
+import blog.business.services.PostService;
+import blog.presentation.models.Post;
 
 @Controller
 public class HomeController {

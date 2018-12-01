@@ -1,4 +1,4 @@
-package blog.services;
+package blog.business.services;
 
 import java.util.List;
 import java.util.Objects;
@@ -10,8 +10,8 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import blog.models.User;
-import blog.repositories.UserRepository;
+import blog.persistence.repositories.UserRepository;
+import blog.presentation.models.User;
 
 @Service
 @Primary

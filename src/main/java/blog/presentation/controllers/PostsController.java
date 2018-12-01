@@ -1,4 +1,4 @@
-package blog.controllers;
+package blog.presentation.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
@@ -10,14 +10,15 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
-import blog.forms.EditPostForm;
-import blog.models.Post;
-import blog.models.User;
-import blog.services.CustomUserDetails;
-import blog.services.NotificationService;
-import blog.services.PostService;
+import blog.business.services.CustomUserDetails;
+import blog.business.services.NotificationService;
+import blog.business.services.PostService;
+import blog.presentation.models.Post;
+import blog.presentation.models.User;
+import blog.presentation.views.EditPostForm;
 
 @Controller
+@RequestMapping("")
 public class PostsController {
 
 	@Autowired
@@ -25,6 +26,8 @@ public class PostsController {
 	
 	@Autowired
 	private NotificationService notificationService;
+	
+	//@ResponseBody
 	
 	@RequestMapping("/posts/view/{id}")
 	public String view(@PathVariable("id") Long id, Model model) {

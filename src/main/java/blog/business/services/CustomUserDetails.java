@@ -1,4 +1,4 @@
-package blog.services;
+package blog.business.services;
 
 import java.util.Collection;
 

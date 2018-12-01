@@ -1,10 +1,10 @@
-package blog.services;
+package blog.business.services;
 
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-import blog.models.User;
+import blog.presentation.models.User;
 
 import java.util.List;
 import java.util.Objects;

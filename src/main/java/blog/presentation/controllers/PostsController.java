@@ -18,7 +18,7 @@ import blog.presentation.models.User;
 import blog.presentation.views.EditPostForm;
 
 @Controller
-@RequestMapping("")
+@RequestMapping("/posts")
 public class PostsController {
 
 	@Autowired
@@ -29,7 +29,7 @@ public class PostsController {
 	
 	//@ResponseBody
 	
-	@RequestMapping("/posts/view/{id}")
+	@RequestMapping("/view/{id}")
 	public String view(@PathVariable("id") Long id, Model model) {
 		Post post = postService.findById(id);
 		if(post == null) {
@@ -40,12 +40,12 @@ public class PostsController {
 		return "posts/view";
 	}
 	
-	@RequestMapping("posts/create")
+	@RequestMapping("/create")
 	public String createPage(EditPostForm editPostForm) {
 		return "posts/edit";
 	}
 	
-	@RequestMapping(value="posts/create", method=RequestMethod.POST)
+	@RequestMapping(value="/create", method=RequestMethod.POST)
 	public String create(EditPostForm editPostForm, BindingResult bindingResult) {
 		// se deu erro, mantém onde está
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();

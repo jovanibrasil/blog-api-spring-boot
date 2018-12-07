@@ -64,12 +64,15 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-security</artifactId>
         </dependency>
+        
         <!-- Framework para versionamento e automatização do processo de criação
-        de banco de dados. -->
+        de banco de dados. 
         <dependency>
         	<groupId>org.flywaydb</groupId>
         	<artifactId>flyway-core</artifactId>
         </dependency>
+      	-->  
+        
 	</dependencies>
 
 

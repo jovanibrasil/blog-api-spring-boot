@@ -31,17 +31,16 @@
 		-->
 
 			<ul id="messages"
-				th:with="messages=${session[T(blog.services
-		          .NotificationServiceImpl).NOTIFY_MSG_SESSION_KEY]}">
+				th:with="messages=${session[T(blog.business.services.NotificationServiceImpl).NOTIFY_MSG_SESSION_KEY]}">
 				<!-- displays each message -->
 				<li th:each="msg:${messages}" th:text="${msg.text}"
 					th:class="${#strings.toLowerCase(msg.type)}"></li>
 				<!-- then remove each one from http session -->
 				<span th:if="${messages}" th:remove="all"
-					th:text="${session.remove(
-		          			T(blog.services.NotificationServiceImpl).NOTIFY_MSG_SESSION_KEY)}">
+					th:text="${session.remove(T(blog.business.services.NotificationServiceImpl).NOTIFY_MSG_SESSION_KEY)}">
 				</span>
 			</ul>
+			
 		</header>
 	</header>
 

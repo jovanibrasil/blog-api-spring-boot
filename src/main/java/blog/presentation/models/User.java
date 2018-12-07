@@ -55,11 +55,21 @@ public class User implements UserDetails {
 	
 	public User() {}
 	
-	public User(Long id, String name, String fullName) {
+	public User(Long userId, String name, String fullName, ProfileTypeEnum profileType) {
 		super();
-		this.userId = id;
+		this.userId = userId;
 		this.userName = name;
 		this.fullUserName = fullName;
+		this.lastUpdateDate = new Date();
+	}
+	
+	public User(String name, String fullName, String passwordHash, ProfileTypeEnum profileType) {
+		super();
+		this.userName = name;
+		this.fullUserName = fullName;
+		this.passwordHash = passwordHash;
+		this.profileType = profileType;
+		this.lastUpdateDate = new Date();
 	}
 	
 	public ProfileTypeEnum getProfileType() {
@@ -121,12 +131,6 @@ public class User implements UserDetails {
 	}
 
 	@Override
-	public String toString() {
-		return "User [id=" + userId + ", userName=" + userName + ", passwordHash=" + passwordHash + ", fullName=" + fullUserName
-				+ ", posts=" + posts + "]";
-	}
-
-	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
 		return new ArrayList<GrantedAuthority>();
 	}
@@ -159,6 +163,13 @@ public class User implements UserDetails {
 	@Override
 	public String getUsername() {
 		return this.userName;
+	}
+	
+	@Override
+	public String toString() {
+		return "User [userId=" + userId + ", userName=" + userName + ", profileType=" + profileType + ", passwordHash="
+				+ passwordHash + ", fullUserName=" + fullUserName + ", lastUpdateDate=" + lastUpdateDate + ", posts="
+				+ posts + "]";
 	}
 	
 }

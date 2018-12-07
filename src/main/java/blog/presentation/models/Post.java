@@ -27,13 +27,6 @@ public class Post {
 	@Temporal(TemporalType.TIMESTAMP)
 	@Column(nullable=false)
 	private Date lastUpdateDate;
-	public Date getLastUpdateDate() {
-		return lastUpdateDate;
-	}
-
-	public void setLastUpdateDate(Date lastUpdateDate) {
-		this.lastUpdateDate = lastUpdateDate;
-	}
 	// Lob: data should be represented as BLOB (binary data) in the database.
 	// Any serializable data can be annotated with this notation.
 	@Lob @Column(nullable=false)
@@ -45,9 +38,6 @@ public class Post {
 	@JoinColumn(referencedColumnName="userId")
 	private User author;
 	
-	@Column(nullable=false)
-	private Date date = new Date();
-	
 	public Post() {}
 	
 	public Post(Long id, String title, String body, User author) {
@@ -55,37 +45,58 @@ public class Post {
 		this.title = title;
 		this.body = body;
 		this.author = author;
+		this.lastUpdateDate = new Date();
+	}
+	
+	public Post(String title, String body, User author) {
+		this.title = title;
+		this.body = body;
+		this.author = author;
+		this.lastUpdateDate = new Date();
 	}
 
-	public Long getId() {
+	public Long getPostId() {
 		return postId;
 	}
+	
+	public void setPostId(Long id) {
+		this.postId = id;
+	}
+	
 	public String getTitle() {
 		return title;
 	}
-	public String getBody() {
-		return body;
-	}
-	public User getAuthor() {
-		return author;
-	}
-	public Date getDate() {
-		return date;
-	}
-	public void setId(Long id) {
-		this.postId = id;
-	}
+
 	public void setTitle(String title) {
 		this.title = title;
 	}
+	
+	public String getBody() {
+		return body;
+	}
+
 	public void setBody(String body) {
 		this.body = body;
 	}
+	
+	public User getAuthor() {
+		return author;
+	}
+
 	public void setAuthor(User author) {
 		this.author = author;
 	}
-	public void setDate(Date date) {
-		this.date = date;
+	
+	public Date getLastUpdateDate() {
+		return lastUpdateDate;
+	}
+	public void setLastUpdateDate(Date date) {
+		this.lastUpdateDate = date;
+	}
+
+	@Override
+	public String toString() {
+		return "Post [postId=" + postId + ", title=" + title + "]";
 	}
 	
 }

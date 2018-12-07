@@ -23,6 +23,7 @@ public class HomeController {
 	public String index(Model model) { // adjusts the view model
 		
 		List<Post> latestPosts = postService.findLatest(5);
+		System.out.println(latestPosts);
 		model.addAttribute("latest5Posts", latestPosts);
 		
 		latestPosts = latestPosts.stream().limit(3).collect(Collectors.toList());

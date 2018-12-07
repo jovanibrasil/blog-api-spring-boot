@@ -13,7 +13,7 @@ import blog.presentation.models.Post;
 @Repository
 public interface PostRepository extends JpaRepository<Post, Long> {
 	
-	@Query("SELECT p FROM Post p LEFT JOIN FETCH p.author ORDER BY p.date DESC")
+	@Query("SELECT p FROM Post p LEFT JOIN FETCH p.author ORDER BY p.lastUpdateDate DESC")
 	List<Post> findLatest5Posts(Pageable pageRequest);
 	
 	@Query("SELECT p FROM Post p WHERE p.author.userId=:userId")

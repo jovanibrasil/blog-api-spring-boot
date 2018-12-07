@@ -1,5 +1,7 @@
 package blog.presentation.controllers;
 
+import java.util.Date;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -57,12 +59,10 @@ public class PostsController {
 			
 			System.out.println("O id do autor é"+author.getId());
 			
-			Post post = new Post();
-			post.setTitle(editPostForm.getTitle());
-			post.setBody(editPostForm.getBody());
-			post.setAuthor(author);
+			Post post = new Post(editPostForm.getTitle(), editPostForm.getBody(), author);
 			postService.create(post);
-			return "posts/edit"; // TODO se sucesso, retorna para lista de posts do user
+			notificationService.addInfoMessage("Your post was created successfully!");
+			return "redirect:/posts/management"; // TODO se sucesso, retorna para lista de posts do user
 		}else {
 			return "users/login";
 		}

@@ -9,7 +9,7 @@
 		<aside>
 			<h2>Posts recentes</h2>
 			<a 	href="#" th:each="p:${latest5Posts}" th:text="${p.title}" 
-				th:href="@{/posts/view/{id}/(id=${p.id})}">Posts recentes</a>
+				th:href="@{/posts/view/{id}/(id=${p.postId})}">Posts recentes</a>
 		</aside>
 		
 		<main id="posts">	
@@ -17,7 +17,7 @@
 				<h2 class="title" th:text="${p.title}">Título do post</h2>
 				<div class="date">
 					<i>Postado em</i>
-					<span th:text="${#dates.format(p.date, 'dd-MMM-yyyy')}">04-November-2018</span>
+					<span th:text="${#dates.format(p.lastUpdateDate, 'dd-MMM-yyyy')}">04-November-2018</span>
 					<span th:if="${p.author}" th:remove="tag">
 						<i>Por</i>
 						<span 

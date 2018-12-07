@@ -10,6 +10,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import blog.enums.ProfileTypeEnum;
 import blog.persistence.repositories.UserRepository;
 import blog.presentation.models.User;
 
@@ -51,19 +52,14 @@ public class UserServiceJpaImpl implements UserService {
 	@Override
 	public UserDetails loadUserByUsername(String userName) throws UsernameNotFoundException {
 		User user = userRepository.findUserByName(userName);
-		//System.out.println("-----------------_>" + user.getId() + "   " + user.getPasswordHash());
 		return new CustomUserDetails(user.getId(), user.getFullUserName(), user.getPassword(),
 				true, true, true, true, user.getAuthorities());
 	}
 
 	@Override
 	public void saveUser(String userName, String fullUserName, String password) {
-		User user = new User();
-		user.setUserName(userName);
-		user.setFullUserName(fullUserName);
-		user.setPasswordHash(passwordEncoder.encode(password));
+		User user = new User(userName, fullUserName, passwordEncoder.encode(password), ProfileTypeEnum.ROLE_USER);
 		this.userRepository.save(user);
 	}
-	
 	
 }

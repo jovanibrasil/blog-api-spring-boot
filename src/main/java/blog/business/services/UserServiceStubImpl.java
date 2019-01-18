@@ -8,6 +8,7 @@ import blog.presentation.models.User;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
 @Service
 public class UserServiceStubImpl implements UserService {
@@ -24,7 +25,7 @@ public class UserServiceStubImpl implements UserService {
 	}
 
 	@Override
-	public User findById(Long id) {
+	public Optional<User> findById(Long id) {
 		// TODO Auto-generated method stub
 		return null;
 	}

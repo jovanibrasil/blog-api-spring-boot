@@ -28,8 +28,8 @@ public class HomeController {
 		
 		latestPosts = latestPosts.stream().limit(3).collect(Collectors.toList());
 		model.addAttribute("latest3Posts", latestPosts);
-		
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		
 		if(auth.isAuthenticated() && !auth.getName().equals("anonymousUser")) {
 			model.addAttribute("lblHelloUserName", auth.getName());
 		}

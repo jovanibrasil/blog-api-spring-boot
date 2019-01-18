@@ -2,6 +2,7 @@ package blog.business.services;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;
@@ -35,8 +36,8 @@ public class UserServiceJpaImpl implements UserService {
 	}
 
 	@Override
-	public User findById(Long id) {
-		return this.userRepository.findOne(id);
+	public Optional<User> findById(Long id) {
+		return this.userRepository.findById(id);
 	}
 
 	@Override
@@ -46,7 +47,7 @@ public class UserServiceJpaImpl implements UserService {
 
 	@Override
 	public void deleteById(Long id) {
-		this.userRepository.delete(id);
+		this.userRepository.deleteById(id);
 	}
 
 	@Override

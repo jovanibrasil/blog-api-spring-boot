@@ -1,6 +1,7 @@
 package blog.presentation.controllers;
 
 import java.util.Date;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
@@ -33,12 +34,12 @@ public class PostsController {
 	
 	@RequestMapping("/view/{id}")
 	public String view(@PathVariable("id") Long id, Model model) {
-		Post post = postService.findById(id);
-		if(post == null) {
+		Optional<Post> post = postService.findById(id);
+		if(!post.isPresent()) {
 			notificationService.addErrorMessafe("Post não encontrado #"+id);
 			return "redirect:/";
 		}
-		model.addAttribute("post", post);
+		model.addAttribute("post", post.get());
 		return "posts/view";
 	}
 	

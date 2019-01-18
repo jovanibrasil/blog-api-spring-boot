@@ -2,6 +2,7 @@ package blog.business.services;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;
@@ -29,8 +30,8 @@ public class PostServiceJpaImpl implements PostService {
 	}
 
 	@Override
-	public Post findById(Long id) {
-		return this.postRepo.findOne(id);
+	public Optional<Post> findById(Long id) {
+		return this.postRepo.findById(id);
 	}
 
 	@Override
@@ -45,7 +46,7 @@ public class PostServiceJpaImpl implements PostService {
 
 	@Override
 	public void deleteById(Long id) {
-		this.postRepo.delete(id);
+		this.postRepo.deleteById(id);
 	}
 
 	@Override

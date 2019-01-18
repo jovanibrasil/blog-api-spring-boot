@@ -3,6 +3,7 @@ package blog.business.services;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
@@ -40,11 +41,12 @@ public class PostServiceStubImpl implements PostService {
 	}
 
 	@Override
-	public Post findById(Long id) {
-		return this.posts.stream()
-				.filter(p -> Objects.equals(p.getPostId(), id))
-				.findFirst()
-				.orElse(null);
+	public Optional<Post> findById(Long id) {
+//		return this.posts.stream()
+//				.filter(p -> Objects.equals(p.getPostId(), id))
+//				.findFirst()
+//				.orElse(null);
+		return null;
 	}
 
 	@Override

@@ -1,14 +1,14 @@
 package blog.business.services;
 
-import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
+import blog.enums.ListOrderType;
 import blog.persistence.repositories.PostRepository;
 import blog.presentation.models.Post;
 
@@ -20,13 +20,26 @@ public class PostServiceJpaImpl implements PostService {
 	private PostRepository postRepo;
 	
 	@Override
-	public List<Post> findAll() {
-		return this.postRepo.findAll();
+	public Optional<List<Post>> findAll() {
+		return Optional.of(this.postRepo.findAll());
 	}
 
 	@Override
-	public List<Post> findLatest(int n) {
-		return this.postRepo.findLatest5Posts(new PageRequest(0, 5));
+	public Optional<List<Post>> findPosts(ListOrderType orderType, Long quantity) {
+		if(orderType == ListOrderType.ASC || orderType == ListOrderType.ASC){
+			return Optional.of(this.postRepo.findPosts(orderType, quantity));
+		}else {
+			return Optional.empty();
+		}
+	}
+	
+	@Override
+	public Optional<List<Post>> findPostsByUser(ListOrderType orderType, Long quantity, Long userId) {
+		if(orderType == ListOrderType.ASC || orderType == ListOrderType.ASC){
+			return Optional.of(this.postRepo.findPostsByUserId(orderType, quantity, userId));
+		}else {
+			return Optional.empty();
+		}
 	}
 
 	@Override
@@ -35,23 +48,19 @@ public class PostServiceJpaImpl implements PostService {
 	}
 
 	@Override
-	public Post create(Post post) {
-		return this.postRepo.save(post);
+	public Optional<Post> create(Post post) {
+		post.setLastUpdateDate(new Date());
+		return Optional.of(this.postRepo.save(post));
 	}
 
 	@Override
-	public Post edit(Post post) {
-		return this.postRepo.save(post);
+	public Optional<Post> edit(Post post) {
+		return Optional.of(this.postRepo.save(post));
 	}
 
 	@Override
 	public void deleteById(Long id) {
 		this.postRepo.deleteById(id);
-	}
-
-	@Override
-	public List<Post> findPostsByUserId(Long userId) {
-		return this.postRepo.findPostsByUserId(userId);
 	}
 
 }

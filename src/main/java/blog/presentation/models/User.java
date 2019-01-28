@@ -9,8 +9,6 @@ import java.util.Set;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -19,11 +17,11 @@ import javax.persistence.OneToMany;
 import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
 import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import blog.enums.ProfileTypeEnum;
 
@@ -39,18 +37,21 @@ public class User implements UserDetails {
 	
 	@Column(nullable=false, length=30, unique=true)
 	private String userName;
-	@Enumerated(EnumType.STRING)
-	@Column(nullable=false)
+	
+	//@Enumerated(EnumType.STRING)
+	//@Column(nullable=false)
 	private ProfileTypeEnum profileType;
-	@Column(length=60)
+	//@Column(length=60)
 	private String passwordHash;
-	@Column(length=100)
+	//@Column(length=100)
 	private String fullUserName;
-	@Temporal(TemporalType.TIMESTAMP)
-	@Column(nullable=false)
+	//@Temporal(TemporalType.TIMESTAMP)
+	//@Column(nullable=false)
 	private Date lastUpdateDate;
+	
 	// One user to many posts.
 	@OneToMany(mappedBy="author", fetch=FetchType.LAZY, cascade=CascadeType.ALL)
+	@JsonManagedReference
 	private Set<Post> posts = new HashSet<>();
 	
 	public User() {}

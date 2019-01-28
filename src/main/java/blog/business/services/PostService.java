@@ -3,14 +3,17 @@ package blog.business.services;
 import java.util.List;
 import java.util.Optional;
 
+import blog.enums.ListOrderType;
 import blog.presentation.models.Post;
 
 public interface PostService {
-	public List<Post> findAll();
-	public List<Post> findLatest(int n);
+	
+	public Optional<List<Post>> findAll();
+	public Optional<List<Post>> findPosts(ListOrderType orderType, Long n);
+	public Optional<List<Post>> findPostsByUser(ListOrderType orderType, Long n, Long userId);
 	public Optional<Post> findById(Long id);
-	public Post create(Post post);
-	public Post edit(Post post);
+	public Optional<Post> create(Post post);
+	public Optional<Post> edit(Post post);
 	public void deleteById(Long id);
-	public List<Post> findPostsByUserId(Long id);
+	
 }

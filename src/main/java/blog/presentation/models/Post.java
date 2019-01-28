@@ -14,6 +14,10 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
+
+import com.fasterxml.jackson.annotation.JsonBackReference;
 
 @Entity
 @Table(name="posts")
@@ -22,6 +26,8 @@ public class Post {
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private Long postId;
+	@NotNull
+	@Size(min=2, max=40, message="Título do Post deve ter entre 2 e 10 caracteres.")
 	@Column(nullable=false, length=300)
 	private String title;
 	@Temporal(TemporalType.TIMESTAMP)
@@ -29,6 +35,8 @@ public class Post {
 	private Date lastUpdateDate;
 	// Lob: data should be represented as BLOB (binary data) in the database.
 	// Any serializable data can be annotated with this notation.
+	@NotNull
+	@Size(min=2, max=20000, message="Corpo do post deve ter entre 2 e 1000 caracteres.")
 	@Lob @Column(nullable=false)
 	private String body;
 	// FetchType: JPA loads all data together or on-demand.
@@ -36,6 +44,7 @@ public class Post {
 	// Many posts to one user.
 	@ManyToOne(fetch=FetchType.EAGER)
 	@JoinColumn(referencedColumnName="userId")
+	@JsonBackReference
 	private User author;
 	
 	public Post() {}

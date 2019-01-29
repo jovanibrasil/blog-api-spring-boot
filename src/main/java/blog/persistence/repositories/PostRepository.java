@@ -13,11 +13,12 @@ import blog.presentation.models.Post;
 @Repository
 public interface PostRepository extends JpaRepository<Post, Long> {
 	
-	@Query(nativeQuery=true, value="SELECT p FROM Post p INNET JOIN user ORDER BY p.lastUpdateDate ?orderType Limit 0, ?quantity")
-	List<Post> findPosts(@Param("orderType") ListOrderType orderType, @Param("quantity") Long quantity);
+	//@Query(nativeQuery=true, value="SELECT p FROM posts p INNER JOIN users ORDER BY p.last_update_date :orderType Limit :quantity")
+	@Query(nativeQuery=true, value="SELECT * FROM posts p LEFT JOIN users u WHERE u.user_id=p.user_id ORDER BY p.last_update_date DESC Limit :limit")
+	List<Post> findPosts(@Param("limit") Long limit);
 	
-	@Query(nativeQuery=true, value="SELECT p FROM Post p INNER JOIN user WHERE user.userId=?userId ORDER BY p.lastUpdateDate ?orderType Limit 0, ?quantity")
-	List<Post> findPostsByUserId(@Param("orderType") ListOrderType orderType, @Param("quantity") Long quantity, @Param("userId") Long userId);
+	@Query(nativeQuery=true, value="SELECT * FROM posts p LEFT JOIN users u WHERE u.user_id=p.user_id AND u.user_id=:user_id ORDER BY p.last_update_date DESC Limit :limit")
+	List<Post> findPostsByUserId(@Param("user_id") Long userId, @Param("limit") Long limit);
 	
 }
 

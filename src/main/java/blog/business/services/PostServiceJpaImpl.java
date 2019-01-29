@@ -25,21 +25,13 @@ public class PostServiceJpaImpl implements PostService {
 	}
 
 	@Override
-	public Optional<List<Post>> findPosts(ListOrderType orderType, Long quantity) {
-		if(orderType == ListOrderType.ASC || orderType == ListOrderType.ASC){
-			return Optional.of(this.postRepo.findPosts(orderType, quantity));
-		}else {
-			return Optional.empty();
-		}
+	public Optional<List<Post>> findPosts(Long limit) {
+		return Optional.of(this.postRepo.findPosts(limit));
 	}
 	
 	@Override
-	public Optional<List<Post>> findPostsByUser(ListOrderType orderType, Long quantity, Long userId) {
-		if(orderType == ListOrderType.ASC || orderType == ListOrderType.ASC){
-			return Optional.of(this.postRepo.findPostsByUserId(orderType, quantity, userId));
-		}else {
-			return Optional.empty();
-		}
+	public Optional<List<Post>> findPostsByUser(Long quantity, Long userId) {
+		return Optional.of(this.postRepo.findPostsByUserId(userId, quantity));
 	}
 
 	@Override

@@ -124,12 +124,12 @@ public class PostsController {
 	 * 
 	 * 
 	 */
-	@RequestMapping("/list/{order}/{length}") 
-	public ResponseEntity<Response<ArrayList<PostDTO>>> getPostlist(@PathVariable("order") ListOrderType orderType,  @PathVariable("length") Long length, Model model) { 
+	@RequestMapping("/list/{length}") 
+	public ResponseEntity<Response<ArrayList<PostDTO>>> getPostlist(@PathVariable("length") Long length, Model model) { 
 		
 		Response<ArrayList<PostDTO>> response = new Response<>();
 		
-		Optional<List<Post>> optLatestPosts = postService.findPosts(orderType, length);
+		Optional<List<Post>> optLatestPosts = postService.findPosts(length);
 		
 		if(!optLatestPosts.isPresent()) {
 			response.getErrors().add("It was not possible to create the list of posts.");
@@ -139,6 +139,7 @@ public class PostsController {
 		ArrayList<PostDTO> posts = new ArrayList<>();
 		
 		optLatestPosts.get().forEach(post -> {
+			System.out.println(post);
 			PostDTO postDTO = new PostDTO();
 			postDTO.setUserId(post.getAuthor().getId());
 			postDTO.setBody(post.getBody());
@@ -159,13 +160,11 @@ public class PostsController {
 	 * 
 	 * 
 	 */
-	@RequestMapping("/list/{order}/{length}/{userid}") 
-	public ResponseEntity<Response<ArrayList<PostDTO>>> getPostListByUser(@PathVariable("order") ListOrderType orderType,
-			@PathVariable("length") Long length, @PathVariable("userid") Long userId) { 
+	@RequestMapping("/list/{length}/{userid}") 
+	public ResponseEntity<Response<ArrayList<PostDTO>>> getPostListByUser(@PathVariable("length") Long length, @PathVariable("userid") Long userId) { 
 		
 		Response<ArrayList<PostDTO>> response = new Response<>();
-		
-		Optional<List<Post>> optLatestPosts = postService.findPostsByUser(orderType, length, userId);
+		Optional<List<Post>> optLatestPosts = postService.findPostsByUser(length, userId);
 		
 		if(!optLatestPosts.isPresent()) {
 			response.getErrors().add("It was not possible to create the list of posts.");

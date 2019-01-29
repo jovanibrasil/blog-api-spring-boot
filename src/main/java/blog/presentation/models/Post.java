@@ -43,7 +43,7 @@ public class Post {
 	// In this case, author will be loaded on demand
 	// Many posts to one user.
 	@ManyToOne(fetch=FetchType.EAGER)
-	@JoinColumn(referencedColumnName="userId")
+	@JoinColumn(referencedColumnName="userId", name="user_id")
 	@JsonBackReference
 	private User author;
 	

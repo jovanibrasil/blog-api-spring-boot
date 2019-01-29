@@ -81,19 +81,42 @@ public class BlogMvcApplication {
 					+ "sapien, eu fringilla nisl. Curabitur metus ex, interdum vitae scelerisque nec, elementum id tellus. Praesent in est metus. Nunc "
 					+ "semper sapien sed venenatis rhoncus. Aliquam vitae quam felis.";
 
-			User user = new User();
-			user.setFullUserName("Jovani Brasil");
-			user.setUserName("jovanibrasil");
+			User user1 = new User();
+			user1.setFullUserName("Jovani Brasil");
+			user1.setUserName("jovanibrasil");
 			//user.setLastUpdateDate(new Date());
 			//user.setPasswordHash(new BCryptPasswordEncoder().encode("teste"));
 			//user.setProfileType(ProfileTypeEnum.ROLE_USER);
-			user.setPosts(new HashSet<Post>());
+			user1.setPosts(new HashSet<Post>());
 
-			user = userRepository.save(user);
+			user1 = userRepository.save(user1);
+			
+//			user.setFullUserName("Fake user");
+//			user.setUserName("fakeuser");
+//			
+			User user2 = new User();
+			user2.setFullUserName("Fake user");
+			user2.setUserName("fakeuser");
+			//user.setLastUpdateDate(new Date());
+			//user.setPasswordHash(new BCryptPasswordEncoder().encode("teste"));
+			//user.setProfileType(ProfileTypeEnum.ROLE_USER);
+			user2.setPosts(new HashSet<Post>());
 
+			user2 = userRepository.save(user2);
+			
+			
+			
 			for (int i = 0; i < 20; i++) {
 				Post post = new Post();
-				post.setAuthor(user);
+				
+				if(i%2 == 0) {
+					post.setAuthor(user1);
+				}
+				else {
+					System.out.println("user "+user2.getId());
+					post.setAuthor(user2);
+				}
+					
 				post.setTitle("Lorem ipsum " + i);
 				post.setBody(content);
 				post.setLastUpdateDate(new Date());

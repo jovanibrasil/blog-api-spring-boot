@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
 import org.slf4j.Logger;
@@ -22,7 +21,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import blog.business.services.PostService;
 import blog.dtos.PostDTO;
-import blog.enums.ListOrderType;
 import blog.presentation.models.Post;
 import blog.presentation.models.User;
 import blog.response.Response;
@@ -45,7 +43,7 @@ public class PostsController {
 	/*
 	 * Test method. This is a simple ping.
 	 * 
-	 * 
+	 * @param name is an user name passed by url parameter.
 	 * 
 	 */
 	@GetMapping("ping/{name}")
@@ -56,13 +54,12 @@ public class PostsController {
 	/*
 	 * Get post by post id.
 	 * 
-	 * 
+	 * @param id is the post id. 
 	 * 
 	 */
 	@GetMapping("/post/{id}")
 	public ResponseEntity<Response<PostDTO>> getPost(@PathVariable("id") Long id) {
 		
-		log.info("Received a blog GET post request!");	
 		Response<PostDTO> response = new Response<>();
 		Optional<Post> optPost = postService.findById(id);
 		
@@ -87,19 +84,18 @@ public class PostsController {
 	/*
 	 * Create a new post
 	 * 
-	 * 
-	 * 
 	 */
 	@RequestMapping(value="/create", method=RequestMethod.POST)
 	public ResponseEntity<Response<PostDTO>> createPost(@Valid @RequestBody PostDTO postDTO, BindingResult bindingResult) {
+		
 		Response<PostDTO> response = new Response<>();
 		
 		if(bindingResult.hasErrors()) {
+			log.error("It was not possible to create the specified post.");
 			bindingResult.getAllErrors().forEach(err -> response.getErrors().add(err.getDefaultMessage()));
 			return ResponseEntity.badRequest().body(response);
 		}
 		
-		//Long userId = Long.parseLong(request.getParameter("userId"));
 		User author = new User();
 		author.setUserId(postDTO.getUserId());
 				
@@ -107,6 +103,7 @@ public class PostsController {
 		Optional<Post> optPost = postService.create(post);
 		
 		if(!optPost.isPresent()) {
+			log.error("It was not possible to create the specified post.");
 			response.getErrors().add("It was not possible to created the post.");
 			return ResponseEntity.badRequest().body(response);
 		}
@@ -121,7 +118,7 @@ public class PostsController {
 	/*
 	 * Get a list with size "length" that contains posts ordered by the parameter "order". No user is specified.
 	 * 
-	 * 
+	 * @param length is the size of the post list that will be returned.
 	 * 
 	 */
 	@RequestMapping("/list/{length}") 
@@ -132,6 +129,7 @@ public class PostsController {
 		Optional<List<Post>> optLatestPosts = postService.findPosts(length);
 		
 		if(!optLatestPosts.isPresent()) {
+			log.error("It was not possible to create the list of posts.");
 			response.getErrors().add("It was not possible to create the list of posts.");
 			return ResponseEntity.badRequest().body(response);
 		}
@@ -157,7 +155,8 @@ public class PostsController {
 	/*
 	 * Get a list of n latest posts of a specified user.
 	 * 
-	 * 
+	 * @param length is the size of the post list that will be returned.
+	 * @param userId is the user identification. 
 	 * 
 	 */
 	@RequestMapping("/list/{length}/{userid}") 
@@ -167,6 +166,7 @@ public class PostsController {
 		Optional<List<Post>> optLatestPosts = postService.findPostsByUser(length, userId);
 		
 		if(!optLatestPosts.isPresent()) {
+			log.error("It was not possible to create the list of posts.");
 			response.getErrors().add("It was not possible to create the list of posts.");
 			return ResponseEntity.badRequest().body(response);
 		}
@@ -191,27 +191,27 @@ public class PostsController {
 	/*
 	 * Update a specified post.
 	 * 
-	 * 
 	 */
 	@RequestMapping(value="/update", method=RequestMethod.POST)
-	public ResponseEntity<Response<PostDTO>> updatePost(HttpServletRequest request, @Valid @RequestBody PostDTO postDTO, BindingResult bindingResult) {
+	public ResponseEntity<Response<PostDTO>> updatePost(@Valid @RequestBody PostDTO postDTO, BindingResult bindingResult) {
 		
 		Response<PostDTO> response = new Response<>();
 		
 		if(bindingResult.hasErrors()) {
-			log.error("");
+			log.error("It was not possible to update the specified post.");
 			bindingResult.getAllErrors().forEach(err -> response.getErrors().add(err.getDefaultMessage()));
 			return ResponseEntity.badRequest().body(response);
 		}
 		
-		Long userId = Long.parseLong(request.getParameter("userId"));
 		User author = new User();
-		author.setUserId(userId);
+		author.setUserId(postDTO.getUserId());
 				
 		Post post = new Post(postDTO.getTitle(), postDTO.getBody(), author);
+		post.setPostId(postDTO.getPostId());
 		Optional<Post> optPost = postService.create(post);
 		
 		if(!optPost.isPresent()) {
+			log.error("It was not possible to update the specified post.");
 			response.getErrors().add("It was not possible to created the post.");
 			return ResponseEntity.badRequest().body(response);
 		}

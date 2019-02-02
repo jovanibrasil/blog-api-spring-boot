@@ -51,8 +51,10 @@ public class PostServiceJpaImpl implements PostService {
 	}
 
 	@Override
-	public void deleteById(Long id) {
+	public Optional<Post> deleteById(Long id) {
+		Optional<Post> post = this.findById(id);
 		this.postRepo.deleteById(id);
+		return post;
 	}
 
 }

@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -221,6 +222,32 @@ public class PostsController {
 		
 		return ResponseEntity.ok(response);
 		
+	}
+	
+	/*
+	 * Delete a specific post.
+	 * 
+	 */
+	@DeleteMapping(value="/delete/{id}")
+	public ResponseEntity<Response<PostDTO>> deletePost(@PathVariable("id") Long id){
+		Response<PostDTO> response = new Response<>();
+		
+		Optional<Post> optPost = postService.deleteById(id);
+		
+		if(!optPost.isPresent()) {
+			response.getErrors().add("It was not possible to delete the post.");
+		}
+		
+		Post post = optPost.get(); 
+		PostDTO postDTO = new PostDTO();
+		postDTO.setUserId(post.getAuthor().getId());
+		postDTO.setBody(post.getBody());
+		postDTO.setLastUpdateDate(post.getLastUpdateDate());
+		postDTO.setPostId(post.getPostId());
+		postDTO.setTitle(post.getTitle());
+		response.setData(postDTO);
+		
+		return ResponseEntity.ok(response);
 	}
 	
 }

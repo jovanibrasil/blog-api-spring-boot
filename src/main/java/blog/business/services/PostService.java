@@ -14,6 +14,6 @@ public interface PostService {
 	public Optional<Post> findById(Long id);
 	public Optional<Post> create(Post post);
 	public Optional<Post> edit(Post post);
-	public void deleteById(Long id);
+	public Optional<Post> deleteById(Long id);
 	
 }

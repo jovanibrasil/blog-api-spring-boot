@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -22,6 +23,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import blog.business.services.PostService;
 import blog.dtos.PostDTO;
+import blog.dtos.PostInfo;
+import blog.dtos.SummaryDTO;
 import blog.presentation.models.Post;
 import blog.presentation.models.User;
 import blog.response.Response;
@@ -32,6 +35,7 @@ import blog.response.Response;
  * 
  */
 
+@CrossOrigin(origins = "http://localhost:4200")
 @RestController
 @RequestMapping("/posts")
 public class PostsController {
@@ -75,7 +79,7 @@ public class PostsController {
 		postDTO.setUserId(post.getAuthor().getId());
 		postDTO.setBody(post.getBody());
 		postDTO.setLastUpdateDate(post.getLastUpdateDate());
-		postDTO.setPostId(post.getPostId());
+		postDTO.setId(post.getPostId());
 		postDTO.setTitle(post.getTitle());
 		response.setData(postDTO);
 		
@@ -100,7 +104,7 @@ public class PostsController {
 		User author = new User();
 		author.setUserId(postDTO.getUserId());
 				
-		Post post = new Post(postDTO.getTitle(), postDTO.getBody(), author);
+		Post post = new Post(postDTO.getTitle(), postDTO.getSummary(), postDTO.getBody(), author);
 		Optional<Post> optPost = postService.create(post);
 		
 		if(!optPost.isPresent()) {
@@ -110,7 +114,7 @@ public class PostsController {
 		}
 			
 		postDTO.setLastUpdateDate(optPost.get().getLastUpdateDate());
-		postDTO.setPostId(optPost.get().getPostId());
+		postDTO.setId(optPost.get().getPostId());
 		response.setData(postDTO);
 		
 		return ResponseEntity.ok(response);
@@ -141,14 +145,68 @@ public class PostsController {
 			System.out.println(post);
 			PostDTO postDTO = new PostDTO();
 			postDTO.setUserId(post.getAuthor().getId());
+			postDTO.setSummary(post.getSummary());
 			postDTO.setBody(post.getBody());
 			postDTO.setLastUpdateDate(post.getLastUpdateDate());
-			postDTO.setPostId(post.getPostId());
+			postDTO.setId(post.getPostId());
 			postDTO.setTitle(post.getTitle());
 			posts.add(postDTO);
 		});
 		
 		response.setData(posts);
+		return ResponseEntity.ok(response);
+		
+	}
+	
+	@GetMapping("/summaries/{length}") 
+	public ResponseEntity<Response<ArrayList<SummaryDTO>>> getSummarylist(@PathVariable("length") Long length, Model model) { 
+		
+		Response<ArrayList<SummaryDTO>> response = new Response<>();
+		
+		Optional<List<Post>> optLatestPosts = postService.findPosts(length);
+		
+		if(!optLatestPosts.isPresent()) {
+			log.error("It was not possible to create the list of summaries.");
+			response.getErrors().add("It was not possible to create the list of summaries.");
+			return ResponseEntity.badRequest().body(response);
+		}
+		
+		ArrayList<SummaryDTO> summaries = new ArrayList<>();
+		
+		optLatestPosts.get().forEach(post -> {
+			SummaryDTO summaryDTO = new SummaryDTO(post.getPostId(), post.getTitle(), 
+					post.getLastUpdateDate(), post.getSummary(), post.getAuthor().getUsername());
+			summaries.add(summaryDTO);
+		});
+		
+		response.setData(summaries);
+		return ResponseEntity.ok(response);
+		
+	}
+	
+	@GetMapping("/top/{length}") 
+	public ResponseEntity<Response<ArrayList<PostInfo>>> getTopPostsInfoList(@PathVariable("length") Long length, Model model) { 
+		
+		log.info("Getting a list of post information (title + id)");
+		
+		Response<ArrayList<PostInfo>> response = new Response<>();
+		
+		Optional<List<Post>> optLatestPosts = postService.findPosts(length);
+		
+		if(!optLatestPosts.isPresent()) {
+			log.error("It was not possible to create the list of info list.");
+			response.getErrors().add("It was not possible to create the list of info list.");
+			return ResponseEntity.badRequest().body(response);
+		}
+		
+		ArrayList<PostInfo> postInfoList = new ArrayList<>();
+		
+		optLatestPosts.get().forEach(post -> {
+			PostInfo summaryDTO = new PostInfo(post.getPostId(), post.getTitle());
+			postInfoList.add(summaryDTO);
+		});
+		
+		response.setData(postInfoList);
 		return ResponseEntity.ok(response);
 		
 	}
@@ -178,8 +236,9 @@ public class PostsController {
 			PostDTO postDTO = new PostDTO();
 			postDTO.setUserId(post.getAuthor().getId());
 			postDTO.setBody(post.getBody());
+			postDTO.setSummary(post.getSummary());
 			postDTO.setLastUpdateDate(post.getLastUpdateDate());
-			postDTO.setPostId(post.getPostId());
+			postDTO.setId(post.getPostId());
 			postDTO.setTitle(post.getTitle());
 			posts.add(postDTO);
 		});
@@ -207,8 +266,8 @@ public class PostsController {
 		User author = new User();
 		author.setUserId(postDTO.getUserId());
 				
-		Post post = new Post(postDTO.getTitle(), postDTO.getBody(), author);
-		post.setPostId(postDTO.getPostId());
+		Post post = new Post(postDTO.getTitle(), postDTO.getSummary(), postDTO.getBody(), author);
+		post.setPostId(postDTO.getId());
 		Optional<Post> optPost = postService.create(post);
 		
 		if(!optPost.isPresent()) {
@@ -217,7 +276,7 @@ public class PostsController {
 			return ResponseEntity.badRequest().body(response);
 		}
 			
-		postDTO.setPostId(optPost.get().getPostId());
+		postDTO.setId(optPost.get().getPostId());
 		response.setData(postDTO);
 		
 		return ResponseEntity.ok(response);
@@ -243,7 +302,7 @@ public class PostsController {
 		postDTO.setUserId(post.getAuthor().getId());
 		postDTO.setBody(post.getBody());
 		postDTO.setLastUpdateDate(post.getLastUpdateDate());
-		postDTO.setPostId(post.getPostId());
+		postDTO.setId(post.getPostId());
 		postDTO.setTitle(post.getTitle());
 		response.setData(postDTO);
 		

@@ -47,9 +47,7 @@ public class BlogMvcApplication {
 					+ "sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."
 					+ " Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris"
 					+ "nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in"
-					+ "reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur."
-					+ " Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia"
-					+ "deserunt mollit anim id est laborum.";
+					+ "reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.";
 
 			String content = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean ipsum nisl, varius at semper a, consectetur at eros."
 					+ "Nulla lectus quam, consequat nec cursus sit amet, lacinia et arcu. Duis tempus sodales venenatis. Orci varius natoque "
@@ -104,8 +102,6 @@ public class BlogMvcApplication {
 
 			user2 = userRepository.save(user2);
 			
-			
-			
 			for (int i = 0; i < 20; i++) {
 				Post post = new Post();
 				
@@ -118,6 +114,7 @@ public class BlogMvcApplication {
 				}
 					
 				post.setTitle("Lorem ipsum " + i);
+				post.setSummary(summary);
 				post.setBody(content);
 				post.setLastUpdateDate(new Date());
 				post = postRepository.save(post);

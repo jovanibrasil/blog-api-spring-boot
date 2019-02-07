@@ -5,29 +5,34 @@ import java.util.Date;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
-import blog.presentation.models.User;
-
 public class PostDTO {
 
 	@NotNull
-	private Long postId;
-	@NotNull
+	private Long id;
+	
+	@NotNull(message="Title must not be null")
 	@Size(min=2, max=10, message="Título do Post deve ter entre 2 e 10 caracteres.")
 	private String title;
-	@NotNull
+	
+	private Date lastUpdateDate;
+	
+	@NotNull(message="Summary must not be null")
+	@Size(min=2, max=1000, message="Sumário deve ter entre 2 e 1000 caracteres.")
+	private String summary;
+	
 	@Size(min=2, max=1000, message="Corpo do post deve ter entre 2 e 1000 caracteres.")
 	private String body;
-	@NotNull
+	
+	@NotNull(message="UserId must not be null")
 	private Long userId;
-	private Date lastUpdateDate;
 	
 	public PostDTO() {}
 	
-	public Long getPostId() {
-		return postId;
+	public Long getId() {
+		return id;
 	}
-	public void setPostId(Long postId) {
-		this.postId = postId;
+	public void setId(Long id) {
+		this.id = id;
 	}
 	public String getTitle() {
 		return title;
@@ -53,10 +58,18 @@ public class PostDTO {
 	public void setLastUpdateDate(Date lastUpdateDate) {
 		this.lastUpdateDate = lastUpdateDate;
 	}
+	
+	public String getSummary() {
+		return summary;
+	}
+
+	public void setSummary(String summary) {
+		this.summary = summary;
+	}
 
 	@Override
 	public String toString() {
-		return "PostDTO [postId=" + postId + ", title=" + title + ", body=" + body + ", UserId=" + userId
+		return "PostDTO [postId=" + id + ", title=" + title + ", body=" + body + ", UserId=" + userId
 				+ ", lastUpdateDate=" + lastUpdateDate + "]";
 	}
 	

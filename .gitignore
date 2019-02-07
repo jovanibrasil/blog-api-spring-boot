@@ -38,3 +38,6 @@ hs_err_pid*
 # maven files
 target/**
 /target/
+
+# vscode files
+.vscode/

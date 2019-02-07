@@ -17,7 +17,7 @@ pipeline {
                 echo 'Cloning git ...'
                 git([url: 'https://github.com/jovanibrasil/blog-api.git', branch: 'master', credentialsId: '18a17f19-9870-4bcc-8c7b-75eec38a059a'])
                 echo 'Installing dependencies ...'
-                sh 'npm install'
+                sh 'mvn package'
                 echo 'Building ...'
                 sh 'docker build -t blog-api ~/workspace/blog-api'
             }

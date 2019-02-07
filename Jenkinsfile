@@ -19,8 +19,6 @@ pipeline {
                 echo 'Installing dependencies ...'
                 sh 'mvn package'
                 echo 'Building ...'
-                sh 'docker stop blog-api'
-                sh 'docker rm blog-api'                
                 sh 'docker build -t blog-api ~/workspace/blog-api'
             }
         }
@@ -39,6 +37,8 @@ pipeline {
 
         stage("Deploy"){
             steps {
+                // sh 'docker stop blog-api'
+                // sh 'docker rm blog-api'                
                 sh 'docker run -p 8081:8080 --name=blog-api -d blog-api'
             }
         }

@@ -39,7 +39,7 @@ pipeline {
             steps {
                 // sh 'docker stop blog-api'
                 // sh 'docker rm blog-api'                
-                sh 'docker run -p 8081:8081 --name=blog-api -d blog-api'
+                sh 'docker run -p 8081:8080 --name=blog-api -d blog-api'
             }
         }
 

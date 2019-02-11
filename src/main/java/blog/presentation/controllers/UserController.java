@@ -15,7 +15,7 @@ import blog.dtos.UserDTO;
 import blog.presentation.models.User;
 import blog.response.Response;
 
-//@CrossOrigin(origins = "http://localhost:4200")
+@CrossOrigin(origins = "*")
 @RestController
 @RequestMapping("/user")
 public class UserController {

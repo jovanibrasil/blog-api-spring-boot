@@ -11,16 +11,16 @@ public class PostDTO {
 	private Long id;
 	
 	@NotNull(message="Title must not be null")
-	@Size(min=2, max=10, message="Título do Post deve ter entre 2 e 10 caracteres.")
+	@Size(min=2, max=50, message="Título do Post deve ter entre 2 e 10 caracteres.")
 	private String title;
 	
 	private Date lastUpdateDate;
 	
 	@NotNull(message="Summary must not be null")
-	@Size(min=2, max=1000, message="Sumário deve ter entre 2 e 1000 caracteres.")
+	@Size(min=2, max=5000, message="Sumário deve ter entre 2 e 1000 caracteres.")
 	private String summary;
 	
-	@Size(min=2, max=1000, message="Corpo do post deve ter entre 2 e 1000 caracteres.")
+	@Size(min=2, max=30000, message="Corpo do post deve ter entre 2 e 1000 caracteres.")
 	private String body;
 	
 	@NotNull(message="UserId must not be null")

@@ -1,6 +1,7 @@
 package blog.presentation.controllers;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -35,7 +36,7 @@ import blog.response.Response;
  * 
  */
 
-//@CrossOrigin(origins = "http://localhost:4200")
+@CrossOrigin(origins = "*")
 @RestController
 @RequestMapping("/posts")
 public class PostsController {
@@ -118,6 +119,42 @@ public class PostsController {
 		response.setData(postDTO);
 		
 		return ResponseEntity.ok(response);
+	}
+	
+	/*
+	 * Update a specified post.
+	 * 
+	 */
+	@RequestMapping(value="/update", method=RequestMethod.POST)
+	public ResponseEntity<Response<PostDTO>> updatePost(@Valid @RequestBody PostDTO postDTO, BindingResult bindingResult) {
+		
+		Response<PostDTO> response = new Response<>();
+		
+		if(bindingResult.hasErrors()) {
+			log.error("It was not possible to update the specified post. Invalid data.");
+			bindingResult.getAllErrors().forEach(err -> response.getErrors().add(err.getDefaultMessage()));
+			return ResponseEntity.badRequest().body(response);
+		}
+		
+		User author = new User();
+		author.setUserId(postDTO.getUserId());
+				
+		Post post = new Post(postDTO.getTitle(), postDTO.getSummary(), postDTO.getBody(), author);
+		post.setPostId(postDTO.getId());
+		post.setLastUpdateDate(new Date());
+		Optional<Post> optPost = postService.create(post);
+		
+		if(!optPost.isPresent()) {
+			log.error("It was not possible to update the specified post. Internal error.");
+			response.getErrors().add("It was not possible to created the post.");
+			return ResponseEntity.badRequest().body(response);
+		}
+			
+		postDTO.setId(optPost.get().getPostId());
+		response.setData(postDTO);
+		
+		return ResponseEntity.ok(response);
+		
 	}
 	
 	/*
@@ -244,41 +281,6 @@ public class PostsController {
 		});
 		
 		response.setData(posts);
-		return ResponseEntity.ok(response);
-		
-	}
-	
-	/*
-	 * Update a specified post.
-	 * 
-	 */
-	@RequestMapping(value="/update", method=RequestMethod.POST)
-	public ResponseEntity<Response<PostDTO>> updatePost(@Valid @RequestBody PostDTO postDTO, BindingResult bindingResult) {
-		
-		Response<PostDTO> response = new Response<>();
-		
-		if(bindingResult.hasErrors()) {
-			log.error("It was not possible to update the specified post.");
-			bindingResult.getAllErrors().forEach(err -> response.getErrors().add(err.getDefaultMessage()));
-			return ResponseEntity.badRequest().body(response);
-		}
-		
-		User author = new User();
-		author.setUserId(postDTO.getUserId());
-				
-		Post post = new Post(postDTO.getTitle(), postDTO.getSummary(), postDTO.getBody(), author);
-		post.setPostId(postDTO.getId());
-		Optional<Post> optPost = postService.create(post);
-		
-		if(!optPost.isPresent()) {
-			log.error("It was not possible to update the specified post.");
-			response.getErrors().add("It was not possible to created the post.");
-			return ResponseEntity.badRequest().body(response);
-		}
-			
-		postDTO.setId(optPost.get().getPostId());
-		response.setData(postDTO);
-		
 		return ResponseEntity.ok(response);
 		
 	}

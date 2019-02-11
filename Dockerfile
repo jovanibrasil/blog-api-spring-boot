@@ -5,6 +5,6 @@ USER root
 
     COPY ./target/blog-api.war /usr/local/tomcat/webapps/blog-api.war
     #COPY ./target/blog-api /usr/local/tomcat/webapps/blog-api
-    EXPOSE 8083
+    EXPOSE 8081
 
 #USER jenkins

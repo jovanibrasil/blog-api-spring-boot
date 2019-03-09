@@ -26,7 +26,7 @@ pipeline {
                 echo 'Installing dependencies ...'
                 sh 'mvn package -Dspring.spring.datasource.url=BLOG_MYSQL_URL -Dspring.spring.datasource.username=BLOG_MYSQL_USERNAME -Dspring.spring.datasource.password=BLOG_MYSQL_PASSWORD'
                 echo 'Building ...'
-                sh 'docker build --build-arg BLOG_MYSQL_URL BLOG_MYSQL_USERNAME BLOG_MYSQL_PASSWORD -t blog-api ~/workspace/blog-api'
+                sh 'docker build --build-arg BLOG_MYSQL_URL --build-arg BLOG_MYSQL_USERNAME --build-arg BLOG_MYSQL_PASSWORD -t blog-api ~/workspace/blog-api'
             }
         }
 

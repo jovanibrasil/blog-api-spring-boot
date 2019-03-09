@@ -58,8 +58,8 @@ public class UserServiceJpaImpl implements UserService {
 	}
 
 	@Override
-	public void saveUser(String userName, String fullUserName, String password) {
-		User user = new User(userName, fullUserName, passwordEncoder.encode(password), ProfileTypeEnum.ROLE_USER);
+	public void saveUser(Long userId, String userName, String fullUserName, String password) {
+		User user = new User(userId, userName, fullUserName, ProfileTypeEnum.ROLE_USER);
 		this.userRepository.save(user);
 	}
 	

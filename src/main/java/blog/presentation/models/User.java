@@ -9,6 +9,8 @@ import java.util.Set;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -17,6 +19,8 @@ import javax.persistence.OneToMany;
 import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -32,21 +36,20 @@ public class User implements UserDetails {
 	private static final long serialVersionUID = 4524066694717395806L;
 
 	@Id
-	@GeneratedValue(strategy=GenerationType.IDENTITY)
+	@Column(nullable=false, unique=true)
 	private Long userId;
 	
 	@Column(nullable=false, length=30, unique=true)
 	private String userName;
 	
-	//@Enumerated(EnumType.STRING)
-	//@Column(nullable=false)
+	@Enumerated(EnumType.STRING)
+	@Column(nullable=false)
 	private ProfileTypeEnum profileType;
-	//@Column(length=60)
-	private String passwordHash;
-	//@Column(length=100)
+	
+	@Column(length=100)
 	private String fullUserName;
-	//@Temporal(TemporalType.TIMESTAMP)
-	//@Column(nullable=false)
+	@Temporal(TemporalType.TIMESTAMP)
+	@Column(nullable=false)
 	private Date lastUpdateDate;
 	
 	// One user to many posts.
@@ -60,20 +63,11 @@ public class User implements UserDetails {
 
 	public User() {}
 	
-	public User(Long userId, String name, String fullName, ProfileTypeEnum profileType) {
+	public User(Long userId, String userName, String fullName, ProfileTypeEnum profileType) {
 		super();
 		this.userId = userId;
-		this.userName = name;
+		this.userName = userName;
 		this.fullUserName = fullName;
-		this.lastUpdateDate = new Date();
-	}
-	
-	public User(String name, String fullName, String passwordHash, ProfileTypeEnum profileType) {
-		super();
-		this.userName = name;
-		this.fullUserName = fullName;
-		this.passwordHash = passwordHash;
-		this.profileType = profileType;
 		this.lastUpdateDate = new Date();
 	}
 	
@@ -109,9 +103,7 @@ public class User implements UserDetails {
 	public String getUserName() {
 		return userName;
 	}
-	public String getPasswordHash() {
-		return passwordHash;
-	}
+	
 	public String getFullUserName() {
 		return fullUserName;
 	}
@@ -125,9 +117,6 @@ public class User implements UserDetails {
 		this.userName = name;
 	}
 	
-	public void setPasswordHash(String passwordHash) {
-		this.passwordHash = passwordHash;
-	}
 	public void setFullUserName(String fullName) {
 		this.fullUserName = fullName;
 	}
@@ -138,11 +127,6 @@ public class User implements UserDetails {
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
 		return new ArrayList<GrantedAuthority>();
-	}
-
-	@Override
-	public String getPassword() {
-		return this.passwordHash;
 	}
 
 	@Override
@@ -180,9 +164,15 @@ public class User implements UserDetails {
 	
 	@Override
 	public String toString() {
-		return "User [userId=" + userId + ", userName=" + userName + ", profileType=" + profileType + ", passwordHash="
-				+ passwordHash + ", fullUserName=" + fullUserName + ", lastUpdateDate=" + lastUpdateDate + ", posts="
+		return "User [userId=" + userId + ", userName=" + userName + ", profileType=" + profileType 
+				+ " , fullUserName=" + fullUserName + ", lastUpdateDate=" + lastUpdateDate + ", posts="
 				+ posts + "]";
+	}
+
+	@Override
+	public String getPassword() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 	
 }

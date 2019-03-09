@@ -13,5 +13,5 @@ public interface UserService extends UserDetailsService {
 	Optional<User> findById(Long id);
 	User create(User user);
 	void deleteById(Long id);
-	void saveUser(String userName, String fullUserName, String Password);
+	void saveUser(Long userId, String userName, String fullUserName, String Password);
 }

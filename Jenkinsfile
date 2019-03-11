@@ -24,9 +24,9 @@ pipeline {
                 echo 'Cloning git ...'
                 git([url: 'https://github.com/jovanibrasil/blog-api.git', branch: 'master', credentialsId: '18a17f19-9870-4bcc-8c7b-75eec38a059a'])
                 echo 'Installing dependencies ...'
-                sh 'mvn package -Dspring.spring.datasource.url=BLOG_MYSQL_URL -Dspring.spring.datasource.username=BLOG_MYSQL_USERNAME -Dspring.spring.datasource.password=BLOG_MYSQL_PASSWORD'
+                sh 'mvn package'
                 echo 'Building ...'
-                sh 'docker build -t blog-api ~/workspace/blog-api'
+                sh 'docker build --build-arg BLOG_MYSQL_URL --build-arg BLOG_MYSQL_USERNAME --build-arg BLOG_MYSQL_PASSWORD -t blog-api ~/workspace/blog-api'
             }
         }
 

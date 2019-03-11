@@ -10,6 +10,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
 import org.springframework.context.annotation.Bean;
 
+import blog.enums.ProfileTypeEnum;
 import blog.persistence.repositories.PostRepository;
 import blog.persistence.repositories.UserRepository;
 import blog.presentation.models.Post;
@@ -43,7 +44,7 @@ public class BlogMvcApplication extends SpringBootServletInitializer {
 		return args -> {
 			// Using value difined on application.properties
 			// System.out.println("Quantidade máxima de posts por usuário no plano free = " + this.maxPosts);
-//
+
 //			String summary = "Lorem ipsum dolor sit amet, consectetur adipiscing elit,"
 //					+ "sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."
 //					+ " Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris"
@@ -82,9 +83,11 @@ public class BlogMvcApplication extends SpringBootServletInitializer {
 //			User user1 = new User();
 //			user1.setFullUserName("Jovani Brasil");
 //			user1.setUserName("jovanibrasil");
+//	
+//			user1.setUserId(1L);
 //			//user.setLastUpdateDate(new Date());
 //			//user.setPasswordHash(new BCryptPasswordEncoder().encode("teste"));
-//			//user.setProfileType(ProfileTypeEnum.ROLE_USER);
+//			user1.setProfileType(ProfileTypeEnum.ROLE_USER);
 //			user1.setPosts(new HashSet<Post>());
 //
 //			user1 = userRepository.save(user1);
@@ -93,11 +96,12 @@ public class BlogMvcApplication extends SpringBootServletInitializer {
 ////			user.setUserName("fakeuser");
 ////			
 //			User user2 = new User();
+//			user2.setUserId(2L);
 //			user2.setFullUserName("Fake user");
 //			user2.setUserName("fakeuser");
 //			//user.setLastUpdateDate(new Date());
 //			//user.setPasswordHash(new BCryptPasswordEncoder().encode("teste"));
-//			//user.setProfileType(ProfileTypeEnum.ROLE_USER);
+//			user2.setProfileType(ProfileTypeEnum.ROLE_USER);
 //			user2.setPosts(new HashSet<Post>());
 //
 //			user2 = userRepository.save(user2);
@@ -114,8 +118,8 @@ public class BlogMvcApplication extends SpringBootServletInitializer {
 //				}
 //					
 //				post.setTitle("Lorem ipsum " + i);
-//				post.setSummary(summary);
-//				post.setBody(content);
+//				post.setSummary(summary + i);
+//				post.setBody(content + i);
 //				post.setLastUpdateDate(new Date());
 //				post = postRepository.save(post);
 //				System.out.println(post);

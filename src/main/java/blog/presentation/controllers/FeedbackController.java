@@ -43,20 +43,13 @@ public class FeedbackController {
 			return ResponseEntity.badRequest().body(response);
 		}
 		
-		Feedback feedback = new Feedback();
-		// TODO get user id
-		feedback.setTitle(feedbackDTO.getTitle());
-		feedback.setContent(feedbackDTO.getContent());
-		feedback.setFeedbackDate(new Date());
-		
-		User user = new User();
-		user.setUserId(2L);
-		feedback.setUser(user);
+		Feedback feedback = new Feedback(feedbackDTO.getName(), 
+				feedbackDTO.getEmail(), feedbackDTO.getContent());
 		
 		Optional<Feedback> optFeedback = this.feedbackService.create(feedback);
 		
 		if(!optFeedback.isPresent()) {
-			response.setData("Não foi possível enviar o feedback.");
+			response.setData("Não foi possível registrar o feedback.");
 			return ResponseEntity.badRequest().body(response);
 		}
 		
@@ -84,8 +77,8 @@ public class FeedbackController {
 		optLatestFeedbacks.get().forEach(feedback -> {
 			System.out.println(feedback);
 			FeedbackDTO feedbackDTO = new FeedbackDTO();
-			feedbackDTO.setTitle(feedback.getTitle());
-			feedbackDTO.setContent(feedback.getContent());
+//			feedbackDTO.setTitle(feedback.getTitle());
+//			feedbackDTO.setContent(feedback.getContent());
 			feedbacks.add(feedbackDTO);
 		});
 		

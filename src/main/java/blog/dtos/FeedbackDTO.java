@@ -5,29 +5,51 @@ import javax.validation.constraints.Size;
 
 public class FeedbackDTO {
 	
+	// min e max do name e do email
+	
 	@NotNull
-	@Size(min=2, max=15, message="Título do feedback deve ter entre 2 e 15 caracteres.")
-	private String title;
+	@Size(min=2, max=40, message="Nome de usuário deve ter entre 2 e 40 caracteres.")
+	private String name;
 	@NotNull
-	@Size(min=2, max=1000, message="Conteudo do feedback deve ter entre 2 e 1000 caracteres.")
+	@Size(min=2, max=40, message="Email deve ter entre 2 e 40 caracteres.")
+	private String email;
+	@Size(min=10, max=1000, message="Conteudo do feedback deve ter entre 10 e 1000 caracteres.")
 	private String content;
+	@NotNull
+	private String captchaCode;
 	
 	public FeedbackDTO() {}
-	
-	public String getTitle() {
-		return title;
+
+	public String getName() {
+		return name;
 	}
-	
-	public void setTitle(String title) {
-		this.title = title;
+
+	public void setName(String name) {
+		this.name = name;
 	}
-	
+
+	public String getEmail() {
+		return email;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
+	}
+
 	public String getContent() {
 		return content;
 	}
-	
+
 	public void setContent(String content) {
 		this.content = content;
+	}
+
+	public String getCaptchaCode() {
+		return captchaCode;
+	}
+
+	public void setCaptchaCode(String captchaCode) {
+		this.captchaCode = captchaCode;
 	}
 	
 }

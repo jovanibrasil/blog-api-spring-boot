@@ -57,10 +57,6 @@ public class User implements UserDetails {
 	@JsonManagedReference
 	private Set<Post> posts = new HashSet<>();
 	
-	@OneToMany(mappedBy="user", fetch=FetchType.LAZY, cascade=CascadeType.ALL)
-	@JsonManagedReference
-	private Set<Feedback> feedbacks = new HashSet<>();
-
 	public User() {}
 	
 	public User(Long userId, String userName, String fullName, ProfileTypeEnum profileType) {
@@ -152,14 +148,6 @@ public class User implements UserDetails {
 	@Override
 	public String getUsername() {
 		return this.userName;
-	}
-	
-	public Set<Feedback> getFeedbacks() {
-		return feedbacks;
-	}
-
-	public void setFeedbacks(Set<Feedback> feedbacks) {
-		this.feedbacks = feedbacks;
 	}
 	
 	@Override

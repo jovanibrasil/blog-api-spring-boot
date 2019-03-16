@@ -79,9 +79,11 @@ public class PostsController {
 		PostDTO postDTO = new PostDTO();
 		postDTO.setUserId(post.getAuthor().getId());
 		postDTO.setBody(post.getBody());
+		postDTO.setCreationDate(post.getCreationDate());
 		postDTO.setLastUpdateDate(post.getLastUpdateDate());
 		postDTO.setId(post.getPostId());
 		postDTO.setTitle(post.getTitle());
+		postDTO.setTags(post.getTags());
 		response.setData(postDTO);
 		
 		return ResponseEntity.ok(response);
@@ -95,7 +97,7 @@ public class PostsController {
 	public ResponseEntity<Response<PostDTO>> createPost(@Valid @RequestBody PostDTO postDTO, BindingResult bindingResult) {
 		
 		Response<PostDTO> response = new Response<>();
-		
+				
 		if(bindingResult.hasErrors()) {
 			log.error("It was not possible to create the specified post.");
 			bindingResult.getAllErrors().forEach(err -> response.getErrors().add(err.getDefaultMessage()));
@@ -105,7 +107,8 @@ public class PostsController {
 		User author = new User();
 		author.setUserId(postDTO.getUserId());
 				
-		Post post = new Post(postDTO.getTitle(), postDTO.getSummary(), postDTO.getBody(), author);
+		Post post = new Post(postDTO.getTitle(), postDTO.getSummary(), 
+				postDTO.getTags(), postDTO.getBody(), author);
 		Optional<Post> optPost = postService.create(post);
 		
 		if(!optPost.isPresent()) {
@@ -113,7 +116,7 @@ public class PostsController {
 			response.getErrors().add("It was not possible to created the post.");
 			return ResponseEntity.badRequest().body(response);
 		}
-			
+		postDTO.setCreationDate(optPost.get().getCreationDate());
 		postDTO.setLastUpdateDate(optPost.get().getLastUpdateDate());
 		postDTO.setId(optPost.get().getPostId());
 		response.setData(postDTO);
@@ -139,7 +142,8 @@ public class PostsController {
 		User author = new User();
 		author.setUserId(postDTO.getUserId());
 				
-		Post post = new Post(postDTO.getTitle(), postDTO.getSummary(), postDTO.getBody(), author);
+		Post post = new Post(postDTO.getTitle(), postDTO.getSummary(),
+			postDTO.getTags(), postDTO.getBody(), author);
 		post.setPostId(postDTO.getId());
 		post.setLastUpdateDate(new Date());
 		Optional<Post> optPost = postService.create(post);
@@ -149,8 +153,8 @@ public class PostsController {
 			response.getErrors().add("It was not possible to created the post.");
 			return ResponseEntity.badRequest().body(response);
 		}
-			
 		postDTO.setId(optPost.get().getPostId());
+		postDTO.setLastUpdateDate(optPost.get().getLastUpdateDate());
 		response.setData(postDTO);
 		
 		return ResponseEntity.ok(response);
@@ -184,9 +188,11 @@ public class PostsController {
 			postDTO.setUserId(post.getAuthor().getId());
 			postDTO.setSummary(post.getSummary());
 			postDTO.setBody(post.getBody());
+			postDTO.setCreationDate(post.getCreationDate());
 			postDTO.setLastUpdateDate(post.getLastUpdateDate());
 			postDTO.setId(post.getPostId());
 			postDTO.setTitle(post.getTitle());
+			postDTO.setTags(post.getTags());
 			posts.add(postDTO);
 		});
 		
@@ -195,12 +201,17 @@ public class PostsController {
 		
 	}
 	
-	@GetMapping("/summaries/{length}") 
-	public ResponseEntity<Response<ArrayList<SummaryDTO>>> getSummarylist(@PathVariable("length") Long length, Model model) { 
+	@GetMapping("/summaries/{category}") 
+	public ResponseEntity<Response<ArrayList<SummaryDTO>>> getSummarylist(@PathVariable("category") String category, Model model) { 
 		
 		Response<ArrayList<SummaryDTO>> response = new Response<>();
+		Optional<List<Post>> optLatestPosts;
 		
-		Optional<List<Post>> optLatestPosts = postService.findPosts(length);
+		if(category.equals("any")) {
+			optLatestPosts = postService.findPosts(6L);
+		}else {
+			optLatestPosts = postService.findPostsByCategory(category, 6L);
+		}
 		
 		if(!optLatestPosts.isPresent()) {
 			log.error("It was not possible to create the list of summaries.");
@@ -212,7 +223,8 @@ public class PostsController {
 		
 		optLatestPosts.get().forEach(post -> {
 			SummaryDTO summaryDTO = new SummaryDTO(post.getPostId(), post.getTitle(), 
-					post.getLastUpdateDate(), post.getSummary(), post.getAuthor().getUsername());
+					post.getCreationDate(),	post.getLastUpdateDate(), 
+					post.getSummary(), post.getAuthor().getUsername(), post.getTags()	);
 			summaries.add(summaryDTO);
 		});
 		
@@ -274,9 +286,11 @@ public class PostsController {
 			postDTO.setUserId(post.getAuthor().getId());
 			postDTO.setBody(post.getBody());
 			postDTO.setSummary(post.getSummary());
+			postDTO.setCreationDate(post.getCreationDate());
 			postDTO.setLastUpdateDate(post.getLastUpdateDate());
 			postDTO.setId(post.getPostId());
 			postDTO.setTitle(post.getTitle());
+			postDTO.setTags(post.getTags());
 			posts.add(postDTO);
 		});
 		
@@ -303,8 +317,10 @@ public class PostsController {
 		PostDTO postDTO = new PostDTO();
 		postDTO.setUserId(post.getAuthor().getId());
 		postDTO.setBody(post.getBody());
+		postDTO.setCreationDate(post.getCreationDate());
 		postDTO.setLastUpdateDate(post.getLastUpdateDate());
 		postDTO.setId(post.getPostId());
+		postDTO.setTags(post.getTags());
 		postDTO.setTitle(post.getTitle());
 		response.setData(postDTO);
 		

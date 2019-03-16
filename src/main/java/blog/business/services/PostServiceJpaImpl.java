@@ -28,6 +28,11 @@ public class PostServiceJpaImpl implements PostService {
 	public Optional<List<Post>> findPosts(Long limit) {
 		return Optional.of(this.postRepo.findPosts(limit));
 	}
+
+	@Override
+	public Optional<List<Post>> findPostsByCategory(String category, Long limit) {
+		return Optional.of(this.postRepo.findPostsByCategory(category, limit));
+	}
 	
 	@Override
 	public Optional<List<Post>> findPostsByUser(Long quantity, Long userId) {
@@ -59,5 +64,6 @@ public class PostServiceJpaImpl implements PostService {
 		}
 		return Optional.empty();
 	}
+
 
 }

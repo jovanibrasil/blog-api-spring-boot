@@ -1,9 +1,14 @@
 package blog.presentation.models;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import javax.persistence.Column;
+import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -31,6 +36,10 @@ public class Post {
 	
 	@Temporal(TemporalType.TIMESTAMP)
 	@Column(nullable=false)
+	private Date creationDate;
+	
+	@Temporal(TemporalType.TIMESTAMP)
+	@Column(nullable=false)
 	private Date lastUpdateDate;
 	
 	@Column(nullable=false, length=1000)
@@ -48,23 +57,30 @@ public class Post {
 	@JsonBackReference
 	private User author;
 	
+	@Column(name="tags", nullable=false)
+	@ElementCollection(targetClass=String.class, fetch = FetchType.EAGER)
+	private List<String> tags;
+
 	public Post() {}
 	
-	public Post(Long id, String title, String summary, String body, User author) {
+	public Post(Long id, String title, String summary, List<String> tags, String body, User author) {
 		this.postId = id;
 		this.title = title;
 		this.summary = summary;
 		this.body = body;
 		this.author = author;
 		this.lastUpdateDate = new Date();
+		this.tags = tags; 
 	}
 	
-	public Post(String title, String summary, String body, User author) {
+	public Post(String title, String summary,  List<String> tags, String body, User author) {
 		this.title = title;
 		this.summary = summary;
 		this.body = body;
 		this.author = author;
+		this.creationDate = new Date();
 		this.lastUpdateDate = new Date();
+		this.tags = tags;
 	}
 
 	public Long getPostId() {
@@ -119,4 +135,27 @@ public class Post {
 		this.summary = summary;
 	}
 
+	public List<String> getTags() {
+		return tags;
+	}
+
+	public void setTags(List<String> tags) {
+		this.tags = tags;
+	}
+	
+	public void addTag(String tag) {
+		if(this.tags == null) {
+			this.tags = new ArrayList<>();
+		}
+		this.tags.add(tag);
+	}
+
+	public Date getCreationDate() {
+		return creationDate;
+	}
+
+	public void setCreationDate(Date creationDate) {
+		this.creationDate = creationDate;
+	}
+	
 }

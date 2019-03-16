@@ -1,6 +1,7 @@
 package blog.dtos;
 
 import java.util.Date;
+import java.util.List;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
@@ -14,6 +15,7 @@ public class PostDTO {
 	@Size(min=2, max=50, message="Título do Post deve ter entre 2 e 10 caracteres.")
 	private String title;
 	
+	private Date creationDate;
 	private Date lastUpdateDate;
 	
 	@NotNull(message="Summary must not be null")
@@ -25,6 +27,9 @@ public class PostDTO {
 	
 	@NotNull(message="UserId must not be null")
 	private Long userId;
+	
+	@NotNull(message="Tags must not be null")
+	private List<String> tags;
 	
 	public PostDTO() {}
 	
@@ -65,6 +70,22 @@ public class PostDTO {
 
 	public void setSummary(String summary) {
 		this.summary = summary;
+	}
+
+	public Date getCreationDate() {
+		return creationDate;
+	}
+
+	public void setCreationDate(Date creationDate) {
+		this.creationDate = creationDate;
+	}
+	
+	public List<String> getTags() {
+		return tags;
+	}
+
+	public void setTags(List<String> tags) {
+		this.tags = tags;
 	}
 
 	@Override

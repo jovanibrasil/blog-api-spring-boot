@@ -3,6 +3,7 @@ package blog.dtos;
 import java.util.Date;
 import java.util.List;
 
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
@@ -25,8 +26,8 @@ public class PostDTO {
 	@Size(min=2, max=30000, message="Corpo do post deve ter entre 2 e 1000 caracteres.")
 	private String body;
 	
-	@NotNull(message="UserId must not be null")
-	private Long userId;
+	@NotBlank(message="UserName must not be null or blank")
+	private String userName;
 	
 	@NotNull(message="Tags must not be null")
 	private List<String> tags;
@@ -51,11 +52,11 @@ public class PostDTO {
 	public void setBody(String body) {
 		this.body = body;
 	}
-	public Long getUserId() {
-		return userId;
+	public String getUserName() {
+		return userName;
 	}
-	public void setUserId(Long userId) {
-		this.userId = userId;
+	public void setUserName(String userId) {
+		this.userName = userId;
 	}
 	public Date getLastUpdateDate() {
 		return lastUpdateDate;
@@ -90,8 +91,7 @@ public class PostDTO {
 
 	@Override
 	public String toString() {
-		return "PostDTO [postId=" + id + ", title=" + title + ", body=" + body + ", UserId=" + userId
-				+ ", lastUpdateDate=" + lastUpdateDate + "]";
+		return "PostDTO [postId=" + id + ", title=" + title + ", body=" + body + ",  lastUpdateDate=" + lastUpdateDate + "]";
 	}
 	
 }

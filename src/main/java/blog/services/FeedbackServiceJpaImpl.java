@@ -28,8 +28,8 @@ public class FeedbackServiceJpaImpl implements FeedbackService {
 	}
 
 	@Override
-	public Optional<List<Feedback>> findFeedbacksByUser(Long n, Long userId) {
-		return Optional.of(this.feedbackRepo.findFeedbacksByUserId(userId, n));
+	public Optional<List<Feedback>> findFeedbacksByUser(String userName, Long n) {
+		return Optional.of(this.feedbackRepo.findFeedbacksByUserId(userName, n));
 	}
 
 	@Override

@@ -6,6 +6,7 @@ import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 
 import blog.enums.ListOrderType;
@@ -25,18 +26,18 @@ public class PostServiceJpaImpl implements PostService {
 	}
 
 	@Override
-	public Optional<List<Post>> findPosts(Long limit) {
-		return Optional.of(this.postRepo.findPosts(limit));
+	public Optional<Page<Post>> findPosts(Long limit) {
+		return Optional.of(this.postRepo.findPosts(limit, null));
 	}
 
 	@Override
-	public Optional<List<Post>> findPostsByCategory(String category, Long limit) {
-		return Optional.of(this.postRepo.findPostsByCategory(category, limit));
+	public Optional<Page<Post>> findPostsByCategory(String category, Long limit) {
+		return Optional.of(this.postRepo.findPostsByCategory(category, limit, null));
 	}
 	
 	@Override
-	public Optional<List<Post>> findPostsByUser(Long quantity, Long userId) {
-		return Optional.of(this.postRepo.findPostsByUserId(userId, quantity));
+	public Optional<Page<Post>> findPostsByUser(String userName, Long quantity) {
+		return Optional.of(this.postRepo.findPostsByUserId(userName, quantity, null));
 	}
 
 	@Override

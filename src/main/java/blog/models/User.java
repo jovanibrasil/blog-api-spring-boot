@@ -1,6 +1,7 @@
 package blog.models;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashSet;
@@ -12,8 +13,6 @@ import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.PrePersist;
@@ -61,6 +60,13 @@ public class User implements UserDetails {
 		this.userName = userName;
 		this.fullUserName = fullName;
 		this.lastUpdateDate = new Date();
+		this.profileType = profileType;
+	}
+	
+	public User(String userName, ProfileTypeEnum profileType) {
+		super();
+		this.userName = userName;
+		this.profileType = profileType;
 	}
 	
 	public ProfileTypeEnum getProfileType() {
@@ -108,7 +114,7 @@ public class User implements UserDetails {
 
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
-		return new ArrayList<GrantedAuthority>();
+		return new ArrayList<GrantedAuthority>(Arrays.asList(profileType));
 	}
 
 	@Override

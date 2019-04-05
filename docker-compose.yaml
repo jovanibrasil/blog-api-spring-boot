@@ -10,11 +10,11 @@ services:
     networks:
       - net
     depends_on:
-      - search-api
+#      - search-api
       - auth-api
-    environment:
-#      - JVM_OPTS=-Xmx150M -Xms150M -XX:MaxPermSize=100M
-      - CATALINA_OPTS=-Xmx150M -Xms50M -XX:MaxPermSize=50M
+#    environment:
+# not used yet     - JVM_OPTS=-Xmx150M -Xms150M -XX:MaxPermSize=100M
+#      - CATALINA_OPTS=-Xmx150M -Xms50M -XX:MaxPermSize=50M
     deploy:
       resources:
         limits:
@@ -30,19 +30,19 @@ services:
       - 8083:8080
     networks:
       - net
-  search-api: # Search API (Spark)
-    image: search-api
-    container_name: search-api 
-    ports:
-      - 4567:4567
-    networks:
-      - net
-    depends_on: 
-      - solr-master
-  solr-master: # Solr master
-    image: solr-master
-    container_name: solr-master
-    ports:
-      - 8983:8983
-    networks:
-      - net
+#  search-api: # Search API (Spark)
+#    image: search-api
+#    container_name: search-api 
+#    ports:
+#      - 4567:4567
+#    networks:
+#      - net
+#    depends_on: 
+#      - solr-master
+#  solr-master: # Solr master
+#    image: solr-master
+#    container_name: solr-master
+#    ports:
+#      - 8983:8983
+#    networks:
+#      - net

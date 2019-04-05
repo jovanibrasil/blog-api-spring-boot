@@ -21,7 +21,6 @@ import blog.repositories.UserRepository;
  * springboot (procura e carrega entidades, controladores, UI templates, etc)
  */
 @SpringBootApplication
-//@EnableWebSecurity
 public class Application extends SpringBootServletInitializer {
 
 //	@Value("${posts.max-posts}")

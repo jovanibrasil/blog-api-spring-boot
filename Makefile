@@ -13,7 +13,7 @@ bash:
 	docker container exec -i -t --user root blog-api bash
 logs:
 	docker logs blog-api
-compose-up:
-	docker-compose up -d
 compose-down:
 	docker-compose down -v
+compose-up: compose-down
+	docker-compose up -d

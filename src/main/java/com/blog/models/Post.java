@@ -50,7 +50,7 @@ public class Post {
 	private String body;
 	// FetchType: JPA loads all data together or on-demand.
 	// In this case, author will be loaded together.
-	@ManyToOne(fetch=FetchType.LAZY)// Many posts to one user.
+	@ManyToOne(fetch=FetchType.EAGER)// Many posts to one user.
 	@JoinColumn(referencedColumnName="userName", name="user_name")
 	@JsonBackReference
 	private User author;
@@ -120,11 +120,6 @@ public class Post {
 	public void setLastUpdateDate(Date date) {
 		this.lastUpdateDate = date;
 	}
-
-	@Override
-	public String toString() {
-		return "Post [postId=" + postId + ", title=" + title + "]";
-	}
 	
 	public String getSummary() {
 		return summary;
@@ -155,6 +150,13 @@ public class Post {
 
 	public void setCreationDate(Date creationDate) {
 		this.creationDate = creationDate;
+	}
+
+	@Override
+	public String toString() {
+		return "Post [postId=" + postId + ", title=" + title + ", creationDate=" + creationDate + ", lastUpdateDate="
+				+ lastUpdateDate + ", summary=" + summary + ", body=" + body + ", author=" + author.toString() + ", tags=" + tags
+				+ "]";
 	}
 	
 }

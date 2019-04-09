@@ -1,4 +1,4 @@
-package com.blog.services;
+package com.blog.services.impl;
 
 import java.util.Optional;
 
@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import com.blog.models.Subscription;
 import com.blog.repositories.SubscriptionRepository;
+import com.blog.services.SubscriptionService;
 
 @Service
 public class SubscriptionServiceImpl implements SubscriptionService {

@@ -1,4 +1,4 @@
-package com.blog.services;
+package com.blog.services.impl;
 
 import java.util.List;
 import java.util.Objects;
@@ -14,6 +14,8 @@ import org.springframework.stereotype.Service;
 import com.blog.enums.ProfileTypeEnum;
 import com.blog.models.User;
 import com.blog.repositories.UserRepository;
+import com.blog.services.CustomUserDetails;
+import com.blog.services.UserService;
 
 @Service
 @Primary

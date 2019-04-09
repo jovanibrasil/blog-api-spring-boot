@@ -11,6 +11,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -172,8 +174,8 @@ public class PostsController {
 	public ResponseEntity<Response<ArrayList<PostDTO>>> getPostlist(@PathVariable("length") Long length, Model model) { 
 		
 		Response<ArrayList<PostDTO>> response = new Response<>();
-		
-		Optional<Page<Post>> optLatestPosts = postService.findPosts(length);
+		PageRequest page = PageRequest.of(0, 5, Sort.by("post_id"));
+		Optional<Page<Post>> optLatestPosts = postService.findPosts(page);
 		
 		if(!optLatestPosts.isPresent()) {
 			log.error("It was not possible to create the list of posts.");
@@ -207,11 +209,11 @@ public class PostsController {
 		
 		Response<ArrayList<SummaryDTO>> response = new Response<>();
 		Optional<Page<Post>> optLatestPosts;
-		
+		PageRequest page = PageRequest.of(0, 5, Sort.by("post_id"));
 		if(category.equals("any")) {
-			optLatestPosts = postService.findPosts(6L);
+			optLatestPosts = postService.findPosts(page);
 		}else {
-			optLatestPosts = postService.findPostsByCategory(category, 6L);
+			optLatestPosts = postService.findPostsByCategory(category, page);
 		}
 		
 		if(!optLatestPosts.isPresent()) {
@@ -240,8 +242,8 @@ public class PostsController {
 		log.info("Getting a list of post information (title + id)");
 		
 		Response<ArrayList<PostInfo>> response = new Response<>();
-		
-		Optional<Page<Post>> optLatestPosts = postService.findPosts(length);
+		PageRequest page = PageRequest.of(0, 5, Sort.by("post_id"));
+		Optional<Page<Post>> optLatestPosts = postService.findPosts(page);
 		
 		if(!optLatestPosts.isPresent()) {
 			log.error("It was not possible to create the list of info list.");
@@ -272,7 +274,8 @@ public class PostsController {
 	public ResponseEntity<Response<ArrayList<PostDTO>>> getPostListByUser(@PathVariable("length") Long length, @PathVariable("username") String userName) { 
 		
 		Response<ArrayList<PostDTO>> response = new Response<>();
-		Optional<Page<Post>> optLatestPosts = postService.findPostsByUser(userName, length);
+		PageRequest page = PageRequest.of(0, 5, Sort.by("post_id"));
+		Optional<Page<Post>> optLatestPosts = postService.findPostsByUser(userName, page);
 		
 		if(!optLatestPosts.isPresent()) {
 			log.error("It was not possible to create the list of posts.");

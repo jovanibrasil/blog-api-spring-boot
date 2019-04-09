@@ -47,11 +47,6 @@ public class User implements UserDetails {
 	@Column(nullable=false)
 	private Date lastUpdateDate;
 	
-	// One user to many posts.
-	@OneToMany(mappedBy="author", fetch=FetchType.LAZY, cascade=CascadeType.ALL)
-	@JsonManagedReference
-	private Set<Post> posts = new HashSet<>();
-	
 	public User() {}
 	
 	public User(String userName, String fullName, ProfileTypeEnum profileType) {
@@ -61,13 +56,13 @@ public class User implements UserDetails {
 		this.lastUpdateDate = new Date();
 		this.profileType = profileType;
 	}
-	
+
 	public User(String userName, ProfileTypeEnum profileType) {
 		super();
 		this.userName = userName;
 		this.profileType = profileType;
 	}
-	
+
 	public ProfileTypeEnum getProfileType() {
 		return profileType;
 	}
@@ -97,9 +92,7 @@ public class User implements UserDetails {
 	public String getFullUserName() {
 		return fullUserName;
 	}
-	public Set<Post> getPosts() {
-		return posts;
-	}
+	
 	public void setUserName(String name) {
 		this.userName = name;
 	}
@@ -107,10 +100,7 @@ public class User implements UserDetails {
 	public void setFullUserName(String fullName) {
 		this.fullUserName = fullName;
 	}
-	public void setPosts(Set<Post> posts) {
-		this.posts = posts;
-	}
-
+	
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
 		return new ArrayList<GrantedAuthority>(Arrays.asList(profileType));
@@ -144,8 +134,7 @@ public class User implements UserDetails {
 	@Override
 	public String toString() {
 		return "User [ userName=" + userName + ", profileType=" + profileType 
-				+ " , fullUserName=" + fullUserName + ", lastUpdateDate=" + lastUpdateDate + ", posts="
-				+ posts + "]";
+				+ " , fullUserName=" + fullUserName + ", lastUpdateDate=" + lastUpdateDate + ", posts=";
 	}
 
 	@Override

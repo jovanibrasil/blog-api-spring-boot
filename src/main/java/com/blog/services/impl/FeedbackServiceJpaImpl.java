@@ -1,4 +1,4 @@
-package com.blog.services;
+package com.blog.services.impl;
 
 import java.util.List;
 import java.util.Optional;
@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import com.blog.models.Feedback;
 import com.blog.repositories.FeedbackRepository;
+import com.blog.services.FeedbackService;
 
 @Service
 @Primary

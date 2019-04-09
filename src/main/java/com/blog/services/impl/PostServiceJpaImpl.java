@@ -1,17 +1,18 @@
-package com.blog.services;
+package com.blog.services.impl;
 
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
 import org.springframework.context.annotation.Primary;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 
-import com.blog.enums.ListOrderType;
 import com.blog.models.Post;
 import com.blog.repositories.PostRepository;
+import com.blog.services.PostService;
 
 @Service
 @Primary
@@ -26,18 +27,18 @@ public class PostServiceJpaImpl implements PostService {
 	}
 
 	@Override
-	public Optional<Page<Post>> findPosts(Long limit) {
-		return Optional.of(this.postRepo.findPosts(limit, null));
+	public Optional<Page<Post>> findPosts(Pageable page) {
+		return Optional.of(this.postRepo.findPosts(page));
 	}
 
 	@Override
-	public Optional<Page<Post>> findPostsByCategory(String category, Long limit) {
-		return Optional.of(this.postRepo.findPostsByCategory(category, limit, null));
+	public Optional<Page<Post>> findPostsByCategory(String category, Pageable page) {
+		return Optional.of(this.postRepo.findPostsByCategory(category, page));
 	}
 	
 	@Override
-	public Optional<Page<Post>> findPostsByUser(String userName, Long quantity) {
-		return Optional.of(this.postRepo.findPostsByUserId(userName, quantity, null));
+	public Optional<Page<Post>> findPostsByUser(String userName, Pageable page) {
+		return Optional.of(this.postRepo.findPostsByUserId(userName, page));
 	}
 
 	@Override

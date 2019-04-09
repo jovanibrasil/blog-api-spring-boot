@@ -1,4 +1,4 @@
-	package com.blog.services;
+	package com.blog.services.impl;
 
 import java.util.List;
 import java.util.ArrayList;
@@ -7,6 +7,8 @@ import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import com.blog.services.NotificationService;
 
 /*
  * This class stores error and info messages in a list in the httpsession.

@@ -4,9 +4,9 @@ clean: stop
 	- docker rm blog-api
 build: clean
 	mvn clean package
-	docker build --build-arg BLOG_MYSQL_URL --build-arg BLOG_MYSQL_USERNAME --build-arg BLOG_MYSQL_PASSWORD -t blog-api .
+	docker build -t blog-api .
 run: clean
-	docker run -d -p 8081:8080 --name=blog-api --network net -m 150M blog-api
+	docker run -d -p 8081:8080 -e "SPRING_PROFILES_ACTIVE=dev" --name=blog-api --network net blog-api
 start: stop
 	docker start blog-api
 bash:
@@ -14,6 +14,6 @@ bash:
 logs:
 	docker logs blog-api
 compose-down:
-	docker-compose down -v
+	docker-compose down -v 
 compose-up: compose-down
-	docker-compose up -d
+	docker-compose up --no-recreate -d

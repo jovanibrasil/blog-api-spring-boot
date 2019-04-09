@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.CollectionTable;
 import javax.persistence.Column;
 import javax.persistence.ElementCollection;
@@ -49,7 +50,7 @@ public class Post {
 	private String body;
 	// FetchType: JPA loads all data together or on-demand.
 	// In this case, author will be loaded together.
-	@ManyToOne(fetch=FetchType.EAGER)// Many posts to one user.
+	@ManyToOne(fetch=FetchType.LAZY)// Many posts to one user.
 	@JoinColumn(referencedColumnName="userName", name="user_name")
 	@JsonBackReference
 	private User author;

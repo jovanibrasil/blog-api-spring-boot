@@ -12,9 +12,10 @@ services:
     depends_on:
 #      - search-api
       - auth-api
-#    environment:
-# not used yet     - JVM_OPTS=-Xmx150M -Xms150M -XX:MaxPermSize=100M
-#      - CATALINA_OPTS=-Xmx150M -Xms50M -XX:MaxPermSize=50M
+      - mysql-database
+    environment:
+      - "SPRING_PROFILES_ACTIVE=dev"
+#     - CATALINA_OPTS=-Xmx150M -Xms50M -XX:MaxPermSize=50M
     deploy:
       resources:
         limits:
@@ -30,6 +31,16 @@ services:
       - 8083:8080
     networks:
       - net
+    environment:
+      - "SPRING_PROFILES_ACTIVE=dev"
+  mysql-database:
+    image: mysql-database
+    container_name: mysql-database
+    ports:
+      - 3306:3306
+    networks:
+      - net
+
 #  search-api: # Search API (Spark)
 #    image: search-api
 #    container_name: search-api 

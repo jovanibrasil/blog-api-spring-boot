@@ -23,21 +23,21 @@ public class User {
 
 	@Id @Column(nullable=false, length=30, unique=true)
 	private String userName;
-	@Column(length=100)
+	@Column(length=60)
 	private String fullUserName;
 	
 	// Contact information
-	@Column(nullable=false) 
+	@Column(nullable=false, length=60) 
 	private String email;
-	@Column
+	@Column(length=20)
 	private String phoneNumber;
 	
 	// Social networks
-	@Column
+	@Column(length=20)
 	private String githubUserName;
-	@Column
+	@Column(length=20)
 	private String linkedinUserName;
-	@Column
+	@Column(length=100)
 	private String googleScholarLink;
 	
 	@Enumerated(EnumType.STRING)

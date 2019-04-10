@@ -1,5 +1,6 @@
 package com.blog.dtos;
 
+import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
@@ -11,7 +12,7 @@ public class FeedbackDTO {
 	@Size(min=2, max=40, message="Nome de usuário deve ter entre 2 e 40 caracteres.")
 	private String name;
 	@NotNull
-	@Size(min=2, max=40, message="Email deve ter entre 2 e 40 caracteres.")
+	@Email(message="Email must be valid.")
 	private String email;
 	@Size(min=10, max=1000, message="Conteudo do feedback deve ter entre 10 e 1000 caracteres.")
 	private String content;

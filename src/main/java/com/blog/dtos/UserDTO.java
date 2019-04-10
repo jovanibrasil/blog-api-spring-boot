@@ -1,36 +1,38 @@
 package com.blog.dtos;
 
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotBlank;
+
 public class UserDTO {
 	
 	// basic user data
-    private String userName;
-    private String fullName;
+    @NotBlank(message="The user name must not be empty.")
+	private String userName;
+    @NotBlank(message="The full user name must not be empty.")
+    private String fullUserName;
+    @Email(message="The email is not valid.")
+    @NotBlank(message="The email must not be empty.")
     private String email;
+    
     private String phone;
     // network references
-    private String gitHubUserName;
-    private String linkedInUserName;
-    private String googleScholarLink;
-    private String lattesLink;
-    private Long id;
+    private String githubUserName;
+    private String linkedinUserName;
+    private String googlescholarLink;
+	
+    public UserDTO() {}
     
-	public Long getId() {
-		return id;
-	}
-	public void setId(Long id) {
-		this.id = id;
-	}
-	public String getUserName() {
+    public String getUserName() {
 		return userName;
 	}
 	public void setUserName(String userName) {
 		this.userName = userName;
 	}
-	public String getFullName() {
-		return fullName;
+	public String getFullUserName() {
+		return fullUserName;
 	}
-	public void setFullName(String fullName) {
-		this.fullName = fullName;
+	public void setFullUserName(String fullUserName) {
+		this.fullUserName = fullUserName;
 	}
 	public String getEmail() {
 		return email;
@@ -44,29 +46,23 @@ public class UserDTO {
 	public void setPhone(String phone) {
 		this.phone = phone;
 	}
-	public String getGitHubUserName() {
-		return gitHubUserName;
+	public String getGithubUserName() {
+		return githubUserName;
 	}
-	public void setGitHubUserName(String gitHubUserName) {
-		this.gitHubUserName = gitHubUserName;
+	public void setGithubUserName(String githubUserName) {
+		this.githubUserName = githubUserName;
 	}
-	public String getLinkedInUserName() {
-		return linkedInUserName;
+	public String getLinkedinUserName() {
+		return linkedinUserName;
 	}
-	public void setLinkedInUserName(String linkedInUserName) {
-		this.linkedInUserName = linkedInUserName;
+	public void setLinkedinUserName(String linkedinUserName) {
+		this.linkedinUserName = linkedinUserName;
 	}
-	public String getGoogleScholarLink() {
-		return googleScholarLink;
+	public String getGooglescholarLink() {
+		return googlescholarLink;
 	}
-	public void setGoogleScholarLink(String googleScholarLink) {
-		this.googleScholarLink = googleScholarLink;
+	public void setGooglescholarLink(String googlescholarLink) {
+		this.googlescholarLink = googlescholarLink;
 	}
-	public String getLattesLink() {
-		return lattesLink;
-	}
-	public void setLattesLink(String lattesLink) {
-		this.lattesLink = lattesLink;
-	}
-    
+    	
 }

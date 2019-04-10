@@ -39,7 +39,7 @@ public class FeedbackController {
 		Response<String> response = new Response<>();
 		
 		if(bindingResult.hasErrors()) {
-			bindingResult.getAllErrors().forEach(err -> response.getErrors().add(err.getDefaultMessage()));
+			bindingResult.getAllErrors().forEach(err -> response.addError(err.getDefaultMessage()));
 			return ResponseEntity.badRequest().body(response);
 		}
 		
@@ -68,7 +68,7 @@ public class FeedbackController {
 		
 		if(!optLatestFeedbacks.isPresent()) {
 			//log.error("It was not possible to create the list of posts.");
-			response.getErrors().add("It was not possible to create the list of feedbacks.");
+			response.addError("It was not possible to create the list of feedbacks.");
 			return ResponseEntity.badRequest().body(response);
 		}
 		

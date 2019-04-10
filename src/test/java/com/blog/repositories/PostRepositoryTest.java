@@ -62,11 +62,11 @@ public class PostRepositoryTest {
 	}
 	
 	@Test
-	public void testFindPostByName() {
+	public void testFindPostsByUserName() {
 		PageRequest page = PageRequest.of(0, 5, Sort.by("lastUpdateDate"));
 		Page<Post> posts = this.postRepository.findPostsByUserId("jovanibrasil", page);
 		System.out.println(posts.getContent().get(0).toString());
-		assertEquals("jovanibrasil", posts.getContent().get(0).getAuthor().getUsername());
+		assertEquals("jovanibrasil", posts.getContent().get(0).getAuthor().getUserName());
 	}
 	
 }

@@ -74,13 +74,13 @@ public class PostsController {
 		
 		if(!optPost.isPresent()) {
 			log.error("It was not possible to find the specified post.");
-			response.getErrors().add("It was not possible to find the specified post.");
+			response.addError("It was not possible to find the specified post.");
 			return ResponseEntity.badRequest().body(response);
 		}
 		
 		Post post = optPost.get(); 
 		PostDTO postDTO = new PostDTO();
-		postDTO.setUserName(post.getAuthor().getUsername());
+		postDTO.setUserName(post.getAuthor().getUserName());
 		postDTO.setBody(post.getBody());
 		postDTO.setCreationDate(post.getCreationDate());
 		postDTO.setLastUpdateDate(post.getLastUpdateDate());
@@ -103,7 +103,7 @@ public class PostsController {
 				
 		if(bindingResult.hasErrors()) {
 			log.error("It was not possible to create the specified post.");
-			bindingResult.getAllErrors().forEach(err -> response.getErrors().add(err.getDefaultMessage()));
+			bindingResult.getAllErrors().forEach(err -> response.addError(err.getDefaultMessage()));
 			return ResponseEntity.badRequest().body(response);
 		}
 		
@@ -116,7 +116,7 @@ public class PostsController {
 		
 		if(!optPost.isPresent()) {
 			log.error("It was not possible to create the specified post.");
-			response.getErrors().add("It was not possible to created the post.");
+			response.addError("It was not possible to created the post.");
 			return ResponseEntity.badRequest().body(response);
 		}
 		postDTO.setCreationDate(optPost.get().getCreationDate());
@@ -138,7 +138,7 @@ public class PostsController {
 		
 		if(bindingResult.hasErrors()) {
 			log.error("It was not possible to update the specified post. Invalid data.");
-			bindingResult.getAllErrors().forEach(err -> response.getErrors().add(err.getDefaultMessage()));
+			bindingResult.getAllErrors().forEach(err -> response.addError(err.getDefaultMessage()));
 			return ResponseEntity.badRequest().body(response);
 		}
 		
@@ -153,7 +153,7 @@ public class PostsController {
 		
 		if(!optPost.isPresent()) {
 			log.error("It was not possible to update the specified post. Internal error.");
-			response.getErrors().add("It was not possible to created the post.");
+			response.addError("It was not possible to created the post.");
 			return ResponseEntity.badRequest().body(response);
 		}
 		postDTO.setId(optPost.get().getPostId());
@@ -179,7 +179,7 @@ public class PostsController {
 		
 		if(!optLatestPosts.isPresent()) {
 			log.error("It was not possible to create the list of posts.");
-			response.getErrors().add("It was not possible to create the list of posts.");
+			response.addError("It was not possible to create the list of posts.");
 			return ResponseEntity.badRequest().body(response);
 		}
 		
@@ -188,7 +188,7 @@ public class PostsController {
 		optLatestPosts.get().forEach(post -> {
 			System.out.println(post);
 			PostDTO postDTO = new PostDTO();
-			postDTO.setUserName(post.getAuthor().getUsername());
+			postDTO.setUserName(post.getAuthor().getUserName());
 			postDTO.setSummary(post.getSummary());
 			postDTO.setBody(post.getBody());
 			postDTO.setCreationDate(post.getCreationDate());
@@ -218,7 +218,7 @@ public class PostsController {
 		
 		if(!optLatestPosts.isPresent()) {
 			log.error("It was not possible to create the list of summaries.");
-			response.getErrors().add("It was not possible to create the list of summaries.");
+			response.addError("It was not possible to create the list of summaries.");
 			return ResponseEntity.badRequest().body(response);
 		}
 		
@@ -227,7 +227,7 @@ public class PostsController {
 		optLatestPosts.get().forEach(post -> {
 			SummaryDTO summaryDTO = new SummaryDTO(post.getPostId(), post.getTitle(), 
 					post.getCreationDate(),	post.getLastUpdateDate(), 
-					post.getSummary(), post.getAuthor().getUsername(), post.getTags()	);
+					post.getSummary(), post.getAuthor().getUserName(), post.getTags()	);
 			summaries.add(summaryDTO);
 		});
 		
@@ -247,7 +247,7 @@ public class PostsController {
 		
 		if(!optLatestPosts.isPresent()) {
 			log.error("It was not possible to create the list of info list.");
-			response.getErrors().add("It was not possible to create the list of info list.");
+			response.addError("It was not possible to create the list of info list.");
 			return ResponseEntity.badRequest().body(response);
 		}
 		
@@ -279,7 +279,7 @@ public class PostsController {
 		
 		if(!optLatestPosts.isPresent()) {
 			log.error("It was not possible to create the list of posts.");
-			response.getErrors().add("It was not possible to create the list of posts.");
+			response.addError("It was not possible to create the list of posts.");
 			return ResponseEntity.badRequest().body(response);
 		}
 		
@@ -287,7 +287,7 @@ public class PostsController {
 		
 		optLatestPosts.get().forEach(post -> {
 			PostDTO postDTO = new PostDTO();
-			postDTO.setUserName(post.getAuthor().getUsername());
+			postDTO.setUserName(post.getAuthor().getUserName());
 			postDTO.setBody(post.getBody());
 			postDTO.setSummary(post.getSummary());
 			postDTO.setCreationDate(post.getCreationDate());
@@ -314,12 +314,12 @@ public class PostsController {
 		Optional<Post> optPost = postService.deleteById(id);
 		
 		if(!optPost.isPresent()) {
-			response.getErrors().add("It was not possible to delete the post.");
+			response.addError("It was not possible to delete the post.");
 		}
 		
 		Post post = optPost.get(); 
 		PostDTO postDTO = new PostDTO();
-		postDTO.setUserName(post.getAuthor().getUsername());
+		postDTO.setUserName(post.getAuthor().getUserName());
 		postDTO.setBody(post.getBody());
 		postDTO.setCreationDate(post.getCreationDate());
 		postDTO.setLastUpdateDate(post.getLastUpdateDate());

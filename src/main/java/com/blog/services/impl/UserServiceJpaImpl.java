@@ -23,14 +23,6 @@ public class UserServiceJpaImpl implements UserService {
     
 	@Autowired
 	private UserRepository userRepository;
-	@Autowired
-	BCryptPasswordEncoder passwordEncoder;
-	
-	@Override
-	public boolean authenticate(String username, String password) {
-        // Provide a sample password check: username == password
-        return Objects.equals(username, password);
-	}
 	
 	@Override
 	public List<User> findAll() {
@@ -38,31 +30,23 @@ public class UserServiceJpaImpl implements UserService {
 	}
 
 	@Override
-	public Optional<User> findById(Long id) {
-		return this.userRepository.findById(id);
+	public Optional<User> findByUserName(String userName) {
+		return Optional.ofNullable(this.userRepository.findUserByName(userName));
 	}
 
 	@Override
-	public User create(User user) {
-		return this.userRepository.save(user);
+	public Optional<User> save(User user) {
+		user.setProfileType(ProfileTypeEnum.ROLE_USER);
+		return Optional.ofNullable(this.userRepository.save(user));	
 	}
 
 	@Override
-	public void deleteById(Long id) {
-		this.userRepository.deleteById(id);
+	public void deleteByUserName(String userName) {
+		Optional<User> optUser = this.findByUserName(userName);
+		if(optUser.isPresent()) {
+			this.userRepository.delete(optUser.get());
+		}
 	}
 
-	@Override
-	public UserDetails loadUserByUsername(String userName) throws UsernameNotFoundException {
-		User user = userRepository.findUserByName(userName);
-		return new CustomUserDetails(user.getUsername(), user.getPassword(),
-				true, true, true, true, user.getAuthorities());
-	}
-
-	@Override
-	public void saveUser(String userName, String fullUserName, String password) {
-		User user = new User(userName, fullUserName, ProfileTypeEnum.ROLE_USER);
-		this.userRepository.save(user);
-	}
 	
 }

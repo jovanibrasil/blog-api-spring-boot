@@ -42,7 +42,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 			.and().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS) // set session police stateless
 			.and()
 			.authorizeRequests()
-			.antMatchers("/users/login", "/users/signup", "/users/logout", "/search", "/subscription",
+			.antMatchers("/users/login", "/users/signup", "/users/logout", "/search", "/subscription", "/user/*",
 					 "/posts/top/**", "/posts/summary/**", "/posts/post/**").permitAll()
 			.antMatchers("/posts/delete/*", "/posts/create", "/posts/update", "/posts/list/**").hasRole("ADMIN");
 		
@@ -53,19 +53,19 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 		
 	}
 	
-	@Override
-    @Bean
-    public AuthenticationManager authenticationManagerBean() throws Exception {
-        return super.authenticationManagerBean();
-    }
+//	@Override
+//    @Bean
+//    public AuthenticationManager authenticationManagerBean() throws Exception {
+//        return super.authenticationManagerBean();
+//    }
 	
 	/**
 	 * The password encoder is used to hash the passwords.  in this case a BCryptPasswordEncoder.
 	 */
-	@Bean
-	public BCryptPasswordEncoder passwordEncoder() {
-		return new BCryptPasswordEncoder();
-	}
+//	@Bean
+//	public BCryptPasswordEncoder passwordEncoder() {
+//		return new BCryptPasswordEncoder();
+//	}
 
 }
 

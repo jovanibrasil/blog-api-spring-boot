@@ -31,7 +31,7 @@ public class SubscriptionController {
 		Optional<Subscription> optSubscription = this.subscriptionService.create(subscription);
 		
 		if(!optSubscription.isPresent()) {
-			response.getErrors().add("It was not possible to create the subscription.");
+			response.addError("It was not possible to create the subscription.");
 			response.setData(false);
 			return ResponseEntity.badRequest().body(response);
 		}

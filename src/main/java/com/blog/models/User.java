@@ -19,9 +19,9 @@ import com.blog.enums.ProfileTypeEnum;
 @Table(name="users")
 public class User {
 	
-	private static final long serialVersionUID = 4524066694717395806L;
-
-	@Id @Column(nullable=false, length=30, unique=true)
+	@Id
+	private Long userId;
+	@Column(nullable=false, length=30, unique=true)
 	private String userName;
 	@Column(length=60)
 	private String fullUserName;
@@ -153,6 +153,14 @@ public class User {
 
 	public void setCreationDate(Date creationDate) {
 		this.creationDate = creationDate;
+	}
+
+	public Long getUserId() {
+		return userId;
+	}
+
+	public void setUserId(Long userId) {
+		this.userId = userId;
 	}
 	
 }

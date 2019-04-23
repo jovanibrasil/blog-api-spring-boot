@@ -27,7 +27,7 @@ public class UserDTO {
     private String linkedinUserName;
     @Length(max=100, message="The Google Scholar link must contains a maximum of 100 characters.")
     private String googlescholarLink;
-	
+    
     public UserDTO() {}
     
     public String getUserName() {
@@ -48,29 +48,37 @@ public class UserDTO {
 	public void setEmail(String email) {
 		this.email = email;
 	}
+
 	public String getPhone() {
 		return phone;
 	}
+
 	public void setPhone(String phone) {
 		this.phone = phone;
 	}
+
 	public String getGithubUserName() {
 		return githubUserName;
 	}
+
 	public void setGithubUserName(String githubUserName) {
 		this.githubUserName = githubUserName;
 	}
+
 	public String getLinkedinUserName() {
 		return linkedinUserName;
 	}
+
 	public void setLinkedinUserName(String linkedinUserName) {
 		this.linkedinUserName = linkedinUserName;
 	}
+
 	public String getGooglescholarLink() {
 		return googlescholarLink;
 	}
+
 	public void setGooglescholarLink(String googlescholarLink) {
 		this.googlescholarLink = googlescholarLink;
 	}
-    	
+	    	
 }

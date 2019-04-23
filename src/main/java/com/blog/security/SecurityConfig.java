@@ -43,8 +43,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 			.and()
 			.authorizeRequests()
 			.antMatchers("/users/login", "/users/signup", "/users/logout", "/search", "/subscription", "/user/*",
-					 "/posts/top/**", "/posts/summary/**", "/posts/post/**").permitAll()
-			.antMatchers("/posts/delete/*", "/posts/create", "/posts/update", "/posts/list/**").hasRole("ADMIN");
+					 "/posts/top", "/posts/summary", "/posts/post/*", "/posts/list", "posts/list/byuser/*").permitAll()
+			.antMatchers("/posts/delete/*", "/posts/create", "/posts/update").hasRole("ADMIN");
 		
 			//http.addFilterBefore(new LoginFilter("/users/login", authenticationManager()), UsernamePasswordAuthenticationFilter.class);
 			http.addFilterBefore(authenticationTokenFilterBean(),  BasicAuthenticationFilter.class); // set filter

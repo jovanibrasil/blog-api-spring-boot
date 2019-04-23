@@ -18,6 +18,13 @@
 		<java.version>1.8</java.version>
 	</properties>
 
+	<repositories>
+		<repository>
+		    <id>spring-snaspho</id>
+		    <url>http://repo.springsource.org/libs-milestone/</url>
+		</repository>
+	</repositories>
+
 	<dependencies>
 		<dependency>
 			<groupId>mysql</groupId>
@@ -39,17 +46,33 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-security</artifactId>
 		</dependency>
-		<!-- Framework para versionamento e automatização do processo de criação de banco de dados.--> 
 		<dependency>
 		    <groupId>com.h2database</groupId>
 		    <artifactId>h2</artifactId>
-		    <version>1.4.199</version>
 		    <scope>test</scope>
 		</dependency>	
 		<dependency> 
 			<groupId>org.flywaydb</groupId> 
 			<artifactId>flyway-core</artifactId> 
-		</dependency> 
+		</dependency>
+		<dependency>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-lang3</artifactId>
+		</dependency>
+		<dependency>
+		    <groupId>io.springfox</groupId>
+		    <artifactId>springfox-swagger2</artifactId>
+		    <version>2.6.1</version>
+		</dependency>
+		<dependency>
+		    <groupId>io.springfox</groupId>
+		    <artifactId>springfox-swagger-ui</artifactId>
+		    <version>2.6.1</version>
+		</dependency>
+		<dependency>
+		    <groupId>org.springframework.security</groupId>
+		    <artifactId>spring-security-test</artifactId>
+		</dependency>
 	</dependencies>
 
 	<build>

@@ -27,7 +27,6 @@ import com.blog.models.User;
 import com.blog.security.TempUser;
 import com.blog.services.UserService;
 
-
 @RunWith(SpringRunner.class)
 @SpringBootTest
 @AutoConfigureMockMvc

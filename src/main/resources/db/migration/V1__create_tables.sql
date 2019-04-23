@@ -1,9 +1,10 @@
 create table users (
+	user_id bigint not null, 
 	user_name varchar(30) not null, 
 	full_user_name varchar(100), 
 	last_update_date datetime not null, 
 	profile_type varchar(255) not null, 
-	primary key (user_name)
+	primary key (user_id)
 ) engine=MyISAM;
 
 create table posts (
@@ -13,9 +14,9 @@ create table posts (
 	last_update_date datetime not null, 
 	summary varchar(1000) not null, 
 	title varchar(255) not null, 
-	user_name varchar(30), 
+	user_id bigint not null, 
 	primary key (post_id),
-	constraint fk_user foreign key (user_name) references users (user_name)
+	constraint fk_user foreign key (user_id) references users (user_id)
 ) engine=MyISAM;
 
 create table post_tags (

@@ -53,8 +53,6 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
 			} catch (Exception e) {
 				response.sendError(401);
 			}
-		}else {
-			response.sendError(401);
 		}
 		
 		filterChain.doFilter(request, response);

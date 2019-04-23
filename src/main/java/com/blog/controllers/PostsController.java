@@ -2,17 +2,19 @@ package com.blog.controllers;
 
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 import java.util.Optional;
 
 import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Sort.Direction;
 import org.springframework.http.ResponseEntity;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -20,11 +22,14 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.blog.dtos.DTOUTils;
 import com.blog.dtos.PostDTO;
 import com.blog.dtos.PostInfo;
 import com.blog.dtos.SummaryDTO;
@@ -32,12 +37,6 @@ import com.blog.models.Post;
 import com.blog.models.User;
 import com.blog.response.Response;
 import com.blog.services.PostService;
-
-/*
- * 
- * TODO test if the parameters are between the type limits. How to do this before an exception?
- * 
- */
 
 @CrossOrigin(origins = "*")
 @RestController
@@ -49,28 +48,22 @@ public class PostsController {
 	@Autowired
 	private PostService postService;
 	
-	/*
-	 * Test method. This is a simple ping.
-	 * 
-	 * @param name is an user name passed by url parameter.
-	 * 
-	 */
-	@GetMapping("ping/{name}")
-	public ResponseEntity<String> ping(@PathVariable("name") String name) {
-		return ResponseEntity.ok("Ping was successfully! Hello "+name);
-	}
+	@Value("${posts.page-size}")
+	private int postsListSize;
+	@Value("${posts.top-list.page-size}")
+	private int topPostsListSize;
 	
-	/*
+	/**
 	 * Get post by post id.
 	 * 
 	 * @param id is the post id. 
 	 * 
 	 */
 	@GetMapping("/post/{id}")
-	public ResponseEntity<Response<PostDTO>> getPost(@PathVariable("id") Long id) {
+	public ResponseEntity<Response<PostDTO>> getPost(@NotNull @PathVariable("id") Long id) {
 		
 		Response<PostDTO> response = new Response<>();
-		Optional<Post> optPost = postService.findById(id);
+		Optional<Post> optPost = postService.findPostByPostId(id);
 		
 		if(!optPost.isPresent()) {
 			log.error("It was not possible to find the specified post.");
@@ -79,24 +72,16 @@ public class PostsController {
 		}
 		
 		Post post = optPost.get(); 
-		PostDTO postDTO = new PostDTO();
-		postDTO.setUserName(post.getAuthor().getUserName());
-		postDTO.setBody(post.getBody());
-		postDTO.setCreationDate(post.getCreationDate());
-		postDTO.setLastUpdateDate(post.getLastUpdateDate());
-		postDTO.setId(post.getPostId());
-		postDTO.setTitle(post.getTitle());
-		postDTO.setTags(post.getTags());
-		response.setData(postDTO);
+		response.setData(DTOUTils.postToPostDTO(post));
 		
 		return ResponseEntity.ok(response);
 	}
 	
-	/*
+	/**
 	 * Create a new post
 	 * 
 	 */
-	@RequestMapping(value="/create", method=RequestMethod.POST)
+	@PostMapping(value="/create")
 	public ResponseEntity<Response<PostDTO>> createPost(@Valid @RequestBody PostDTO postDTO, BindingResult bindingResult) {
 		
 		Response<PostDTO> response = new Response<>();
@@ -109,6 +94,7 @@ public class PostsController {
 		
 		User author = new User();
 		author.setUserName(postDTO.getUserName());
+		author.setUserId(postDTO.getId());
 				
 		Post post = new Post(postDTO.getTitle(), postDTO.getSummary(), 
 				postDTO.getTags(), postDTO.getBody(), author);
@@ -131,7 +117,7 @@ public class PostsController {
 	 * Update a specified post.
 	 * 
 	 */
-	@RequestMapping(value="/update", method=RequestMethod.POST)
+	@PutMapping(value="/update")
 	public ResponseEntity<Response<PostDTO>> updatePost(@Valid @RequestBody PostDTO postDTO, BindingResult bindingResult) {
 		
 		Response<PostDTO> response = new Response<>();
@@ -164,18 +150,19 @@ public class PostsController {
 		
 	}
 	
-	/*
+	/**
 	 * Get a list with size "length" that contains posts ordered by the parameter "order". No user is specified.
 	 * 
 	 * @param length is the size of the post list that will be returned.
 	 * 
 	 */
-	@RequestMapping("/list/{length}") 
-	public ResponseEntity<Response<ArrayList<PostDTO>>> getPostlist(@PathVariable("length") Long length, Model model) { 
+	@GetMapping("/list") 
+	public ResponseEntity<Response<Page<PostDTO>>> getPosts(Model model, @RequestParam(value="page", defaultValue="0") int page,
+			@RequestParam(value="ord", defaultValue="lastUpdateDate") String ord, @RequestParam(value="dir", defaultValue="DESC") String dir) { 
 		
-		Response<ArrayList<PostDTO>> response = new Response<>();
-		PageRequest page = PageRequest.of(0, 5, Sort.by("post_id"));
-		Optional<Page<Post>> optLatestPosts = postService.findPosts(page);
+		Response<Page<PostDTO>> response = new Response<>();
+		PageRequest pageRequest = PageRequest.of(page, this.postsListSize, Direction.valueOf(dir), ord);
+		Optional<Page<Post>> optLatestPosts = postService.findPosts(pageRequest);
 		
 		if(!optLatestPosts.isPresent()) {
 			log.error("It was not possible to create the list of posts.");
@@ -183,37 +170,22 @@ public class PostsController {
 			return ResponseEntity.badRequest().body(response);
 		}
 		
-		ArrayList<PostDTO> posts = new ArrayList<>();
-		
-		optLatestPosts.get().forEach(post -> {
-			System.out.println(post);
-			PostDTO postDTO = new PostDTO();
-			postDTO.setUserName(post.getAuthor().getUserName());
-			postDTO.setSummary(post.getSummary());
-			postDTO.setBody(post.getBody());
-			postDTO.setCreationDate(post.getCreationDate());
-			postDTO.setLastUpdateDate(post.getLastUpdateDate());
-			postDTO.setId(post.getPostId());
-			postDTO.setTitle(post.getTitle());
-			postDTO.setTags(post.getTags());
-			posts.add(postDTO);
-		});
-		
+		Page<PostDTO> posts = optLatestPosts.get().map(post -> DTOUTils.postToPostDTO(post));
 		response.setData(posts);
 		return ResponseEntity.ok(response);
 		
 	}
 	
-	@GetMapping("/summaries/{category}") 
-	public ResponseEntity<Response<ArrayList<SummaryDTO>>> getSummarylist(@PathVariable("category") String category, Model model) { 
+	@GetMapping("/summaries") 
+	public ResponseEntity<Response<ArrayList<SummaryDTO>>> getSummarylist(Model model, @RequestParam(value="cat", defaultValue="all") String cat) { 
 		
 		Response<ArrayList<SummaryDTO>> response = new Response<>();
 		Optional<Page<Post>> optLatestPosts;
-		PageRequest page = PageRequest.of(0, 5, Sort.by("post_id"));
-		if(category.equals("any")) {
+		PageRequest page = PageRequest.of(0, this.postsListSize, Sort.by("lastUpdateDate"));
+		if(cat.toLowerCase().equals("all")) {
 			optLatestPosts = postService.findPosts(page);
 		}else {
-			optLatestPosts = postService.findPostsByCategory(category, page);
+			optLatestPosts = postService.findPostsByCategory(cat, page);
 		}
 		
 		if(!optLatestPosts.isPresent()) {
@@ -227,7 +199,7 @@ public class PostsController {
 		optLatestPosts.get().forEach(post -> {
 			SummaryDTO summaryDTO = new SummaryDTO(post.getPostId(), post.getTitle(), 
 					post.getCreationDate(),	post.getLastUpdateDate(), 
-					post.getSummary(), post.getAuthor().getUserName(), post.getTags()	);
+					post.getSummary(), post.getAuthor().getUserName(), post.getTags());
 			summaries.add(summaryDTO);
 		});
 		
@@ -236,13 +208,13 @@ public class PostsController {
 		
 	}
 	
-	@GetMapping("/top/{length}") 
-	public ResponseEntity<Response<ArrayList<PostInfo>>> getTopPostsInfoList(@PathVariable("length") Long length, Model model) { 
+	@GetMapping("/top") 
+	public ResponseEntity<Response<ArrayList<PostInfo>>> getTopPostsInfoList(Model model) { 
 		
 		log.info("Getting a list of post information (title + id)");
 		
 		Response<ArrayList<PostInfo>> response = new Response<>();
-		PageRequest page = PageRequest.of(0, 5, Sort.by("post_id"));
+		PageRequest page = PageRequest.of(0, this.topPostsListSize, Sort.by("lastUpdateDate"));
 		Optional<Page<Post>> optLatestPosts = postService.findPosts(page);
 		
 		if(!optLatestPosts.isPresent()) {
@@ -263,19 +235,19 @@ public class PostsController {
 		
 	}
 	
-	/*
+	/**
 	 * Get a list of n latest posts of a specified user.
 	 * 
 	 * @param length is the size of the post list that will be returned.
 	 * @param userId is the user identification. 
 	 * 
 	 */
-	@RequestMapping("/list/{length}/{userid}") 
-	public ResponseEntity<Response<ArrayList<PostDTO>>> getPostListByUser(@PathVariable("length") Long length, @PathVariable("username") String userName) { 
+	@GetMapping("/list/byuser/{userid}") 
+	public ResponseEntity<Response<ArrayList<PostDTO>>> getPostListByUser(@PathVariable("userid") Long userId) { 
 		
 		Response<ArrayList<PostDTO>> response = new Response<>();
-		PageRequest page = PageRequest.of(0, 5, Sort.by("post_id"));
-		Optional<Page<Post>> optLatestPosts = postService.findPostsByUser(userName, page);
+		PageRequest page = PageRequest.of(0, 5, Sort.by("lastUpdateDate"));
+		Optional<Page<Post>> optLatestPosts = postService.findPostsByUserId(userId, page);
 		
 		if(!optLatestPosts.isPresent()) {
 			log.error("It was not possible to create the list of posts.");
@@ -286,16 +258,7 @@ public class PostsController {
 		ArrayList<PostDTO> posts = new ArrayList<>();
 		
 		optLatestPosts.get().forEach(post -> {
-			PostDTO postDTO = new PostDTO();
-			postDTO.setUserName(post.getAuthor().getUserName());
-			postDTO.setBody(post.getBody());
-			postDTO.setSummary(post.getSummary());
-			postDTO.setCreationDate(post.getCreationDate());
-			postDTO.setLastUpdateDate(post.getLastUpdateDate());
-			postDTO.setId(post.getPostId());
-			postDTO.setTitle(post.getTitle());
-			postDTO.setTags(post.getTags());
-			posts.add(postDTO);
+			posts.add(DTOUTils.postToPostDTO(post));
 		});
 		
 		response.setData(posts);
@@ -305,28 +268,20 @@ public class PostsController {
 	
 	/*
 	 * Delete a specific post.
-	 * 
 	 */
 	@DeleteMapping(value="/delete/{id}")
 	public ResponseEntity<Response<PostDTO>> deletePost(@PathVariable("id") Long id){
 		Response<PostDTO> response = new Response<>();
 		
-		Optional<Post> optPost = postService.deleteById(id);
+		Optional<Post> optPost = postService.deleteByPostId(id);
 		
 		if(!optPost.isPresent()) {
-			response.addError("It was not possible to delete the post.");
+			response.addError("It was not possible to find the specified post.");
+			return ResponseEntity.badRequest().body(response);
 		}
 		
 		Post post = optPost.get(); 
-		PostDTO postDTO = new PostDTO();
-		postDTO.setUserName(post.getAuthor().getUserName());
-		postDTO.setBody(post.getBody());
-		postDTO.setCreationDate(post.getCreationDate());
-		postDTO.setLastUpdateDate(post.getLastUpdateDate());
-		postDTO.setId(post.getPostId());
-		postDTO.setTags(post.getTags());
-		postDTO.setTitle(post.getTitle());
-		response.setData(postDTO);
+		response.setData(DTOUTils.postToPostDTO(post));
 		
 		return ResponseEntity.ok(response);
 	}

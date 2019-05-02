@@ -38,5 +38,10 @@
     "name": "posts.top-list.page-size",
     "type": "java.lang.String",
     "description": "A description for 'posts.top-list.page-size'"
+  },
+  {
+    "name": "blog.admin-username",
+    "type": "java.lang.String",
+    "description": "A description for 'blog.admin-username'"
   }
 ]}

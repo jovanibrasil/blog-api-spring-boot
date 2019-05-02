@@ -2,7 +2,13 @@ create table users (
 	user_id bigint not null, 
 	user_name varchar(30) not null, 
 	full_user_name varchar(100), 
-	last_update_date datetime not null, 
+	email varchar(100) not null,
+	phone_number varchar(20),
+	github_user_name varchar(20),
+	linkedin_user_name varchar(20),
+	google_scholar_link varchar(100),
+	last_update_date datetime not null,
+	creation_date datetime not null,
 	profile_type varchar(255) not null, 
 	primary key (user_id)
 ) engine=MyISAM;

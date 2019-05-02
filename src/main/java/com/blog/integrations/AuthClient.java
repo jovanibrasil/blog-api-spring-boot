@@ -61,7 +61,7 @@ public class AuthClient {
 			if (loginResponse.getStatusCode() == HttpStatus.OK) {
 				//return 
 				JSONObject responseData = responseBody.getJSONObject("data");
-				return responseBody.getString("token");
+				return responseData.getString("token");
 			} else if (loginResponse.getStatusCode() == HttpStatus.UNAUTHORIZED) {
 				// bad credentials
 				// TODO return errors?

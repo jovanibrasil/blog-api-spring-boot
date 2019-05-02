@@ -1,7 +1,7 @@
 FROM tomcat
 LABEL maintainer="jovanibrasil@gmail.com"
 USER root
-    #COPY dist/ /app
+    RUN apt-get -y update && apt-get -y install netcat
 
 	ARG BLOG_MYSQL_URL 
     ARG BLOG_MYSQL_USERNAME 
@@ -12,7 +12,7 @@ USER root
 	ENV BLOG_MYSQL_PASSWORD=$BLOG_MYSQL_PASSWORD
 
     COPY ./target/blog-api.war /usr/local/tomcat/webapps/blog-api.war
-    #COPY ./target/blog-api /usr/local/tomcat/webapps/blog-api
+    COPY ./scripts/startup.sh /
     EXPOSE 8080
 
-#USER jenkins
+	CMD ["/bin/bash", "/startup.sh"]

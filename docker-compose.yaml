@@ -16,15 +16,6 @@ services:
     environment:
       - "SPRING_PROFILES_ACTIVE=dev"
 #     - CATALINA_OPTS=-Xmx150M -Xms50M -XX:MaxPermSize=50M
-    command: >
-      /bin/bash -c "
-        while ! nc -z mysql-database 3306;
-        do
-          echo sleeping;
-          sleep 1;
-        done;
-        echo Connected!;
-      "
     deploy:
       resources:
         limits:

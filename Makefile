@@ -3,7 +3,7 @@ stop:
 clean: stop
 	- docker rm blog-api
 build: clean
-	mvn clean package
+	mvn clean package -Pdev
 	docker build -t blog-api .
 run: clean
 	docker run -d -p 8081:8080 -e "SPRING_PROFILES_ACTIVE=dev" --name=blog-api --network net blog-api

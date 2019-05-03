@@ -89,7 +89,7 @@ public class UserController {
 			response.addError("It was not possible to create the user.");
 			return ResponseEntity.badRequest().body(response);
 		}
-		
+		log.info("Creating user {}", user.getUserName());
 		userDTO = this.userToUserDTO(user);
 		response.setData(userDTO);
 		return ResponseEntity.ok(response);
@@ -136,6 +136,7 @@ public class UserController {
 	 */
 	private User userDTOtoUser(UserDTO userDTO) {
 		User user = new User();
+		user.setUserId(userDTO.getUserId());
 		user.setUserName(userDTO.getUserName());
 		user.setEmail(userDTO.getEmail());
 		user.setFullUserName(userDTO.getFullUserName());

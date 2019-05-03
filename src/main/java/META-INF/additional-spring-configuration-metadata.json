@@ -43,5 +43,20 @@
     "name": "blog.admin-username",
     "type": "java.lang.String",
     "description": "A description for 'blog.admin-username'"
+  },
+  {
+    "name": "urls.auth.get-token",
+    "type": "java.lang.String",
+    "description": "A description for 'urls.auth.get-token'"
+  },
+  {
+    "name": "urls.search",
+    "type": "java.lang.String",
+    "description": "A description for 'urls.search'"
+  },
+  {
+    "name": "urls.auth.check-token",
+    "type": "java.lang.String",
+    "description": "A description for 'urls.auth.check-token'"
   }
 ]}

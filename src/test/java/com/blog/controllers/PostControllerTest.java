@@ -26,7 +26,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
-import com.blog.dtos.DTOUTils;
+import com.blog.dtos.DtoUtils;
 import com.blog.enums.ProfileTypeEnum;
 import com.blog.integrations.AuthClient;
 import com.blog.models.Post;
@@ -218,7 +218,7 @@ public class PostControllerTest {
 		mvc.perform(MockMvcRequestBuilders.post("/posts/create")
 				.contentType(MediaType.APPLICATION_JSON)
 				.header("Authorization", "x.x.x.x")
-				.content(asJsonString(DTOUTils.postToPostDTO(post0))))			
+				.content(asJsonString(DtoUtils.postToPostDTO(post0))))			
 				.andExpect(status().isOk())
 				.andExpect(jsonPath("$.errors").isEmpty());
 	}
@@ -235,7 +235,7 @@ public class PostControllerTest {
 		mvc.perform(MockMvcRequestBuilders.put("/posts/update")
 				.contentType(MediaType.APPLICATION_JSON)
 				.header("Authorization", "x.x.x.x")
-				.content(asJsonString(DTOUTils.postToPostDTO(post0))))			
+				.content(asJsonString(DtoUtils.postToPostDTO(post0))))			
 				.andExpect(status().isOk())
 				.andExpect(jsonPath("$.errors").isEmpty())
 				.andExpect(jsonPath("$.data.title", equalTo(newTitle)));

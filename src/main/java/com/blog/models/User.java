@@ -7,11 +7,11 @@ import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.Id;
-import javax.persistence.PrePersist;
-import javax.persistence.PreUpdate;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+
+import org.springframework.lang.NonNull;
 
 import com.blog.enums.ProfileTypeEnum;
 
@@ -19,16 +19,17 @@ import com.blog.enums.ProfileTypeEnum;
 @Table(name="users")
 public class User {
 	
-	@Id
+	// Basic information
+	@Id @NonNull
 	private Long userId;
 	@Column(nullable=false, length=30, unique=true)
 	private String userName;
-	@Column(length=60)
-	private String fullUserName;
-	
-	// Contact information
 	@Column(nullable=false, length=60) 
 	private String email;
+	
+	// Extra information
+	@Column(length=60)
+	private String fullUserName;
 	@Column(length=20)
 	private String phoneNumber;
 	
@@ -49,32 +50,11 @@ public class User {
 	@Column(nullable=false)
 	private Date creationDate;
 	
-	public User() {}
-	
-	public User(String userName, String fullName, ProfileTypeEnum profileType) {
-		super();
-		this.userName = userName;
-		this.fullUserName = fullName;
+	public User() {
 		this.lastUpdateDate = new Date();
-		this.profileType = profileType;
-	}
-
-	public User(String userName, ProfileTypeEnum profileType) {
-		super();
-		this.userName = userName;
-		this.profileType = profileType;
+		this.creationDate = new Date();
 	}
 	
-	@PrePersist
-    public void prePersist() {
-        this.creationDate = new Date();
-    }
- 
-    @PreUpdate
-    public void preUpdate() {
-        this.lastUpdateDate = new Date();
-    }
-
 	public String getUserName() {
 		return userName;
 	}

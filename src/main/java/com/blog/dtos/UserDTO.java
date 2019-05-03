@@ -4,23 +4,27 @@ import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 
 import org.hibernate.validator.constraints.Length;
+import org.springframework.lang.NonNull;
 
 public class UserDTO {
 	
+	@NonNull
+	private Long userId;
 	// basic user data
 	@Length(min=4, max=30, message="The user name must contains between 4 and 30 characters.")
     @NotBlank(message="The user name must not be empty.")
 	private String userName;
-	@Length(min=4, max=60, message="The full user name must contains between 4 and 60 characters.")
-	@NotBlank(message="The full user name must not be empty.")
-    private String fullUserName;
-    @Email(message="The email is not valid.")
-    @NotBlank(message="The email must not be empty.")
-    private String email;
+	@NotBlank(message="The email must not be empty.")
+	@Email @Length(max=30, message="The email must contains a maximum of 60 characters.")
+	private String email;
     
-    @Length(max=20, message="The github name must contains a maximum of 20 characters.")
+	// Extra user information
+	@Length(max=60, message="The full user name must contains a maximum of 60 characters.")
+	private String fullUserName;
+	@Length(max=20, message="The github name must contains a maximum of 20 characters.")
     private String phone;
-    // network references
+    
+	// network references
     @Length(max=20, message="The github user name must contains a maximum of 20 characters.")
     private String githubUserName;
     @Length(max=20, message="The linkedin user name must contains a maximum of 20 characters.")
@@ -30,7 +34,15 @@ public class UserDTO {
     
     public UserDTO() {}
     
-    public String getUserName() {
+    public Long getUserId() {
+		return userId;
+	}
+    
+	public void setUserId(Long userId) {
+		this.userId = userId;
+	}
+	
+	public String getUserName() {
 		return userName;
 	}
 	public void setUserName(String userName) {

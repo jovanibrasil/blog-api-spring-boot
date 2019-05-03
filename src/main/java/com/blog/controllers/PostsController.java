@@ -1,7 +1,6 @@
 package com.blog.controllers;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.Optional;
 
 import javax.validation.Valid;
@@ -29,12 +28,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.blog.dtos.DTOUTils;
+import com.blog.dtos.DtoUtils;
 import com.blog.dtos.PostDTO;
 import com.blog.dtos.PostInfo;
 import com.blog.dtos.SummaryDTO;
 import com.blog.models.Post;
-import com.blog.models.User;
 import com.blog.response.Response;
 import com.blog.services.PostService;
 
@@ -72,7 +70,7 @@ public class PostsController {
 		}
 		
 		Post post = optPost.get(); 
-		response.setData(DTOUTils.postToPostDTO(post));
+		response.setData(DtoUtils.postToPostDTO(post));
 		
 		return ResponseEntity.ok(response);
 	}
@@ -91,13 +89,7 @@ public class PostsController {
 			bindingResult.getAllErrors().forEach(err -> response.addError(err.getDefaultMessage()));
 			return ResponseEntity.badRequest().body(response);
 		}
-		
-		User author = new User();
-		author.setUserName(postDTO.getUserName());
-		author.setUserId(postDTO.getId());
-				
-		Post post = new Post(postDTO.getTitle(), postDTO.getSummary(), 
-				postDTO.getTags(), postDTO.getBody(), author);
+		Post post = DtoUtils.postDTOtoPost(postDTO);
 		Optional<Post> optPost = postService.create(post);
 		
 		if(!optPost.isPresent()) {
@@ -105,15 +97,16 @@ public class PostsController {
 			response.addError("It was not possible to created the post.");
 			return ResponseEntity.badRequest().body(response);
 		}
+		
 		postDTO.setCreationDate(optPost.get().getCreationDate());
 		postDTO.setLastUpdateDate(optPost.get().getLastUpdateDate());
-		postDTO.setId(optPost.get().getPostId());
+		postDTO.setPostId(optPost.get().getPostId());
 		response.setData(postDTO);
 		
 		return ResponseEntity.ok(response);
 	}
 	
-	/*
+	/**
 	 * Update a specified post.
 	 * 
 	 */
@@ -128,22 +121,17 @@ public class PostsController {
 			return ResponseEntity.badRequest().body(response);
 		}
 		
-		User author = new User();
-		author.setUserName(postDTO.getUserName());
-				
-		Post post = new Post(postDTO.getTitle(), postDTO.getSummary(),
-			postDTO.getTags(), postDTO.getBody(), author);
-		post.setPostId(postDTO.getId());
-		post.setLastUpdateDate(new Date());
-		Optional<Post> optPost = postService.create(post);
+		Post post = DtoUtils.postDTOtoPost(postDTO);
+		Optional<Post> optPost = postService.update(post);
 		
 		if(!optPost.isPresent()) {
 			log.error("It was not possible to update the specified post. Internal error.");
-			response.addError("It was not possible to created the post.");
+			response.addError("It was not possible to update the post.");
 			return ResponseEntity.badRequest().body(response);
 		}
-		postDTO.setId(optPost.get().getPostId());
+		postDTO.setPostId(optPost.get().getPostId());
 		postDTO.setLastUpdateDate(optPost.get().getLastUpdateDate());
+		postDTO.setCreationDate(optPost.get().getCreationDate());
 		response.setData(postDTO);
 		
 		return ResponseEntity.ok(response);
@@ -170,7 +158,7 @@ public class PostsController {
 			return ResponseEntity.badRequest().body(response);
 		}
 		
-		Page<PostDTO> posts = optLatestPosts.get().map(post -> DTOUTils.postToPostDTO(post));
+		Page<PostDTO> posts = optLatestPosts.get().map(post -> DtoUtils.postToPostDTO(post));
 		response.setData(posts);
 		return ResponseEntity.ok(response);
 		
@@ -201,11 +189,9 @@ public class PostsController {
 					post.getCreationDate(),	post.getLastUpdateDate(), 
 					post.getSummary(), post.getAuthor().getUserName(), post.getTags());
 			summaries.add(summaryDTO);
-		});
-		
+		});	
 		response.setData(summaries);
 		return ResponseEntity.ok(response);
-		
 	}
 	
 	@GetMapping("/top") 
@@ -258,7 +244,7 @@ public class PostsController {
 		ArrayList<PostDTO> posts = new ArrayList<>();
 		
 		optLatestPosts.get().forEach(post -> {
-			posts.add(DTOUTils.postToPostDTO(post));
+			posts.add(DtoUtils.postToPostDTO(post));
 		});
 		
 		response.setData(posts);
@@ -281,7 +267,7 @@ public class PostsController {
 		}
 		
 		Post post = optPost.get(); 
-		response.setData(DTOUTils.postToPostDTO(post));
+		response.setData(DtoUtils.postToPostDTO(post));
 		
 		return ResponseEntity.ok(response);
 	}

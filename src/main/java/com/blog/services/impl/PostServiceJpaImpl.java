@@ -44,6 +44,8 @@ public class PostServiceJpaImpl implements PostService {
 	public Optional<Post> create(Post post) {
 		Optional<Post> optPost = this.findPostByPostId(post.getPostId());
 		if(!optPost.isPresent()) {
+			post.setLastUpdateDate(new Date());
+			post.setCreationDate(new Date());
 			return Optional.of(this.postRepo.save(post));
 		}else {
 			return Optional.empty();
@@ -51,12 +53,15 @@ public class PostServiceJpaImpl implements PostService {
 	}
 
 	@Override
-	public Optional<Post> update(Post post) {
-		Optional<Post> optPost = this.findPostByPostId(post.getPostId());
+	public Optional<Post> update(Post receivedPost) {
+		Optional<Post> optPost = this.findPostByPostId(receivedPost.getPostId());
 		if(optPost.isPresent()) {
+			Post post = optPost.get();
+			post.setTitle(receivedPost.getTitle());
+			post.setBody(receivedPost.getBody());
+			post.setSummary(receivedPost.getSummary());
+			post.setLastUpdateDate(new Date());
 			return Optional.of(this.postRepo.save(post));
-			
-			
 		}else {
 			return Optional.empty();
 		}

@@ -3,12 +3,10 @@ package com.blog.security;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 
 //@EnableGlobalMethodSecurity(prePostEnabled=true)
@@ -42,9 +40,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 			.and().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS) // set session police stateless
 			.and()
 			.authorizeRequests()
-			.antMatchers("/users/login", "/users/signup", "/users/logout", "/search", "/subscription", "/user/*",
-					 "/posts/top", "/posts/summary", "/posts/post/*", "/posts/list", "posts/list/byuser/*").permitAll()
-			.antMatchers("/posts/delete/*", "/posts/create", "/posts/update").hasRole("ADMIN");
+			.antMatchers("/users/login", "/search", "/subscription", "/posts/top", "/posts/summary", 
+					"/posts/post/*", "/posts/list", "posts/list/byuser/*", "/user").permitAll()
+			.antMatchers("/posts/delete/*", "/posts/create", "/posts/update").authenticated(); //hasRole("ADMIN");
 		
 			//http.addFilterBefore(new LoginFilter("/users/login", authenticationManager()), UsernamePasswordAuthenticationFilter.class);
 			http.addFilterBefore(authenticationTokenFilterBean(),  BasicAuthenticationFilter.class); // set filter

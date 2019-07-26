@@ -5,6 +5,12 @@ import com.blog.models.User;
 
 public class DtoUtils {
 
+	/**
+	 * Converts a Post object to a PostDTO object.
+	 * 
+	 * @param post
+	 * @return
+	 */
 	public static PostDTO postToPostDTO(Post post) {
 		PostDTO postDTO = new PostDTO();
 		postDTO.setPostId(post.getPostId());
@@ -15,10 +21,16 @@ public class DtoUtils {
 		postDTO.setLastUpdateDate(post.getLastUpdateDate());
 		postDTO.setTitle(post.getTitle());
 		postDTO.setTags(post.getTags());
-		postDTO.setUserId(post.getPostId());
+		postDTO.setUserId(post.getAuthor().getUserId());
 		return postDTO;
 	}
 	
+	/**
+	 * Converts a PostDTO object to a Post object.
+	 * 
+	 * @param postDTO
+	 * @return
+	 */
 	public static Post postDTOtoPost(PostDTO postDTO) {
 		Post post = new Post();
 		post.setPostId(postDTO.getPostId());

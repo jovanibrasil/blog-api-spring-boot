@@ -252,8 +252,12 @@ public class PostsController {
 		
 	}
 	
-	/*
+	/**
+	 * 
 	 * Delete a specific post.
+	 * 
+	 * @param id is the id of the post that will be deleted.
+	 * @return
 	 */
 	@DeleteMapping(value="/delete/{id}")
 	public ResponseEntity<Response<PostDTO>> deletePost(@PathVariable("id") Long id){

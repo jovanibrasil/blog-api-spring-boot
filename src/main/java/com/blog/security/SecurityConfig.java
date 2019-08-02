@@ -45,7 +45,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 			.antMatchers("/posts/delete/*", "/posts/create", "/posts/update").authenticated(); //hasRole("ADMIN");
 		
 			//http.addFilterBefore(new LoginFilter("/users/login", authenticationManager()), UsernamePasswordAuthenticationFilter.class);
-			http.addFilterBefore(authenticationTokenFilterBean(),  BasicAuthenticationFilter.class); // set filter
+			http.addFilterBefore(authenticationTokenFilterBean(), 
+					BasicAuthenticationFilter.class); // set filter
 					        
 			http.headers().cacheControl();
 		

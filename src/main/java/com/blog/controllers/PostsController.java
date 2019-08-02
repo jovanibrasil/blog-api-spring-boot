@@ -261,6 +261,7 @@ public class PostsController {
 	 */
 	@DeleteMapping(value="/delete/{id}")
 	public ResponseEntity<Response<PostDTO>> deletePost(@PathVariable("id") Long id){
+		log.info("Deleting post ...");
 		Response<PostDTO> response = new Response<>();
 		
 		Optional<Post> optPost = postService.deleteByPostId(id);

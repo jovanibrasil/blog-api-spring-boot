@@ -16,14 +16,13 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.web.filter.OncePerRequestFilter;
 
-import com.blog.controllers.PostsController;
 import com.blog.integrations.AuthClient;
 
 /**
  * 
  * Validated the received requests.
  * 
- * @author jovani
+ * @author Jovani Brasil
  *
  */
 public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
@@ -48,13 +47,14 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
 					UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(
 							userDetails, null, userDetails.getAuthorities());
 					auth.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-					SecurityContextHolder.getContext().setAuthentication(auth);		
+					SecurityContextHolder.getContext().setAuthentication(auth);	
+					
 				}else {
-					log.info("User not found.");
+					log.info("User not found. The token is invalid.");
 					response.sendError(401);
 				}	
 			} catch (Exception e) {
-				e.printStackTrace();
+				log.error("User not found. Error: " + e.getMessage());
 				response.sendError(401);
 			}
 		}

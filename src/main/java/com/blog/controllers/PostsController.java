@@ -164,6 +164,39 @@ public class PostsController {
 		
 	}
 	
+	/**
+	 * Get a list of n latest posts of a specified user.
+	 * 
+	 * @param length is the size of the post list that will be returned.
+	 * @param userId is the user identification. 
+	 * 
+	 */
+	@GetMapping("/list/byuser/{userid}") 
+	public ResponseEntity<Response<ArrayList<PostDTO>>> getPostListByUser(@PathVariable("userid") Long userId, 
+			@RequestParam(value="page", defaultValue="0") int page, @RequestParam(value="ord", defaultValue="lastUpdateDate") String ord, 
+			@RequestParam(value="dir", defaultValue="DESC") String dir) { 
+		
+		Response<ArrayList<PostDTO>> response = new Response<>();
+		PageRequest pageRequest = PageRequest.of(page, this.postsListSize, Direction.valueOf(dir), ord);
+		Optional<Page<Post>> optLatestPosts = postService.findPostsByUserId(userId, pageRequest);
+		
+		if(!optLatestPosts.isPresent()) {
+			log.error("It was not possible to create the list of posts.");
+			response.addError("It was not possible to create the list of posts.");
+			return ResponseEntity.badRequest().body(response);
+		}
+		
+		ArrayList<PostDTO> posts = new ArrayList<>();
+		
+		optLatestPosts.get().forEach(post -> {
+			posts.add(DtoUtils.postToPostDTO(post));
+		});
+		
+		response.setData(posts);
+		return ResponseEntity.ok(response);
+		
+	}
+	
 	@GetMapping("/summaries") 
 	public ResponseEntity<Response<ArrayList<SummaryDTO>>> getSummarylist(Model model, @RequestParam(value="cat", defaultValue="all") String cat) { 
 		
@@ -217,37 +250,6 @@ public class PostsController {
 		});
 		
 		response.setData(postInfoList);
-		return ResponseEntity.ok(response);
-		
-	}
-	
-	/**
-	 * Get a list of n latest posts of a specified user.
-	 * 
-	 * @param length is the size of the post list that will be returned.
-	 * @param userId is the user identification. 
-	 * 
-	 */
-	@GetMapping("/list/byuser/{userid}") 
-	public ResponseEntity<Response<ArrayList<PostDTO>>> getPostListByUser(@PathVariable("userid") Long userId) { 
-		
-		Response<ArrayList<PostDTO>> response = new Response<>();
-		PageRequest page = PageRequest.of(0, 5, Sort.by("lastUpdateDate"));
-		Optional<Page<Post>> optLatestPosts = postService.findPostsByUserId(userId, page);
-		
-		if(!optLatestPosts.isPresent()) {
-			log.error("It was not possible to create the list of posts.");
-			response.addError("It was not possible to create the list of posts.");
-			return ResponseEntity.badRequest().body(response);
-		}
-		
-		ArrayList<PostDTO> posts = new ArrayList<>();
-		
-		optLatestPosts.get().forEach(post -> {
-			posts.add(DtoUtils.postToPostDTO(post));
-		});
-		
-		response.setData(posts);
 		return ResponseEntity.ok(response);
 		
 	}

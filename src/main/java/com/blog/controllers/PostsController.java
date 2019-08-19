@@ -57,7 +57,7 @@ public class PostsController {
 	 * @param id is the post id. 
 	 * 
 	 */
-	@GetMapping("/post/{id}")
+	@GetMapping("/{id}")
 	public ResponseEntity<Response<PostDTO>> getPost(@NotNull @PathVariable("id") Long id) {
 		
 		Response<PostDTO> response = new Response<>();
@@ -79,7 +79,7 @@ public class PostsController {
 	 * Create a new post
 	 * 
 	 */
-	@PostMapping(value="/create")
+	@PostMapping
 	public ResponseEntity<Response<PostDTO>> createPost(@Valid @RequestBody PostDTO postDTO, BindingResult bindingResult) {
 		
 		Response<PostDTO> response = new Response<>();
@@ -110,7 +110,7 @@ public class PostsController {
 	 * Update a specified post.
 	 * 
 	 */
-	@PutMapping(value="/update")
+	@PutMapping
 	public ResponseEntity<Response<PostDTO>> updatePost(@Valid @RequestBody PostDTO postDTO, BindingResult bindingResult) {
 		
 		Response<PostDTO> response = new Response<>();
@@ -144,7 +144,7 @@ public class PostsController {
 	 * @param length is the size of the post list that will be returned.
 	 * 
 	 */
-	@GetMapping("/list") 
+	@GetMapping
 	public ResponseEntity<Response<Page<PostDTO>>> getPosts(Model model, @RequestParam(value="page", defaultValue="0") int page,
 			@RequestParam(value="ord", defaultValue="lastUpdateDate") String ord, @RequestParam(value="dir", defaultValue="DESC") String dir) { 
 		
@@ -171,7 +171,7 @@ public class PostsController {
 	 * @param userId is the user identification. 
 	 * 
 	 */
-	@GetMapping("/list/byuser/{userid}") 
+	@GetMapping("/byuser/{userid}") 
 	public ResponseEntity<Response<ArrayList<PostDTO>>> getPostListByUser(@PathVariable("userid") Long userId, 
 			@RequestParam(value="page", defaultValue="0") int page, @RequestParam(value="ord", defaultValue="lastUpdateDate") String ord, 
 			@RequestParam(value="dir", defaultValue="DESC") String dir) { 
@@ -181,8 +181,8 @@ public class PostsController {
 		Optional<Page<Post>> optLatestPosts = postService.findPostsByUserId(userId, pageRequest);
 		
 		if(!optLatestPosts.isPresent()) {
-			log.error("It was not possible to create the list of posts.");
-			response.addError("It was not possible to create the list of posts.");
+			log.error("It was not possible to get the list of posts.");
+			response.addError("It was not possible to get the list of posts.");
 			return ResponseEntity.badRequest().body(response);
 		}
 		
@@ -261,7 +261,7 @@ public class PostsController {
 	 * @param id is the id of the post that will be deleted.
 	 * @return
 	 */
-	@DeleteMapping(value="/delete/{id}")
+	@DeleteMapping(value="/{id}")
 	public ResponseEntity<Response<PostDTO>> deletePost(@PathVariable("id") Long id){
 		log.info("Deleting post ...");
 		Response<PostDTO> response = new Response<>();

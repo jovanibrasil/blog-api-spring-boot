@@ -26,7 +26,7 @@ import com.blog.services.UserService;
 
 @CrossOrigin(origins = "*")
 @RestController
-@RequestMapping("/user")
+@RequestMapping("/users")
 public class UserController {
 
 	private static final Logger log = LoggerFactory.getLogger(UserController.class);

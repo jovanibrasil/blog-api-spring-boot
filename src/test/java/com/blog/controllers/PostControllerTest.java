@@ -97,7 +97,7 @@ public class PostControllerTest {
 	@Test
 	public void testGetPostValidPostID() throws Exception {
 		BDDMockito.given(this.postService.findPostByPostId(1L)).willReturn(Optional.of(post0));
-		mvc.perform(MockMvcRequestBuilders.get("/posts/post/1")
+		mvc.perform(MockMvcRequestBuilders.get("/posts/1")
 				.accept(MediaType.APPLICATION_JSON))
 			.andExpect(status().isOk())
 			.andExpect(jsonPath("$.errors").isEmpty())
@@ -109,7 +109,7 @@ public class PostControllerTest {
 	@Test
 	public void testGetPostInvalidPostId() throws Exception {
 		BDDMockito.given(this.postService.findPostByPostId(10L)).willReturn(Optional.empty());
-		mvc.perform(MockMvcRequestBuilders.get("/posts/post/10"))
+		mvc.perform(MockMvcRequestBuilders.get("/posts/10"))
 			.andExpect(status().isBadRequest())
 			.andExpect(jsonPath("$.errors").value("It was not possible to find the specified post."));
 	}
@@ -125,7 +125,7 @@ public class PostControllerTest {
 		BDDMockito.given(this.postService.findPosts(PageRequest.of(0, 1, Sort.by("lastUpdateDate"))))
 			.willReturn(Optional.of(new PageImpl<Post>(Arrays.asList(post0))));
 		
-		mvc.perform(MockMvcRequestBuilders.get("/posts/list?page=0"))
+		mvc.perform(MockMvcRequestBuilders.get("/posts?page=0"))
 				.andExpect(status().isOk())
 				.andExpect(jsonPath("$.errors").isEmpty())
 				.andExpect(jsonPath("$.data").isNotEmpty());
@@ -140,7 +140,7 @@ public class PostControllerTest {
 		BDDMockito.given(this.postService.findPosts(PageRequest.of(1, 1, Sort.by("lastUpdateDate"))))
 			.willReturn(Optional.of(new PageImpl<Post>(Arrays.asList(post1))));
 
-		mvc.perform(MockMvcRequestBuilders.get("/posts/list").param("page", "1"))
+		mvc.perform(MockMvcRequestBuilders.get("/posts").param("page", "1"))
 				.andExpect(status().isOk())
 				.andExpect(jsonPath("$.errors").isEmpty())
 				.andExpect(jsonPath("$.data").isNotEmpty());
@@ -148,7 +148,7 @@ public class PostControllerTest {
 	
 	@Test
 	public void testGetPostsPage2() throws Exception {
-		mvc.perform(MockMvcRequestBuilders.get("/posts/list").param("page", "2"))
+		mvc.perform(MockMvcRequestBuilders.get("/posts").param("page", "2"))
 				.andExpect(status().isBadRequest())
 				.andExpect(jsonPath("$.errors").isNotEmpty());
 	}
@@ -201,9 +201,10 @@ public class PostControllerTest {
 	
 	@Test
 	public void testGetPostsByUserName() throws Exception {
-		BDDMockito.given(this.postService.findPostsByUserId(1L, PageRequest.of(0, 5, Sort.by("lastUpdateDate")))).willReturn(
-				Optional.of(new PageImpl<Post>(Arrays.asList(post1, post0))));
-		mvc.perform(MockMvcRequestBuilders.get("/posts/list/byuser/1"))
+		PageImpl<Post> page = new PageImpl<Post>(Arrays.asList(post1, post0));
+		BDDMockito.given(this.postService.findPostsByUserId(Mockito.any(), Mockito.any())).willReturn(
+				Optional.of(page));
+		mvc.perform(MockMvcRequestBuilders.get("/posts/byuser/1"))
 				.andExpect(status().isOk())
 				.andExpect(jsonPath("$.errors").isEmpty());
 	}
@@ -215,7 +216,7 @@ public class PostControllerTest {
 	@Test
 	public void testCreatePost() throws Exception {
 		BDDMockito.given(this.postService.create(Mockito.any())).willReturn(Optional.of(post0));
-		mvc.perform(MockMvcRequestBuilders.post("/posts/create")
+		mvc.perform(MockMvcRequestBuilders.post("/posts")
 				.contentType(MediaType.APPLICATION_JSON)
 				.header("Authorization", "x.x.x.x")
 				.content(asJsonString(DtoUtils.postToPostDTO(post0))))			
@@ -231,8 +232,8 @@ public class PostControllerTest {
 	public void testUpdatePost() throws Exception {
 		String newTitle = "Simple test title";
 		post0.setTitle(newTitle);
-		BDDMockito.given(this.postService.create(Mockito.any())).willReturn(Optional.of(post0));
-		mvc.perform(MockMvcRequestBuilders.put("/posts/update")
+		BDDMockito.given(this.postService.update(Mockito.any())).willReturn(Optional.of(post0));
+		mvc.perform(MockMvcRequestBuilders.put("/posts")
 				.contentType(MediaType.APPLICATION_JSON)
 				.header("Authorization", "x.x.x.x")
 				.content(asJsonString(DtoUtils.postToPostDTO(post0))))			
@@ -248,7 +249,7 @@ public class PostControllerTest {
 	@Test
 	public void testDeletePost() throws Exception {
 		BDDMockito.given(this.postService.deleteByPostId(0L)).willReturn(Optional.of(post0));
-		mvc.perform(MockMvcRequestBuilders.delete("/posts/delete/0")
+		mvc.perform(MockMvcRequestBuilders.delete("/posts/0")
 				.header("Authorization", "x.x.x.x"))
 				.andExpect(status().isOk())
 				.andExpect(jsonPath("$.errors").isEmpty());
@@ -257,7 +258,7 @@ public class PostControllerTest {
 	@Test
 	public void testDeletePostInvalidPostId() throws Exception {
 		BDDMockito.given(this.postService.deleteByPostId(Mockito.anyLong())).willReturn(Optional.empty());
-		mvc.perform(MockMvcRequestBuilders.delete("/posts/delete/50")
+		mvc.perform(MockMvcRequestBuilders.delete("/posts/50")
 				.header("Authorization", "x.x.x.x"))
 				.andExpect(status().isBadRequest())
 				.andExpect(jsonPath("$.errors[0]", equalTo("It was not possible to find the specified post.")));

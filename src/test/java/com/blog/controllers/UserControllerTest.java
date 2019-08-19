@@ -60,7 +60,7 @@ public class UserControllerTest {
 	@Test
 	public void testFindUserByNameWithInvalidUserName() throws Exception {
 		BDDMockito.given(this.userService.findByUserName(Mockito.anyString())).willReturn(Optional.empty());
-		mvc.perform(MockMvcRequestBuilders.get("/user/sajdoi")
+		mvc.perform(MockMvcRequestBuilders.get("/users/sajdoi")
 			.header("Authorization", "x.x.x.x")
 			.accept(MediaType.APPLICATION_JSON))
 			.andExpect(status().isBadRequest())
@@ -70,7 +70,7 @@ public class UserControllerTest {
 	@Test
 	public void testFindUserByNameWithValidUserName() throws Exception {
 		BDDMockito.given(this.userService.findByUserName("jovanibrasil")).willReturn(Optional.of(user));
-		mvc.perform(MockMvcRequestBuilders.get("/user/jovanibrasil")
+		mvc.perform(MockMvcRequestBuilders.get("/users/jovanibrasil")
 			.header("Authorization", "x.x.x.x")
 			.accept(MediaType.APPLICATION_JSON))
 			.andExpect(status().isOk())

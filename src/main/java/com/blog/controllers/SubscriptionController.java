@@ -16,7 +16,7 @@ import com.blog.services.SubscriptionService;
 
 @CrossOrigin(origins = "*")
 @RestController
-@RequestMapping("/subscription")
+@RequestMapping("/subscriptions")
 public class SubscriptionController {
 	
 	@Autowired

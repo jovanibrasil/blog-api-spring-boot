@@ -1,7 +1,6 @@
 package com.blog.controllers;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -21,7 +20,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.blog.dtos.FeedbackDTO;
 import com.blog.models.Feedback;
-import com.blog.models.User;
 import com.blog.response.Response;
 import com.blog.services.FeedbackService;
 

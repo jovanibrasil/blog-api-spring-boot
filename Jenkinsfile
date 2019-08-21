@@ -1,5 +1,5 @@
 pipeline {
-    agent { label 'jenkins-slave' }
+    agent { label 'aws-agent' }
     
     environment {
         BLOG_MYSQL_URL = credentials('BLOG_MYSQL_URL')
@@ -53,7 +53,7 @@ pipeline {
         stage("Remove temporary files"){
             steps {
                 echo 'cleaning ...'
-                echo 'rm ~/workspace/blog-app ~/workspace/blog-app@tmp -rf'
+                sh 'rm ~/workspace/blog-api ~/workspace/blog-api@tmp -rf'
             }
         }
 

@@ -22,29 +22,29 @@
 	</properties>
 
 	<profiles>
-	    <profile>
-	        <id>prod</id>
-	        <activation>
-	            <activeByDefault>true</activeByDefault>
-	        </activation>
-	        <properties>
-	            <activeProfile>prod</activeProfile>
-	            <maven.test.skip>true</maven.test.skip>
-	        </properties>
-	    </profile>
-	    <profile>
-	        <id>dev</id>
-	        <properties>
-	            <activeProfile>dev</activeProfile>
-	            <maven.test.skip>true</maven.test.skip>
-	        </properties>
-	    </profile>
-	    <profile>
-	        <id>test</id>
-	        <properties>
-	            <activeProfile>test</activeProfile>
-	        </properties>
-	    </profile>
+		<profile>
+			<id>prod</id>
+			<activation>
+				<activeByDefault>true</activeByDefault>
+			</activation>
+			<properties>
+				<activeProfile>prod</activeProfile>
+				<maven.test.skip>true</maven.test.skip>
+			</properties>
+		</profile>
+		<profile>
+			<id>dev</id>
+			<properties>
+				<activeProfile>dev</activeProfile>
+				<maven.test.skip>true</maven.test.skip>
+			</properties>
+		</profile>
+		<profile>
+			<id>test</id>
+			<properties>
+				<activeProfile>test</activeProfile>
+			</properties>
+		</profile>
 	</profiles>
 
 	<repositories>

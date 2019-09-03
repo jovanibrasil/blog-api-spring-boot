@@ -40,6 +40,7 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
 		String token = request.getHeader(AUTH_HEADER);
 		if(token != null) {
 			try {
+				log.info("Verifying received token ...");
 				// Verify token with the authentication service
 				TempUser tempUser = authClient.checkToken(token);
 				if(tempUser != null) {

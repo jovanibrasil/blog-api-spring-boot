@@ -22,7 +22,7 @@ pipeline {
         stage("Build") {
             steps {
                 echo 'Cloning git ...'
-                git([url: 'https://github.com/jovanibrasil/blog-api.git', branch: 'master', credentialsId: 'jovanibrasil'])
+                git([url: 'https://github.com/jovanibrasil/blog-api.git', branch: 'master', credentialsId: '9bae9c61-0a29-483c-a07f-47273c351555'])
                 echo 'Installing dependencies ...'
                 sh 'mvn clean package'
                 echo 'Building ...'
@@ -54,7 +54,7 @@ pipeline {
         stage("Remove temporary files"){
             steps {
                 echo 'cleaning ...'
-                sh 'rm ~/workspace/blog-api ~/workspace/blog-api@tmp -rf'
+                //sh 'rm ~/workspace/blog-api ~/workspace/blog-api@tmp -rf'
             }
         }
 

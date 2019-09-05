@@ -23,11 +23,11 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 @EnableSwagger2
 public class SwaggerConfig {
 
-	@Value("${blog.admin-username}")
-	private String adminUserName;
+	//@Value("${blog.admin-username}")
+	private String adminUserName = "";
 	
-	@Value("${blog.admin-password}")
-	private String adminPassword;
+	//@Value("${blog.admin-password}")
+	private String adminPassword = "";
 	
 	@Autowired
 	AuthClient authClient;

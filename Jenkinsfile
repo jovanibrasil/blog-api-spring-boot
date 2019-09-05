@@ -26,7 +26,7 @@ pipeline {
                 echo 'Installing dependencies ...'
                 sh 'mvn clean package'
                 echo 'Building ...'
-                sh 'docker build --build-arg BLOG_MYSQL_URL --build-arg BLOG_MYSQL_USERNAME --build-arg BLOG_MYSQL_PASSWORD -t blog-api ~/workspace/blog-api'
+                sh 'docker build --build-arg ENVIRONMENT=prod --build-arg BLOG_MYSQL_URL --build-arg BLOG_MYSQL_USERNAME --build-arg BLOG_MYSQL_PASSWORD -t blog-api ~/workspace/blog-api'
             }
         }
 
@@ -47,7 +47,7 @@ pipeline {
                 // sh 'docker stop blog-api'
                 // sh 'docker rm blog-api'                
                 sh 'make clean'
-		sh 'docker run -p 8081:8080 -e SPRING_PROFILES_ACTIVE=prod --name=blog-api -d blog-api'
+				sh 'docker run -p 8081:8080 -e SPRING_PROFILES_ACTIVE=prod --name=blog-api -d blog-api'
             }
         }
 

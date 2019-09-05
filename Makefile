@@ -4,7 +4,7 @@ clean: stop
 	- docker rm blog-api
 build: clean
 	mvn clean package -Pdev
-	docker build -t blog-api .
+	docker build --build-arg ENVIRONMENT=dev -t blog-api .
 	chmod -R ugo+rw target/
 run: clean
 	docker run -d -p 8081:8080 -e "SPRING_PROFILES_ACTIVE=dev" --name=blog-api --network net blog-api

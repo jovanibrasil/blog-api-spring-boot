@@ -200,7 +200,7 @@ public class PostsController {
 	@GetMapping("/summaries") 
 	public ResponseEntity<Response<ArrayList<SummaryDTO>>> getSummarylist(
 			@RequestParam(value="page", defaultValue="0") int page,
-			@RequestParam(value="cat", defaultValue="all") String cat) { 
+			@RequestParam(value="category", defaultValue="all") String cat) { 
 		log.info("Get post summaries. category: {}", cat);
 		Response<ArrayList<SummaryDTO>> response = new Response<>();
 		Optional<Page<Post>> optLatestPosts;

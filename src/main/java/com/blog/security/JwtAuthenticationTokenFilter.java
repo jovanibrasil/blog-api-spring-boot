@@ -38,10 +38,8 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
 	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
 			throws ServletException, IOException {
 		
-		log.info("Parameters: {}", request.getParameterNames().toString() );
-		
 		request.getParameterMap().entrySet().forEach(x -> {
-			log.info("Paramater: {} Value: {}", x.getKey().toString(), x.getValue()[0]);
+			log.info("Parameter: {} Value: {}", x.getKey().toString(), x.getValue()[0]);
 		});
 		
 		String token = request.getHeader(AUTH_HEADER);

@@ -1,6 +1,7 @@
 package com.blog.security;
 
 import java.io.IOException;
+import java.util.Enumeration;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
@@ -36,6 +37,12 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
 	@Override
 	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
 			throws ServletException, IOException {
+		
+		log.info("Parameters: {}", request.getParameterNames().toString() );
+		
+		request.getParameterMap().entrySet().forEach(x -> {
+			log.info("Paramater: {} Value: {}", x.getKey().toString(), x.getValue()[0]);
+		});
 		
 		String token = request.getHeader(AUTH_HEADER);
 		if(token != null) {

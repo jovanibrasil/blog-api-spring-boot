@@ -198,15 +198,17 @@ public class PostsController {
 	}
 	
 	@GetMapping("/summaries") 
-	public ResponseEntity<Response<ArrayList<SummaryDTO>>> getSummarylist(Model model, @RequestParam(value="cat", defaultValue="all") String cat) { 
-		
+	public ResponseEntity<Response<ArrayList<SummaryDTO>>> getSummarylist(
+			@RequestParam(value="page", defaultValue="0") int page,
+			@RequestParam(value="cat", defaultValue="all") String cat) { 
+		log.info("Get post summaries. category: {}", cat);
 		Response<ArrayList<SummaryDTO>> response = new Response<>();
 		Optional<Page<Post>> optLatestPosts;
-		PageRequest page = PageRequest.of(0, this.postsListSize, Sort.by("lastUpdateDate"));
+		PageRequest pageRequest = PageRequest.of(page, this.postsListSize, Sort.by("lastUpdateDate"));
 		if(cat.toLowerCase().equals("all")) {
-			optLatestPosts = postService.findPosts(page);
+			optLatestPosts = postService.findPosts(pageRequest);
 		}else {
-			optLatestPosts = postService.findPostsByCategory(cat, page);
+			optLatestPosts = postService.findPostsByCategory(cat, pageRequest);
 		}
 		
 		if(!optLatestPosts.isPresent()) {
@@ -228,7 +230,7 @@ public class PostsController {
 	}
 	
 	@GetMapping("/top") 
-	public ResponseEntity<Response<ArrayList<PostInfo>>> getTopPostsInfoList(Model model) { 
+	public ResponseEntity<Response<ArrayList<PostInfo>>> getTopPostsInfoList() { 
 		
 		log.info("Getting a list of post information (title + id)");
 		

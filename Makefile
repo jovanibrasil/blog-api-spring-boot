@@ -7,7 +7,7 @@ build: clean
 	docker build --build-arg ENVIRONMENT=dev -t blog-api .
 	chmod -R ugo+rw target/
 run: clean
-	docker run -d -p 8081:8080 -m 128m --memory-swap 256m -e "SPRING_PROFILES_ACTIVE=dev" --name=blog-api --network net blog-api
+	docker run -d -p 8081:8080 -m 256m --memory-swap 512m -e "SPRING_PROFILES_ACTIVE=dev" --name=blog-api --network net blog-api
 start: stop
 	docker start blog-api
 bash:

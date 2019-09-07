@@ -47,7 +47,7 @@ pipeline {
                 // sh 'docker stop blog-api'
                 // sh 'docker rm blog-api'                
                 sh 'make clean'
-				sh 'docker run -p 8081:8080 -e SPRING_PROFILES_ACTIVE=prod --name=blog-api -d blog-api'
+				sh 'docker run -p 8081:8080 -m 128m --memory-swap 256m -e SPRING_PROFILES_ACTIVE=prod --name=blog-api -d blog-api'
             }
         }
 

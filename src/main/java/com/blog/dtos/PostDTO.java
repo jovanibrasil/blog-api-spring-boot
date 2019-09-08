@@ -9,7 +9,7 @@ import javax.validation.constraints.Size;
 public class PostDTO {
 
 	@NotNull
-	private Long postId;
+	private Long id;
 	
 	@NotNull(message="Title must not be null")
 	@Size(min=2, max=50, message="Título do Post deve ter entre 2 e 10 caracteres.")
@@ -42,11 +42,11 @@ public class PostDTO {
 		this.userId = userId;
 	}
 	
-	public Long getPostId() {
-		return postId;
+	public Long getId() {
+		return id;
 	}
-	public void setPostId(Long id) {
-		this.postId = id;
+	public void setId(Long id) {
+		this.id = id;
 	}
 	public String getTitle() {
 		return title;
@@ -99,7 +99,9 @@ public class PostDTO {
 
 	@Override
 	public String toString() {
-		return "PostDTO [postId=" + postId + ", title=" + title + ", body=" + body + ",  lastUpdateDate=" + lastUpdateDate + "]";
+		return "PostDTO [id=" + id + ", title=" + title + ", creationDate=" + creationDate + ", lastUpdateDate="
+				+ lastUpdateDate + ", summary=" + summary + ", body=" + body + ", userId=" + userId + ", userName="
+				+ userName + ", tags=" + tags + "]";
 	}
 	
 }

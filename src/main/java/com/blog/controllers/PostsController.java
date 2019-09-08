@@ -100,7 +100,7 @@ public class PostsController {
 		
 		postDTO.setCreationDate(optPost.get().getCreationDate());
 		postDTO.setLastUpdateDate(optPost.get().getLastUpdateDate());
-		postDTO.setPostId(optPost.get().getPostId());
+		postDTO.setId(optPost.get().getPostId());
 		response.setData(postDTO);
 		
 		return ResponseEntity.ok(response);
@@ -113,8 +113,8 @@ public class PostsController {
 	@PutMapping
 	public ResponseEntity<Response<PostDTO>> updatePost(@Valid @RequestBody PostDTO postDTO, BindingResult bindingResult) {
 		
+		log.info("Updating post ...");
 		Response<PostDTO> response = new Response<>();
-		
 		if(bindingResult.hasErrors()) {
 			log.error("It was not possible to update the specified post. Invalid data.");
 			bindingResult.getAllErrors().forEach(err -> response.addError(err.getDefaultMessage()));
@@ -129,7 +129,7 @@ public class PostsController {
 			response.addError("It was not possible to update the post.");
 			return ResponseEntity.badRequest().body(response);
 		}
-		postDTO.setPostId(optPost.get().getPostId());
+		postDTO.setId(optPost.get().getPostId());
 		postDTO.setLastUpdateDate(optPost.get().getLastUpdateDate());
 		postDTO.setCreationDate(optPost.get().getCreationDate());
 		response.setData(postDTO);

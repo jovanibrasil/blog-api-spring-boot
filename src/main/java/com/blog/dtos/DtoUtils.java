@@ -13,7 +13,7 @@ public class DtoUtils {
 	 */
 	public static PostDTO postToPostDTO(Post post) {
 		PostDTO postDTO = new PostDTO();
-		postDTO.setPostId(post.getPostId());
+		postDTO.setId(post.getPostId());
 		postDTO.setUserName(post.getAuthor().getUserName());
 		postDTO.setSummary(post.getSummary());
 		postDTO.setBody(post.getBody());
@@ -33,7 +33,7 @@ public class DtoUtils {
 	 */
 	public static Post postDTOtoPost(PostDTO postDTO) {
 		Post post = new Post();
-		post.setPostId(postDTO.getPostId());
+		post.setPostId(postDTO.getId());
 		post.setSummary(postDTO.getSummary());
 		post.setBody(postDTO.getBody());
 		post.setCreationDate(postDTO.getCreationDate());

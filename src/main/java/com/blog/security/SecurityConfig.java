@@ -3,6 +3,7 @@ package com.blog.security;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
@@ -33,16 +34,18 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	protected void configure(HttpSecurity http) throws Exception {
 				
 		http
-			.csrf().disable() // disable csrf (cross-site request forgery) 
+			.csrf().disable() // disable CSRF (cross-site request forgery) 
 			.cors()
 			.and()
 			.exceptionHandling().authenticationEntryPoint(unauthorizedHandler) // set authentication error
-			.and().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS) // set session police stateless
+			.and().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS) // set session police stateles
 			.and()
 			.authorizeRequests()
-			.antMatchers("/users/login", "/search", "/subscription", "/posts/top", "/posts/summary", 
-					"/posts/post/*", "/posts/list", "posts/list/byuser/*").permitAll()
-			.antMatchers("/posts/delete/*", "/posts/create", "/posts/update").hasAnyRole("ADMIN")
+			.antMatchers("/search", "/subscription", "/posts/top", "/posts/summaries", 
+					"/posts/*", "/posts", "/posts/byuser/*").permitAll()
+			.antMatchers(HttpMethod.DELETE, "/posts/*").hasRole("ADMIN")
+			.antMatchers(HttpMethod.POST, "/posts").hasRole("ADMIN")
+			.antMatchers(HttpMethod.PUT, "/posts").hasRole("ADMIN")
 			.antMatchers("/users").hasRole("SERVICE"); 
 		
 			//http.addFilterBefore(new LoginFilter("/users/login", authenticationManager()), UsernamePasswordAuthenticationFilter.class);

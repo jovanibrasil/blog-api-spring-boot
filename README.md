@@ -1,4 +1,4 @@
-[![Build Status](http://13.58.51.172:8085/job/blog-api/badge/icon)](http://13.58.51.172:8085/job/blog-api/)
+[![Build Status](http://13.58.51.172:8085/buildStatus/icon?job=blog-api)](http://13.58.51.172:8085/job/blog-api/)
 
 # API para um blog pessoal
 

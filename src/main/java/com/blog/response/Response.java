@@ -12,13 +12,13 @@ import java.util.List;
 public class Response<T> {
 
 	private T data;
-	private List<String> errors;
+	private List<ErrorDetail> errors;
 	
 	public Response() {
 		this.errors = new ArrayList<>();
 	}
 	
-	public Response(T data, List<String> errors) {
+	public Response(T data, List<ErrorDetail> errors) {
 		super();
 		this.data = data;
 		this.errors = errors;
@@ -31,14 +31,18 @@ public class Response<T> {
 		this.data = data;
 	}
 	
-	public List<String> getErrors() {
+	public List<ErrorDetail> getErrors() {
 		if(errors == null) {
 			this.errors = new ArrayList<>();
 		}
 		return this.errors;
 	}
 	
-	public void addError(String error) {
+	public void addError(String errorMessage) {
+		this.errors.add(new ErrorDetail(errorMessage));
+	}
+	
+	public void addError(ErrorDetail error) {
 		this.errors.add(error);
 	}
 	

@@ -38,14 +38,15 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 			.cors()
 			.and()
 			.exceptionHandling().authenticationEntryPoint(unauthorizedHandler) // set authentication error
-			.and().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS) // set session police stateles
+			.and().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS) // set session police stateless
 			.and()
 			.authorizeRequests()
-			.antMatchers("/search", "/subscription", "/posts/top", "/posts/summaries", 
+			.antMatchers("/search", "/subscriptions/*", "/posts/top", "/posts/summaries", 
 					"/posts/*", "/posts", "/posts/byuser/*").permitAll()
 			.antMatchers(HttpMethod.DELETE, "/posts/*").hasRole("ADMIN")
 			.antMatchers(HttpMethod.POST, "/posts").hasRole("ADMIN")
 			.antMatchers(HttpMethod.PUT, "/posts").hasRole("ADMIN")
+			.antMatchers(HttpMethod.GET, "/subscriptions").hasRole("ADMIN")
 			.antMatchers("/users").hasRole("SERVICE"); 
 		
 			//http.addFilterBefore(new LoginFilter("/users/login", authenticationManager()), UsernamePasswordAuthenticationFilter.class);

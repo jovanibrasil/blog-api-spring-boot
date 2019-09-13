@@ -18,12 +18,19 @@ public class Subscription {
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private Long id;
-	@Column(nullable=false)
+	@Column(nullable=false, unique = true)
 	private String email;
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date subscriptionDate;
 
 	public Subscription() {}
+	
+	public Subscription(Long id, String email, Date subscriptionDate) {
+		super();
+		this.id = id;
+		this.email = email;
+		this.subscriptionDate = subscriptionDate;
+	}
 	
 	public Subscription(String email) {
 		this.email = email;

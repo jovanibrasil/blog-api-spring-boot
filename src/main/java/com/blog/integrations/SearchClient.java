@@ -1,5 +1,6 @@
 package com.blog.integrations;
 
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,9 +22,12 @@ public class SearchClient {
 		try {
 			List<SummaryDTO> summaries = new ArrayList<>();
 			RestTemplate restTemplate = new RestTemplate();
-			ResponseEntity<Object[]> responseEntity = restTemplate.getForEntity(uri, Object[].class);
-			for (Object object : responseEntity.getBody()) {
-				summaries.add((SummaryDTO)object);
+			
+			URI searchURI = URI.create(String.format(uri + "?term=%s", query));
+			
+			ResponseEntity<SummaryDTO[]> responseEntity = restTemplate.getForEntity(searchURI, SummaryDTO[].class);
+			for (SummaryDTO object : responseEntity.getBody()) {
+				summaries.add(object);
 			}
 			return summaries;
 		} catch (Exception e) {

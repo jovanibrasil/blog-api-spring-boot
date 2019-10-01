@@ -26,13 +26,14 @@ if [ "$(systemctl is-active docker)" = "active" ];
 		echo "BUILDING APP ..."
 		mvn clean package -Pdev
 		find target/*.war -type f -execdir cp "{}" ../ ";"
+		FILENAME=$(find *.war -type f)
 		REVISION=$(find *.war -type f | grep -Eo '[0-9]+')
 		echo "APP BUILDING REVISION ${REVISION}"
 		chmod -R ugo+rwx target
 		chmod -R ugo+rwx src
 
 		echo "CONTAINER RUNNING. DEPLOYING ..."
-		docker cp ${FILENAME}"##"${REVISION}.war apps-server:${CATALINA_HOME}${FILENAME}${REVISION}.war
+		docker cp ${FILENAME} apps-server:${CATALINA_HOME}${FILENAME}
 		mv *.war builds/
 		echo "FINISHED!"
 	else

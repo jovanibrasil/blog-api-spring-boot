@@ -5,8 +5,12 @@
 
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.blog</groupId>
-	<artifactId>blog</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<artifactId>blog-api</artifactId>
+	<version>1.0</version>
+
+	<scm>
+		<connection>scm:git:https://jovanibrasil@github.com/jovanibrasil/ParallelDeploymentTest.git</connection>
+	</scm>
 
 	<parent>
 		<groupId>org.springframework.boot</groupId>
@@ -19,6 +23,7 @@
 	<properties>
 		<java.version>1.8</java.version>
 		<activeProfile>prod</activeProfile>
+		<spring-cloud.version>Greenwich.SR2</spring-cloud.version>
 	</properties>
 
 	<profiles>
@@ -55,6 +60,11 @@
 	</repositories>
 
 	<dependencies>
+		<!-- Vault Starter -->
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-vault-config</artifactId>
+        </dependency>
 		<dependency>
 			<groupId>mysql</groupId>
 			<artifactId>mysql-connector-java</artifactId>
@@ -103,15 +113,56 @@
 			<artifactId>jackson-datatype-jsr310</artifactId>
 		</dependency>
 
-
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-configuration-processor</artifactId>
+			<optional>true</optional>
+		</dependency>
 	</dependencies>
-
+	
+	<dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>org.springframework.cloud</groupId>
+                <artifactId>spring-cloud-dependencies</artifactId>
+                <version>${spring-cloud.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+	
 	<build>
-		<finalName>blog-api</finalName>
+		<finalName>${project.artifactId}##${buildNumber}</finalName>
 		<plugins>
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
+			</plugin>
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>buildnumber-maven-plugin</artifactId>
+				<version>1.4</version>
+				<executions>
+					<execution>
+						<id>buildnumber</id>
+						<phase>validate</phase>
+						<goals>
+							<goal>create</goal>
+						</goals>
+					</execution>
+				</executions>
+				<configuration>
+					<format>{0,number}</format>
+					<items>
+						<item>buildNumber</item>
+					</items>
+					<doCheck>false</doCheck>
+					<doUpdate>false</doUpdate>
+					<buildNumberPropertiesFileLocation>
+						src/main/resources/buildNumber.properties
+					</buildNumberPropertiesFileLocation>
+				</configuration>
 			</plugin>
 		</plugins>
 	</build>

@@ -32,7 +32,7 @@ if [ "$(systemctl is-active docker)" = "active" ];
 		chmod -R ugo+rwx src
 
 		echo "CONTAINER RUNNING. DEPLOYING ..."
-		docker cp ${FILENAME}\#\#${REVISION}.war apps-server:${CATALINA_HOME}${FILENAME}${REVISION}.war
+		docker cp ${FILENAME}"##"${REVISION}.war apps-server:${CATALINA_HOME}${FILENAME}${REVISION}.war
 		mv *.war builds/
 		echo "FINISHED!"
 	else

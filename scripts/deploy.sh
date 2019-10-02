@@ -36,7 +36,8 @@ if [ "$(systemctl is-active docker)" = "active" ];
 
 		echo "CONTAINER RUNNING. DEPLOYING ..."
 		docker cp ${FILENAME} apps-server:${CATALINA_HOME}${FILENAME}
-		mv *.war builds/
+		rm *.war
+		#mv *.war builds/
 		echo "FINISHED!"
 	else
 		echo "DOCKER INACTIVE"

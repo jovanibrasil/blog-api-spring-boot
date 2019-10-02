@@ -2,10 +2,6 @@ pipeline {
     agent { label 'aws-agent' }
     
     environment {
-        BLOG_MYSQL_URL = credentials('BLOG_MYSQL_URL')
-        BLOG_MYSQL_CREDENTIALS = credentials('BLOG_MYSQL_CREDENTIALS')
-        BLOG_MYSQL_USERNAME = "${env.BLOG_MYSQL_CREDENTIALS_USR}"
-        BLOG_MYSQL_PASSWORD = "${env.BLOG_MYSQL_CREDENTIALS_PSW}"
         VAULT_TOKEN = credentials('VAULT_TOKEN')
     }
     
@@ -43,7 +39,6 @@ pipeline {
 
         stage("Deploy"){
             steps {
-            	echo "VAULT_TOKEN=${VAULT_TOKEN}"
                 sh 'make deploy-production VAULT_TOKEN=${VAULT_TOKEN} PROFILE=prod'
             }
         }

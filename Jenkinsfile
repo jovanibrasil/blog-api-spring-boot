@@ -43,7 +43,8 @@ pipeline {
 
         stage("Deploy"){
             steps {
-                sh 'make deploy-production VAULT_TOKEN=VAULT_TOKEN PROFILE=prod'
+            	echo "VAULT_TOKEN=${VAULT_TOKEN}"
+                sh 'make deploy-production VAULT_TOKEN=${VAULT_TOKEN} PROFILE=prod'
             }
         }
 

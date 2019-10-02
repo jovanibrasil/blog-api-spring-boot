@@ -6,6 +6,8 @@ CONTAINER_NAME=apps-server
 CATALINA_HOME=/usr/local/tomcat/webapps/
 FILENAME=blog-api
 
+export VAULT_ADDR=http://vault-server:8200
+
 if [ "$(systemctl is-active docker)" = "active" ];
 	then
 		echo "DOCKER ACTIVE"

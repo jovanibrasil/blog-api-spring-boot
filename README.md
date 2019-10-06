@@ -2,8 +2,11 @@
 
 # API para um blog pessoal
 
-Esta API permite operações básicas de um blog pessoal. Operação como criar, atualizar, deletar, e buscar 
-posts estão disponíveis nesta API. Operações que realizam alteração do estado do sistema em relação aos posts 
+Esta API permite operações básicas de um blog pessoal. O blog [blog.jovanibrasil.com](https://blog.jovanibrasil.com)
+(limitações de recursos de hardware podem tornar o blog lento ou indisponível) é um exemplo da utilização desta API.   
+
+Operações sobre posts como criar, atualizar, deletar, e buscar
+estão disponíveis nesta API. As operações que realizam alteração do estado do sistema em relação aos posts 
 são realizadas mediante verificação de autenticação e autorização. 
 
 ## Executando

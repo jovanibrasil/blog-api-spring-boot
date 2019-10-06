@@ -111,7 +111,7 @@ public class PostControllerTest {
 		BDDMockito.given(this.postService.findPostByPostId(10L)).willReturn(Optional.empty());
 		mvc.perform(MockMvcRequestBuilders.get("/posts/10"))
 			.andExpect(status().isBadRequest())
-			.andExpect(jsonPath("$.errors").value("It was not possible to find the specified post."));
+			.andExpect(jsonPath("$.errors[0].message").value("It was not possible to find the specified post."));
 	}
 	
 	/*
@@ -164,7 +164,7 @@ public class PostControllerTest {
 		BDDMockito.given(this.postService.findPostsByCategory("Java", PageRequest.of(0, 1, Sort.by("lastUpdateDate"))))
 			.willReturn(Optional.of(new PageImpl<Post>(Arrays.asList(post0))));
 		
-		mvc.perform(MockMvcRequestBuilders.get("/posts/summaries?cat=Java"))
+		mvc.perform(MockMvcRequestBuilders.get("/posts/summaries?category=Java"))
 				.andExpect(status().isOk())
 				.andExpect(jsonPath("$.errors").isEmpty());
 	}
@@ -176,7 +176,7 @@ public class PostControllerTest {
 		BDDMockito.given(this.postService.findPostsByCategory("Scala", PageRequest.of(0, 1, Sort.by("lastUpdateDate"))))
 			.willReturn(Optional.of(new PageImpl<Post>(Arrays.asList(post1))));
 		
-		mvc.perform(MockMvcRequestBuilders.get("/posts/summaries?cat=Scala"))
+		mvc.perform(MockMvcRequestBuilders.get("/posts/summaries?category=Scala"))
 				.andExpect(status().isOk())
 				.andExpect(jsonPath("$.errors").isEmpty());
 	}
@@ -261,7 +261,7 @@ public class PostControllerTest {
 		mvc.perform(MockMvcRequestBuilders.delete("/posts/50")
 				.header("Authorization", "x.x.x.x"))
 				.andExpect(status().isBadRequest())
-				.andExpect(jsonPath("$.errors[0]", equalTo("It was not possible to find the specified post.")));
+				.andExpect(jsonPath("$.errors[0].message", equalTo("It was not possible to find the specified post.")));
 	}
 	
 	public static String asJsonString(final Object obj) {

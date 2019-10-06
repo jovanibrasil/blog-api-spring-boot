@@ -41,7 +41,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 			.and().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS) // set session police stateless
 			.and()
 			.authorizeRequests()
-			.antMatchers("/search", "/subscriptions/*", "/posts/top", "/posts/summaries", 
+			.antMatchers("/search", "/subscriptions", "/posts/top", "/posts/summaries", 
 					"/posts/*", "/posts", "/posts/byuser/*").permitAll()
 			.antMatchers(HttpMethod.DELETE, "/posts/*").hasRole("ADMIN")
 			.antMatchers(HttpMethod.POST, "/posts").hasRole("ADMIN")

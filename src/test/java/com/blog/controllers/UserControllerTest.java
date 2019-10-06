@@ -64,7 +64,7 @@ public class UserControllerTest {
 			.header("Authorization", "x.x.x.x")
 			.accept(MediaType.APPLICATION_JSON))
 			.andExpect(status().isBadRequest())
-			.andExpect(jsonPath("$.errors").value("It was not possible to find the specified user."));
+			.andExpect(jsonPath("$.errors[0].message").value("It was not possible to find the specified user."));
 	}
 	
 	@Test

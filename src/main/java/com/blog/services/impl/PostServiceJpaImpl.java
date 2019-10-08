@@ -31,8 +31,8 @@ public class PostServiceJpaImpl implements PostService {
 	}
 	
 	@Override
-	public Optional<Page<Post>> findPostsByUserId(Long userId, Pageable page) {
-		return Optional.of(this.postRepo.findPostsByUserId(userId, page));
+	public Optional<Page<Post>> findPostsByUserName(String userName, Pageable page) {
+		return Optional.of(this.postRepo.findPostsByUserName(userName, page));
 	}
 
 	@Override

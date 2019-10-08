@@ -32,7 +32,6 @@ public class UserRepositoryTest {
 		List<String> tags = new ArrayList<>();
 		tags.add("Tag");
 		User user = new User();
-		user.setUserId(1L);
 		user.setFullUserName("User Name");
 		user.setLastUpdateDate(new Date());
 		user.setProfileType(ProfileTypeEnum.ROLE_USER);

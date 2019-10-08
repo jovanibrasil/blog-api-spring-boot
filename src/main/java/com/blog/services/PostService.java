@@ -11,7 +11,7 @@ public interface PostService {
 	
 	public Optional<Page<Post>> findPosts(Pageable page);
 	public Optional<Page<Post>> findPostsByCategory(String category, Pageable page);
-	public Optional<Page<Post>> findPostsByUserId(Long userId, Pageable page);
+	public Optional<Page<Post>> findPostsByUserName(String userName, Pageable page);
 	public Optional<Post> findPostByPostId(Long id);
 	public Optional<Post> create(Post post);
 	public Optional<Post> update(Post post);

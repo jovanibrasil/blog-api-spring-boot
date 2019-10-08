@@ -20,9 +20,8 @@ import com.blog.enums.ProfileTypeEnum;
 public class User {
 	
 	// Basic information
-	@Id @NonNull
-	private Long userId;
-	@Column(nullable=false, length=30, unique=true)
+	@Id 
+	@Column(nullable=false, length=12)
 	private String userName;
 	@Column(nullable=false, length=60) 
 	private String email;
@@ -133,14 +132,6 @@ public class User {
 
 	public void setCreationDate(Date creationDate) {
 		this.creationDate = creationDate;
-	}
-
-	public Long getUserId() {
-		return userId;
-	}
-
-	public void setUserId(Long userId) {
-		this.userId = userId;
 	}
 	
 }

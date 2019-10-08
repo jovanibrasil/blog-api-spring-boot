@@ -7,7 +7,7 @@ public class SummaryDTO {
 
 	private Long id;
 	private String title;
-//	private Date creationDate;
+	private Date creationDate;
 	private Date lastUpdateDate;
 	private String summary;
 	private String userName;
@@ -20,7 +20,7 @@ public class SummaryDTO {
 		super();
 		this.id = id;
 		this.title = title;
-//		this.creationDate = creationDate;
+		this.creationDate = creationDate;
 		this.lastUpdateDate = lastUpdateDate;
 		this.summary = summary;
 		this.userName = userName;
@@ -73,6 +73,14 @@ public class SummaryDTO {
 
 	public void setTags(List<String> tags) {
 		this.tags = tags;
+	}
+
+	public Date getCreationDate() {
+		return creationDate;
+	}
+
+	public void setCreationDate(Date creationDate) {
+		this.creationDate = creationDate;
 	}
 	
 }

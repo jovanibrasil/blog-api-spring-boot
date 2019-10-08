@@ -26,21 +26,12 @@ public class PostDTO {
 	private String body;
 	
 	@NotNull
-	private Long userId;
 	private String userName;
 	
 	@NotNull(message="Tags must not be null")
 	private List<String> tags;
 	
 	public PostDTO() {}
-	
-	public Long getUserId() {
-		return userId;
-	}
-	
-	public void setUserId(Long userId) {
-		this.userId = userId;
-	}
 	
 	public Long getId() {
 		return id;
@@ -100,7 +91,7 @@ public class PostDTO {
 	@Override
 	public String toString() {
 		return "PostDTO [id=" + id + ", title=" + title + ", creationDate=" + creationDate + ", lastUpdateDate="
-				+ lastUpdateDate + ", summary=" + summary + ", body=" + body + ", userId=" + userId + ", userName="
+				+ lastUpdateDate + ", summary=" + summary + ", body=" + body + ", userName="
 				+ userName + ", tags=" + tags + "]";
 	}
 	

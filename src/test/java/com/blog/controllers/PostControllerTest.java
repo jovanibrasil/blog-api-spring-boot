@@ -57,7 +57,6 @@ public class PostControllerTest {
 	public void setUp() {
 		
 		User user = new User();
-		user.setUserId(0L);
 		user.setUserName("jovanibrasil");
 		user.setFullUserName("Jovani Brasil");
 		user.setEmail("jovanibrasil@gmail.com");
@@ -202,7 +201,7 @@ public class PostControllerTest {
 	@Test
 	public void testGetPostsByUserName() throws Exception {
 		PageImpl<Post> page = new PageImpl<Post>(Arrays.asList(post1, post0));
-		BDDMockito.given(this.postService.findPostsByUserId(Mockito.any(), Mockito.any())).willReturn(
+		BDDMockito.given(this.postService.findPostsByUserName(Mockito.any(), Mockito.any())).willReturn(
 				Optional.of(page));
 		mvc.perform(MockMvcRequestBuilders.get("/posts/byuser/1"))
 				.andExpect(status().isOk())

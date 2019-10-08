@@ -55,7 +55,6 @@ public class PostServiceTest {
 		tags = new ArrayList<>();
 		tags.add("Tag");
 		user = new User();
-		user.setUserId(1L);
 		user.setFullUserName("User Name");
 		user.setLastUpdateDate(new Date());
 		user.setProfileType(ProfileTypeEnum.ROLE_USER);
@@ -75,7 +74,7 @@ public class PostServiceTest {
 		BDDMockito.given(this.postRepository.findPosts(Mockito.any(PageRequest.class))).willReturn(page);
 	
 		BDDMockito.given(this.postRepository.findById(Mockito.anyLong())).willReturn(Optional.of(post));
-		BDDMockito.given(this.postRepository.findPostsByUserId(Mockito.anyLong(), Mockito.any()))
+		BDDMockito.given(this.postRepository.findPostsByUserName(Mockito.anyString(), Mockito.any()))
 			.willReturn(page);
 		
 	}
@@ -136,14 +135,14 @@ public class PostServiceTest {
 	@Test
 	public void testFindPostsByUserIdValidUserId() {
 		PageRequest page = PageRequest.of(0, 5, Sort.by("lastUpdateDate"));
-		Optional<Page<Post>> optPost = this.postService.findPostsByUserId(1L, page);
+		Optional<Page<Post>> optPost = this.postService.findPostsByUserName("jovanibrasil", page);
 		assertEquals(1, optPost.get().getNumberOfElements());
 	}
 	
 	@Test
 	public void testFindPostsByUserIdInvalidUserId() {
 		PageRequest page = PageRequest.of(0, 5, Sort.by("lastUpdateDate"));
-		Optional<Page<Post>> optPost = this.postService.findPostsByUserId(0L, page);
+		Optional<Page<Post>> optPost = this.postService.findPostsByUserName("jovanibrasil", page);
 		assertEquals(1, optPost.get().getNumberOfElements());
 	}
 	

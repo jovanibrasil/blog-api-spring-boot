@@ -50,7 +50,7 @@ public class Post {
 	// FetchType: JPA loads all data together or on-demand.
 	// In this case, author will be loaded together.
 	@ManyToOne(fetch=FetchType.EAGER)// Many posts to one user.
-	@JoinColumn(referencedColumnName="userId", name="user_id")
+	@JoinColumn(referencedColumnName="userName", name="user_name")
 	@JsonBackReference
 	private User author;
 	

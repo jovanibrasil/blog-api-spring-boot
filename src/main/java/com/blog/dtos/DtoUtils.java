@@ -21,7 +21,6 @@ public class DtoUtils {
 		postDTO.setLastUpdateDate(post.getLastUpdateDate());
 		postDTO.setTitle(post.getTitle());
 		postDTO.setTags(post.getTags());
-		postDTO.setUserId(post.getAuthor().getUserId());
 		return postDTO;
 	}
 	
@@ -41,7 +40,6 @@ public class DtoUtils {
 		post.setTitle(postDTO.getTitle());
 		post.setTags(postDTO.getTags());
 		User user = new User();
-		user.setUserId(postDTO.getUserId());
 		post.setAuthor(user);
 		return post;
 	}

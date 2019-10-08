@@ -82,9 +82,9 @@ public class PostRepositoryTest {
 	}
 	
 	@Test
-	public void testFindPostsByInvalidUserId() {
+	public void testFindPostsByInvalidUserName() {
 		PageRequest page = PageRequest.of(0, 5, Sort.by("lastUpdateDate"));
-		Page<Post> posts = this.postRepository.findPostsByUserName("jovanibrasil", page);
+		Page<Post> posts = this.postRepository.findPostsByUserName("jovanibrasil2", page);
 		assertEquals(0, posts.getNumberOfElements());
 	}
 	

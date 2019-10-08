@@ -168,17 +168,17 @@ public class PostsController {
 	 * Get a list of n latest posts of a specified user.
 	 * 
 	 * @param length is the size of the post list that will be returned.
-	 * @param userName is the user identification. 
+	 * @param userId is the user identification. 
 	 * 
 	 */
 	@GetMapping("/byuser/{username}") 
-	public ResponseEntity<Response<ArrayList<PostDTO>>> getPostListByUser(@PathVariable("username") String userName, 
+	public ResponseEntity<Response<ArrayList<PostDTO>>> getPostListByUser(@PathVariable("username") String userId, 
 			@RequestParam(value="page", defaultValue="0") int page, @RequestParam(value="ord", defaultValue="lastUpdateDate") String ord, 
 			@RequestParam(value="dir", defaultValue="DESC") String dir) { 
 		
 		Response<ArrayList<PostDTO>> response = new Response<>();
 		PageRequest pageRequest = PageRequest.of(page, this.postsListSize, Direction.valueOf(dir), ord);
-		Optional<Page<Post>> optLatestPosts = postService.findPostsByUserName(userName, pageRequest);
+		Optional<Page<Post>> optLatestPosts = postService.findPostsByUserName(userId, pageRequest);
 		
 		if(!optLatestPosts.isPresent()) {
 			log.error("It was not possible to get the list of posts.");

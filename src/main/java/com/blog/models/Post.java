@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import javax.persistence.Basic;
 import javax.persistence.CollectionTable;
 import javax.persistence.Column;
 import javax.persistence.ElementCollection;
@@ -47,6 +48,10 @@ public class Post {
 	// Any serializable data can be annotated with this notation.
 	@Lob @Column(nullable=false)
 	private String body;
+	
+	@Lob @Basic(fetch = FetchType.LAZY)
+	private byte[] banner;
+	
 	// FetchType: JPA loads all data together or on-demand.
 	// In this case, author will be loaded together.
 	@ManyToOne(fetch=FetchType.EAGER)// Many posts to one user.
@@ -149,6 +154,14 @@ public class Post {
 
 	public void setCreationDate(Date creationDate) {
 		this.creationDate = creationDate;
+	}
+
+	public byte[] getBanner() {
+		return banner;
+	}
+
+	public void setBanner(byte[] banner) {
+		this.banner = banner;
 	}
 
 	@Override

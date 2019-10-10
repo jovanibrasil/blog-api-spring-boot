@@ -31,6 +31,8 @@ public class PostDTO {
 	@NotNull(message="Tags must not be null")
 	private List<String> tags;
 	
+	private String banner;
+	
 	public PostDTO() {}
 	
 	public Long getId() {
@@ -86,6 +88,14 @@ public class PostDTO {
 
 	public void setTags(List<String> tags) {
 		this.tags = tags;
+	}
+	
+	public String getBanner() {
+		return banner;
+	}
+
+	public void setBanner(String banner) {
+		this.banner = banner;
 	}
 
 	@Override

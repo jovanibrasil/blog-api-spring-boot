@@ -6,6 +6,7 @@ import java.util.Optional;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 
+import org.apache.commons.codec.binary.Base64;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -222,7 +223,8 @@ public class PostsController {
 		optLatestPosts.get().forEach(post -> {
 			SummaryDTO summaryDTO = new SummaryDTO(post.getPostId(), post.getTitle(), 
 					post.getCreationDate(),	post.getLastUpdateDate(), 
-					post.getSummary(), post.getAuthor().getUserName(), post.getTags());
+					post.getSummary(), post.getAuthor().getUserName(), 
+					post.getTags(), DtoUtils.encodeBase64(post.getBanner()));
 			summaries.add(summaryDTO);
 		});	
 		response.setData(summaries);

@@ -12,11 +12,12 @@ public class SummaryDTO {
 	private String summary;
 	private String userName;
 	private List<String> tags;
+	private String banner;
 	
 	public SummaryDTO() {}
 	
 	public SummaryDTO(Long id, String title, Date creationDate, Date lastUpdateDate, 
-			String summary, String userName, List<String> tags) {
+			String summary, String userName, List<String> tags, String banner) {
 		super();
 		this.id = id;
 		this.title = title;
@@ -25,6 +26,7 @@ public class SummaryDTO {
 		this.summary = summary;
 		this.userName = userName;
 		this.tags = tags;
+		this.banner = banner;
 	}
 
 	public Long getId() {
@@ -81,6 +83,14 @@ public class SummaryDTO {
 
 	public void setCreationDate(Date creationDate) {
 		this.creationDate = creationDate;
+	}
+
+	public String getBanner() {
+		return banner;
+	}
+
+	public void setBanner(String banner) {
+		this.banner = banner;
 	}
 	
 }

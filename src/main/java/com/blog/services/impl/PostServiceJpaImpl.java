@@ -61,6 +61,7 @@ public class PostServiceJpaImpl implements PostService {
 			post.setBody(receivedPost.getBody());
 			post.setSummary(receivedPost.getSummary());
 			post.setLastUpdateDate(new Date());
+			post.setBanner(receivedPost.getBanner());
 			post.setTags(receivedPost.getTags());
 			return Optional.of(this.postRepo.save(post));
 		}else {

@@ -11,7 +11,7 @@ public class UserDTO {
 	@NonNull
 	private Long userId;
 	// basic user data
-	@Length(min=4, max=30, message="The user name must contains between 4 and 30 characters.")
+	@Length(min=4, max=16, message="The user name must contains between 4 and 16 characters.")
     @NotBlank(message="The user name must not be empty.")
 	private String userName;
 	@NotBlank(message="The email must not be empty.")

@@ -21,7 +21,7 @@ public class User {
 	
 	// Basic information
 	@Id 
-	@Column(nullable=false, length=12)
+	@Column(nullable=false, length=16)
 	private String userName;
 	@Column(nullable=false, length=60) 
 	private String email;

@@ -1,3 +1,7 @@
+ifndef PROFILE
+override PROFILE = dev
+endif
+
 run-tests:
 	mvn clean test -Ptest
 
@@ -6,8 +10,20 @@ stop:
 clean: stop
 	- docker rm blog-api
 
-build: clean
+build-maven:
+	rm libs/ -rf
 	mvn clean package -Pdev
+	mvn dependency:copy-dependencies
+	FILE_NAME=blog-api\#\#$(shell find target/*.war -type f | grep -Eo '[0-9]+)
+
+build-docker: clean
+	docker build --build-arg ENVIRONMENT=dev --build-arg FILE_NAME -t blog-api .
+	chmod -R ugo+rw target/
+	
+build: clean
+	rm libs/ -rf
+	mvn clean package -Pdev
+	mvn dependency:copy-dependencies
 	FILE_NAME=blog-api\#\#$(shell find target/*.war -type f | grep -Eo '[0-9]+)
 	docker build --build-arg ENVIRONMENT=dev --build-arg FILE_NAME -t blog-api .
 	chmod -R ugo+rw target/
@@ -32,4 +48,4 @@ compose-up: compose-down
 	docker-compose up --no-recreate -d
 
 deploy-production:
-	/bin/sh scripts/deploy.sh VAULT_TOKEN=${VAULT_TOKEN} SPRING_PROFILES_ACTIVE=${PROFILE}
+	/bin/sh scripts/deploy-docker-tomcat.sh VAULT_TOKEN=${VAULT_TOKEN} SPRING_PROFILES_ACTIVE=${PROFILE}

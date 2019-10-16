@@ -15,6 +15,8 @@ ENV BLOG_MYSQL_PASSWORD=$BLOG_MYSQL_PASSWORD
 ENV ENVIRONMENT=$ENVIRONMENT
 ENV FILE_NAME=${FILE_NAME}
 
+COPY ./libs/* /usr/local/tomcat/lib/
+
 COPY ./target/${FILE_NAME} /usr/local/tomcat/webapps/${FILE_NAME}
 COPY ./scripts ./scripts
 RUN if [ "$ENVIRONMENT" = "dev" ]; \

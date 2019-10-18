@@ -25,7 +25,8 @@ public class SearchClient {
 			
 			URI searchURI = URI.create(String.format(uri + "?term=%s", query));
 			
-			ResponseEntity<SummaryDTO[]> responseEntity = restTemplate.getForEntity(searchURI, SummaryDTO[].class);
+			ResponseEntity<SummaryDTO[]> responseEntity = restTemplate
+					.getForEntity(searchURI, SummaryDTO[].class);
 			for (SummaryDTO object : responseEntity.getBody()) {
 				summaries.add(object);
 			}

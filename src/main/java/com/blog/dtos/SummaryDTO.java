@@ -3,10 +3,13 @@ package com.blog.dtos;
 import java.util.Date;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 public class SummaryDTO {
 
 	private Long id;
 	private String title;
+	@JsonFormat(pattern="yyyy-MM-dd HH:mm:ss")
 	private Date creationDate;
 	private Date lastUpdateDate;
 	private String summary;

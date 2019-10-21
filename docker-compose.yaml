@@ -1,6 +1,7 @@
 version: '3' 
 networks:
   net:
+    driver: bridge
 services:
   blog-api:
     image: blog-api # Blog API (Spring)
@@ -62,3 +63,7 @@ services:
       - 8983:8983
     networks:
       - net
+    environment:
+      - BLOG_MYSQL_URL=${BLOG_MYSQL_URL}
+      - BLOG_MYSQL_USERNAME=${BLOG_MYSQL_USERNAME}
+      - BLOG_MYSQL_PASSWORD=${BLOG_MYSQL_PASSWORD}

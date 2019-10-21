@@ -30,7 +30,7 @@ build: clean
 
 run: clean
 	docker run -d -p 8081:8080 -m 256m --memory-swap 512m -e "SPRING_PROFILES_ACTIVE=dev" \
-	 --name=blog-api --network net blog-api
+	 -e "VAULT_TOKEN=${VAULT_TOKEN}" --name=blog-api --network net blog-api
 
 start: stop
 	docker start blog-api

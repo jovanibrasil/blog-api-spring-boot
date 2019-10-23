@@ -40,13 +40,12 @@ public class AuthClient {
 		}
 	}
 	
-	public String getToken(String name, String password) {
-		
+	public String getServiceToken() {
 		try {
 			// create request body
 			JSONObject request = new JSONObject();
-			request.put("username", name);
-			request.put("password", password);
+			request.put("username", "BLOG");
+			request.put("password", "123456");
 			request.put("applications", new JSONArray("BLOG_APP"));
 			// set headers
 			HttpHeaders headers = new HttpHeaders();

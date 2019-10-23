@@ -1,17 +1,15 @@
 package com.blog.config;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Profile;
 
-import com.blog.integrations.AuthClient;
+import com.blog.security.AccessToken;
 
 import springfox.documentation.builders.ApiInfoBuilder;
 import springfox.documentation.builders.PathSelectors;
 import springfox.documentation.builders.RequestHandlerSelectors;
 import springfox.documentation.service.ApiInfo;
+import springfox.documentation.service.Contact;
 import springfox.documentation.spi.DocumentationType;
 import springfox.documentation.spring.web.plugins.Docket;
 import springfox.documentation.swagger.web.ApiKeyVehicle;
@@ -21,15 +19,6 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 @Configuration
 @EnableSwagger2
 public class SwaggerConfig {
-
-	//@Value("${blog.admin-username}")
-	private String adminUserName = "";
-	
-	//@Value("${blog.admin-password}")
-	private String adminPassword = "";
-	
-	@Autowired
-	AuthClient authClient;
 	
 	/*
 	 * Swagger configuration
@@ -49,7 +38,8 @@ public class SwaggerConfig {
 	 */
 	private ApiInfo apiInfo() {
 		return new ApiInfoBuilder().title("Blog API")
-				.description("Blog documentation").version("1.0")
+				.description("Documentação da API de blog.").version("1.0")
+				.contact(new Contact("Jovani Brasil", "jovanibrasil.com", "jovanibrasil@gmail.com"))
 				.build();
 	}
 	
@@ -58,14 +48,8 @@ public class SwaggerConfig {
 	 * @return
 	 */
 	public SecurityConfiguration security() {
-		String token;
-		try {
-			token = authClient.getToken(adminUserName, adminPassword);
-		} catch (Exception e) {
-			token = "";
-		}
 		return new SecurityConfiguration(null, null, null, 
-			null, "Bearer " + token, ApiKeyVehicle.HEADER,
+			null, "Bearer " + AccessToken.getToken(), ApiKeyVehicle.HEADER,
 			"Authorization", ",");
 	}
 	

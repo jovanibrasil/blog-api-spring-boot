@@ -1,7 +1,6 @@
 package com.blog.controllers;
 
 import java.util.List;
-import java.util.Optional;
 
 import javax.validation.Valid;
 import javax.validation.constraints.Email;
@@ -45,14 +44,10 @@ public class SubscriptionController {
 	public ResponseEntity<Response<?>> subscribe(@PathVariable("email") 
 		@Valid @NotBlank(message = "Email não deve estar em branco.")  
 		@Email(message = "Formato de email inválido.") String email){
-		log.info("Subscribing ...");
+		log.info("Subscribing {} ...", email);
 		Response<?> response = new Response<>();
 		Subscription subscription = new Subscription(email);
-		Optional<Subscription> optSubscription = this.subscriptionService.saveSubscription(subscription);
-		if(!optSubscription.isPresent()) {
-			response.addError("It was not possible to create the subscription.");
-			return ResponseEntity.badRequest().body(response);
-		}
+		this.subscriptionService.saveSubscription(subscription);
 		return ResponseEntity.ok(response);	
 	}
 	

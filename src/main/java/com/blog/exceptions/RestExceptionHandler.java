@@ -21,7 +21,7 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler  {
 	
 	@ExceptionHandler(InvalidInformationException.class)
 	public ResponseEntity<Response<?>> handleInvalidInformationException(InvalidInformationException invalidInformationException){
-		log.info("handleResourceNotFound");
+		log.info("Invalid information. Sending response ...");
 		Response<?> response = new Response<>();
 		ErrorDetail errorDetail = new ErrorDetail.Builder()
 				.message(invalidInformationException.getMessage())
@@ -32,7 +32,7 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler  {
 	
 	@ExceptionHandler(ValidationException.class)
 	public ResponseEntity<Response<?>> handle(ValidationException validationException){
-		log.info("handleResourceNotFound");
+		log.info("Validation exception. Sending response ...");
 		Response<?> response = new Response<>();
 		ErrorDetail errorDetail = new ErrorDetail.Builder()
 				.message(validationException.getMessage())

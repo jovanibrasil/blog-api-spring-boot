@@ -27,7 +27,7 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler  {
 				.message(invalidInformationException.getMessage())
 				.build();
 		response.addError(errorDetail);
-		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+		return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).body(response);
 	}
 	
 	@ExceptionHandler(ValidationException.class)

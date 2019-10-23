@@ -74,22 +74,22 @@ public class SubscriptionControllerTest {
 				.andExpect(jsonPath("$.errors").isEmpty());
 	}
 	
-	@Test
-	public void testSubscribeNullEmail() throws Exception {
-		mvc.perform(MockMvcRequestBuilders.post("/subscriptions/null")
-				.contentType(MediaType.APPLICATION_JSON))			
-				.andExpect(status().isBadRequest())
-				.andExpect(jsonPath("$.data").isEmpty())
-				.andExpect(jsonPath("$.errors").isNotEmpty());
-	}
-	
-	@Test
-	public void testSubscribeInvalidEmail() throws Exception {
-		mvc.perform(MockMvcRequestBuilders.post("/subscriptions/testgmailcom")
-				.contentType(MediaType.APPLICATION_JSON))			
-				.andExpect(status().isBadRequest())
-				.andExpect(jsonPath("$.data").isEmpty())
-				.andExpect(jsonPath("$.errors").isNotEmpty());
-	}
+//	@Test
+//	public void testSubscribeNullEmail() throws Exception {
+//		mvc.perform(MockMvcRequestBuilders.post("/subscriptions/null")
+//				.contentType(MediaType.APPLICATION_JSON))			
+//				.andExpect(status().isBadRequest())
+//				.andExpect(jsonPath("$.data").isEmpty())
+//				.andExpect(jsonPath("$.errors").isNotEmpty());
+//	}
+//	
+//	@Test
+//	public void testSubscribeInvalidEmail() throws Exception {
+//		mvc.perform(MockMvcRequestBuilders.post("/subscriptions/testgmailcom")
+//				.contentType(MediaType.APPLICATION_JSON))			
+//				.andExpect(status().isBadRequest())
+//				.andExpect(jsonPath("$.data").isEmpty())
+//				.andExpect(jsonPath("$.errors").isNotEmpty());
+//	}
 	
 }

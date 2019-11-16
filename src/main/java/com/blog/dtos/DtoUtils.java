@@ -1,6 +1,7 @@
 package com.blog.dtos;
 
 import org.apache.commons.codec.binary.Base64;
+import org.springframework.security.core.context.SecurityContextHolder;
 
 import com.blog.models.Post;
 import com.blog.models.User;
@@ -52,8 +53,6 @@ public class DtoUtils {
 		postDTO.setLastUpdateDate(post.getLastUpdateDate());
 		postDTO.setTitle(post.getTitle());
 		postDTO.setTags(post.getTags());
-		String banner = encodeBase64(post.getBanner());
-		postDTO.setBanner(banner);
 		
 		return postDTO;
 	}
@@ -73,9 +72,9 @@ public class DtoUtils {
 		post.setLastUpdateDate(postDTO.getLastUpdateDate());
 		post.setTitle(postDTO.getTitle());
 		post.setTags(postDTO.getTags());
-		byte[] banner = decodeBase64(postDTO.getBanner());
-		post.setBanner(banner);
 		User user = new User();
+		String userName = SecurityContextHolder.getContext().getAuthentication().getName();
+		user.setUserName(userName);
 		post.setAuthor(user);
 		return post;
 	}

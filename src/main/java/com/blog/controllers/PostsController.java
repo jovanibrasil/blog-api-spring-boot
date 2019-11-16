@@ -6,7 +6,6 @@ import java.util.Optional;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 
-import org.apache.commons.codec.binary.Base64;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,10 +23,11 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.blog.dtos.DtoUtils;
 import com.blog.dtos.PostDTO;
@@ -77,24 +77,55 @@ public class PostsController {
 	}
 	
 	/**
+	 * Create a new empty post. 
+	 * 
+	 */
+	@PostMapping("/empty")
+	public ResponseEntity<Response<PostDTO>> createPost() {
+		Response<PostDTO> response = new Response<>();
+		
+		log.info("Creating new empty post");
+		Optional<Post> optPost = postService.create();
+		
+		if(!optPost.isPresent()) {
+			log.info("It was not possible to create the specified post.");
+			response.addError("It was not possible to created the post.");
+			return ResponseEntity.badRequest().body(response);
+		}
+		PostDTO postDTO = new PostDTO();
+		postDTO.setCreationDate(optPost.get().getCreationDate());
+		postDTO.setLastUpdateDate(optPost.get().getLastUpdateDate());
+		postDTO.setId(optPost.get().getPostId());
+		response.setData(postDTO);
+
+		return ResponseEntity.ok(response);
+	}
+	
+	/**
 	 * Create a new post
 	 * 
 	 */
-	@PostMapping
-	public ResponseEntity<Response<PostDTO>> createPost(@Valid @RequestBody PostDTO postDTO, BindingResult bindingResult) {
+	@PostMapping(consumes = { "multipart/form-data" })
+	public ResponseEntity<Response<PostDTO>> createPost(
+			@RequestPart(name = "post") @Valid @NotNull PostDTO postDTO,
+			@RequestPart @NotNull MultipartFile[] postImages, BindingResult bindingResult) {
+		
+		log.info("Multiparts received: " + postImages.length);
 		
 		Response<PostDTO> response = new Response<>();
 				
 		if(bindingResult.hasErrors()) {
-			log.error("It was not possible to create the specified post.");
+			log.info("It was not possible to create the specified post. Invalid fields.");
 			bindingResult.getAllErrors().forEach(err -> response.addError(err.getDefaultMessage()));
 			return ResponseEntity.badRequest().body(response);
 		}
+		
 		Post post = DtoUtils.postDTOtoPost(postDTO);
-		Optional<Post> optPost = postService.create(post);
+		log.info("Creating new post");
+		Optional<Post> optPost = postService.create(post, postImages);
 		
 		if(!optPost.isPresent()) {
-			log.error("It was not possible to create the specified post.");
+			log.info("It was not possible to create the specified post.");
 			response.addError("It was not possible to created the post.");
 			return ResponseEntity.badRequest().body(response);
 		}
@@ -103,7 +134,7 @@ public class PostsController {
 		postDTO.setLastUpdateDate(optPost.get().getLastUpdateDate());
 		postDTO.setId(optPost.get().getPostId());
 		response.setData(postDTO);
-		
+
 		return ResponseEntity.ok(response);
 	}
 	
@@ -111,8 +142,11 @@ public class PostsController {
 	 * Update a specified post.
 	 * 
 	 */
-	@PutMapping
-	public ResponseEntity<Response<PostDTO>> updatePost(@Valid @RequestBody PostDTO postDTO, BindingResult bindingResult) {
+	@PutMapping(consumes = { "multipart/form-data" })
+	public ResponseEntity<Response<PostDTO>> updatePost(
+			@RequestPart(name = "post") @Valid @NotNull PostDTO postDTO,
+			@RequestPart MultipartFile[] postImages, 
+			BindingResult bindingResult) {
 		
 		log.info("Updating post ...");
 		Response<PostDTO> response = new Response<>();
@@ -123,7 +157,7 @@ public class PostsController {
 		}
 		
 		Post post = DtoUtils.postDTOtoPost(postDTO);
-		Optional<Post> optPost = postService.update(post);
+		Optional<Post> optPost = postService.update(post, postImages);
 		
 		if(!optPost.isPresent()) {
 			log.error("It was not possible to update the specified post. Internal error.");
@@ -219,12 +253,12 @@ public class PostsController {
 		}
 		
 		ArrayList<SummaryDTO> summaries = new ArrayList<>();
-		
 		optLatestPosts.get().forEach(post -> {
-			SummaryDTO summaryDTO = new SummaryDTO(post.getPostId(), post.getTitle(), 
-					post.getCreationDate(),	post.getLastUpdateDate(), 
-					post.getSummary(), post.getAuthor().getUserName(), 
-					post.getTags(), DtoUtils.encodeBase64(post.getBanner()));
+			SummaryDTO summaryDTO = new SummaryDTO(post.getPostId(), 
+					post.getTitle(), post.getCreationDate(),	
+					post.getLastUpdateDate(), post.getSummary(), 
+					post.getAuthor().getUserName(), post.getTags(), 
+					post.getBannerUrl());
 			summaries.add(summaryDTO);
 		});	
 		response.setData(summaries);

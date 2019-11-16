@@ -15,21 +15,20 @@ public class SummaryDTO {
 	private String summary;
 	private String userName;
 	private List<String> tags;
-	private String banner;
+	private String bannerUrl;
 	
 	public SummaryDTO() {}
 	
 	public SummaryDTO(Long id, String title, Date creationDate, Date lastUpdateDate, 
-			String summary, String userName, List<String> tags, String banner) {
+			String summary, String userName, List<String> tags, String bannerUrl) {
 		super();
 		this.id = id;
 		this.title = title;
 		this.creationDate = creationDate;
 		this.lastUpdateDate = lastUpdateDate;
 		this.summary = summary;
-		this.userName = userName;
 		this.tags = tags;
-		this.banner = banner;
+		this.bannerUrl = bannerUrl;
 	}
 
 	public Long getId() {
@@ -88,12 +87,12 @@ public class SummaryDTO {
 		this.creationDate = creationDate;
 	}
 
-	public String getBanner() {
-		return banner;
+	public String getBannerUrl() {
+		return bannerUrl;
 	}
 
-	public void setBanner(String banner) {
-		this.banner = banner;
+	public void setBannerUrl(String bannerUrl) {
+		this.bannerUrl = bannerUrl;
 	}
 	
 }

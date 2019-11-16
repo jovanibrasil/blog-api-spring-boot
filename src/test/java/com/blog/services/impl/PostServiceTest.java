@@ -24,13 +24,16 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
+import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.blog.enums.ProfileTypeEnum;
 import com.blog.models.Post;
 import com.blog.models.User;
+import com.blog.repositories.FileSystemStorageTest;
 import com.blog.repositories.PostRepository;
 import com.blog.services.PostService;
 
@@ -41,14 +44,19 @@ import com.blog.services.PostService;
 public class PostServiceTest {
 
 	@MockBean
-	PostRepository postRepository;
+	private PostRepository postRepository;
+	
+	@MockBean
+	private FileSystemStorageService storage;
 	
 	@Autowired
-	PostService postService;
+	private PostService postService;
 	
 	private Post post;
 	private User user;
 	private List<String> tags;
+	
+	private MultipartFile[] images;
 	
 	@Before
 	public void setUp() {
@@ -77,6 +85,18 @@ public class PostServiceTest {
 		BDDMockito.given(this.postRepository.findPostsByUserName(Mockito.anyString(), Mockito.any()))
 			.willReturn(page);
 		
+		Mockito.doNothing()
+			.when(this.storage)
+			.saveImage(Mockito.any(), Mockito.any());
+		
+		Mockito.doNothing()
+			.when(this.storage)
+			.deletePostDirectory(Mockito.any());
+		
+		MockMultipartFile image = new MockMultipartFile("data", "filename.txt", 
+				"text/plain", "some xml".getBytes());
+		this.images = new MockMultipartFile[1];
+		this.images[0] = image;
 	}
 	
 	@After
@@ -192,7 +212,7 @@ public class PostServiceTest {
 	public void testCreatePostExistentPostId() {
 		BDDMockito.given(this.postRepository.findById(1L)).willReturn(Optional.of(post));
 		post.setPostId(1L);
-		Optional<Post> optPost = this.postService.create(post);
+		Optional<Post> optPost = this.postService.create(post, images);
 		assertFalse(optPost.isPresent());
 	}
 	
@@ -213,7 +233,7 @@ public class PostServiceTest {
 		post.setPostId(2L);
 		BDDMockito.given(this.postRepository.save(post2)).willReturn(post);
 		
-		Optional<Post> optPost = this.postService.create(post2);
+		Optional<Post> optPost = this.postService.create(post2, images);
 		assertTrue(optPost.isPresent());
 		assertEquals(2L, optPost.get().getPostId().longValue());
 	}
@@ -226,7 +246,7 @@ public class PostServiceTest {
 	public void testUpdatePostByPostIdValidPostId() {
 		post.setPostId(1L);
 		post.setTitle("new title");
-		Optional<Post> optPost = this.postService.update(post);
+		Optional<Post> optPost = this.postService.update(post, images);
 		assertTrue(optPost.isPresent());
 		assertEquals("new title", optPost.get().getTitle());
 	}
@@ -234,7 +254,7 @@ public class PostServiceTest {
 	@Test
 	public void testUpdatePostByPostIdInvalidPostId() {
 		post.setPostId(1L);
-		Optional<Post> optPost = this.postService.create(post);
+		Optional<Post> optPost = this.postService.create(post, images);
 		assertFalse(optPost.isPresent());
 	}
 	

@@ -15,7 +15,7 @@ ENV BLOG_MYSQL_PASSWORD=$BLOG_MYSQL_PASSWORD
 ENV ENVIRONMENT=$ENVIRONMENT
 ENV FILE_NAME=${FILE_NAME}
 
-#COPY ./libs/* /usr/local/tomcat/lib/
+RUN mkdir -p /apps/blog/
 
 COPY ./target/${FILE_NAME} /usr/local/tomcat/webapps/${FILE_NAME}
 COPY ./scripts ./scripts
@@ -25,5 +25,10 @@ RUN if [ "$ENVIRONMENT" = "dev" ]; \
   	fi
 RUN rm ./scripts -rf
 EXPOSE 8080
+
+RUN groupadd -g 1024 datag
+RUN adduser --disabled-password --gecos "" --force-badname --ingroup datag myuser 
+USER myuser
+
 
 CMD ["/bin/bash", "/startup.sh"]

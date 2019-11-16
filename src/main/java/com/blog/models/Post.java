@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import javax.persistence.Basic;
 import javax.persistence.CollectionTable;
 import javax.persistence.Column;
 import javax.persistence.ElementCollection;
@@ -19,6 +18,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.persistence.Transient;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 
@@ -49,9 +49,6 @@ public class Post {
 	@Lob @Column(nullable=false)
 	private String body;
 	
-	@Lob @Basic(fetch = FetchType.LAZY)
-	private byte[] banner;
-	
 	// FetchType: JPA loads all data together or on-demand.
 	// In this case, author will be loaded together.
 	@ManyToOne(fetch=FetchType.EAGER)// Many posts to one user.
@@ -63,8 +60,22 @@ public class Post {
 	@ElementCollection(targetClass=String.class, fetch = FetchType.EAGER)
 	@CollectionTable(name="post_tags", joinColumns = @JoinColumn(name = "post_id"))
 	private List<String> tags;
+	
+	@Column(nullable = false)
+	private String bannerUrl;
 
 	public Post() {}
+	
+	public Post(User author) {
+		this.postId = 0L;
+		this.title = "";
+		this.summary = "";
+		this.body = "";
+		this.author = author;
+		this.lastUpdateDate = new Date();
+		this.creationDate = new Date();
+		this.tags = new ArrayList<String>(); 
+	}
 	
 	public Post(Long id, String title, String summary, List<String> tags, String body, User author) {
 		this.postId = id;
@@ -156,19 +167,19 @@ public class Post {
 		this.creationDate = creationDate;
 	}
 
-	public byte[] getBanner() {
-		return banner;
+	public String getBannerUrl() {
+		return bannerUrl;
 	}
 
-	public void setBanner(byte[] banner) {
-		this.banner = banner;
+	public void setBannerUrl(String bannerUrl) {
+		this.bannerUrl = bannerUrl;
 	}
-
+	
 	@Override
 	public String toString() {
 		return "Post [postId=" + postId + ", title=" + title + ", creationDate=" + creationDate + ", lastUpdateDate="
-				+ lastUpdateDate + ", summary=" + summary + ", body=" + body + ", author=" + author.toString() + ", tags=" + tags
-				+ "]";
-	}
+				+ lastUpdateDate + ", summary=" + summary + ", body=" + body 
+				+ ", author=" + author + ", tags=" + tags + "]";
+	}	
 	
 }

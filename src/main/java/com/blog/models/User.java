@@ -10,9 +10,6 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
-
-import org.springframework.lang.NonNull;
-
 import com.blog.enums.ProfileTypeEnum;
 
 @Entity
@@ -52,6 +49,10 @@ public class User {
 	public User() {
 		this.lastUpdateDate = new Date();
 		this.creationDate = new Date();
+	}
+	
+	public User(String userName) {
+		this.userName = userName;
 	}
 	
 	public String getUserName() {

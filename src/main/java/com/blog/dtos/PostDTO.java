@@ -15,9 +15,6 @@ public class PostDTO {
 	@Size(min=2, max=50, message="Título do Post deve ter entre 2 e 10 caracteres.")
 	private String title;
 	
-	private Date creationDate;
-	private Date lastUpdateDate;
-	
 	@NotNull(message="Summary must not be null")
 	@Size(min=2, max=5000, message="Sumário deve ter entre 2 e 1000 caracteres.")
 	private String summary;
@@ -25,13 +22,12 @@ public class PostDTO {
 	@Size(min=2, max=30000, message="Corpo do post deve ter entre 2 e 1000 caracteres.")
 	private String body;
 	
-	@NotNull
-	private String userName;
-	
 	@NotNull(message="Tags must not be null")
 	private List<String> tags;
-	
-	private String banner;
+
+	private Date creationDate;
+	private Date lastUpdateDate;
+	private String userName;
 	
 	public PostDTO() {}
 	
@@ -88,14 +84,6 @@ public class PostDTO {
 
 	public void setTags(List<String> tags) {
 		this.tags = tags;
-	}
-	
-	public String getBanner() {
-		return banner;
-	}
-
-	public void setBanner(String banner) {
-		this.banner = banner;
 	}
 
 	@Override

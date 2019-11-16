@@ -21,10 +21,14 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.MediaType;
+import org.springframework.mock.web.MockHttpServletRequest;
+import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.request.MockMultipartHttpServletRequestBuilder;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.springframework.test.web.servlet.request.RequestPostProcessor;
 
 import com.blog.dtos.DtoUtils;
 import com.blog.enums.ProfileTypeEnum;
@@ -138,7 +142,6 @@ public class PostControllerTest {
 				Optional.of(new PageImpl<Post>(Arrays.asList(post1))));
 		BDDMockito.given(this.postService.findPosts(PageRequest.of(1, 1, Sort.by("lastUpdateDate"))))
 			.willReturn(Optional.of(new PageImpl<Post>(Arrays.asList(post1))));
-
 		mvc.perform(MockMvcRequestBuilders.get("/posts").param("page", "1"))
 				.andExpect(status().isOk())
 				.andExpect(jsonPath("$.errors").isEmpty())
@@ -155,7 +158,6 @@ public class PostControllerTest {
 	/*
 	 * GetSummaryList test cases
 	 */
-	
 	@Test
 	public void testGetSummaryListJavaTag() throws Exception {
 		BDDMockito.given(this.postService.findPostsByCategory("Java",  PageRequest.of(0, 10, Sort.by("lastUpdateDate")))).willReturn(
@@ -214,11 +216,16 @@ public class PostControllerTest {
 	
 	@Test
 	public void testCreatePost() throws Exception {
-		BDDMockito.given(this.postService.create(Mockito.any())).willReturn(Optional.of(post0));
-		mvc.perform(MockMvcRequestBuilders.post("/posts")
-				.contentType(MediaType.APPLICATION_JSON)
-				.header("Authorization", "x.x.x.x")
-				.content(asJsonString(DtoUtils.postToPostDTO(post0))))			
+		
+		MockMultipartFile file = new MockMultipartFile("banner", "orig", null, "file".getBytes());
+		MockMultipartFile jsonFile = new MockMultipartFile("post", "", "application/json",
+				asJsonString(DtoUtils.postToPostDTO(post0)).getBytes());
+		
+		BDDMockito.given(this.postService.create(Mockito.any(), Mockito.any())).willReturn(Optional.of(post0));
+		mvc.perform(MockMvcRequestBuilders.multipart("/posts")
+				.file(file)
+				.file(jsonFile)
+				.header("Authorization", "x.x.x.x"))
 				.andExpect(status().isOk())
 				.andExpect(jsonPath("$.errors").isEmpty());
 	}
@@ -226,16 +233,33 @@ public class PostControllerTest {
 	/*
 	 * Update post test cases
 	 */
-	
 	@Test
 	public void testUpdatePost() throws Exception {
+		
 		String newTitle = "Simple test title";
 		post0.setTitle(newTitle);
-		BDDMockito.given(this.postService.update(Mockito.any())).willReturn(Optional.of(post0));
-		mvc.perform(MockMvcRequestBuilders.put("/posts")
-				.contentType(MediaType.APPLICATION_JSON)
-				.header("Authorization", "x.x.x.x")
-				.content(asJsonString(DtoUtils.postToPostDTO(post0))))			
+
+		MockMultipartFile file = new MockMultipartFile("banner", "orig", null, "file".getBytes());
+		MockMultipartFile jsonFile = new MockMultipartFile("post", "", "application/json",
+				asJsonString(DtoUtils.postToPostDTO(post0)).getBytes());
+		
+		BDDMockito.given(this.postService.update(Mockito.any(), Mockito.any()))
+			.willReturn(Optional.of(post0));
+		
+		MockMultipartHttpServletRequestBuilder builder = 
+				MockMvcRequestBuilders.multipart("/posts");
+		builder.with(new RequestPostProcessor() {
+			@Override
+			public MockHttpServletRequest postProcessRequest(MockHttpServletRequest request) {
+				request.setMethod("PUT");
+				return request;
+			}
+		});
+		
+		mvc.perform(builder
+				.file(file)
+				.file(jsonFile)
+				.header("Authorization", "x.x.x.x"))
 				.andExpect(status().isOk())
 				.andExpect(jsonPath("$.errors").isEmpty())
 				.andExpect(jsonPath("$.data.title", equalTo(newTitle)));

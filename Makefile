@@ -45,7 +45,7 @@ compose-down:
 	docker-compose down -v 
 
 compose-up: compose-down
-	docker-compose up --no-recreate -d
+	docker-compose --compatibility up --no-recreate -d
 
 deploy-production:
 	/bin/sh scripts/deploy-docker-tomcat.sh VAULT_TOKEN=${VAULT_TOKEN} SPRING_PROFILES_ACTIVE=${PROFILE}

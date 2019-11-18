@@ -55,6 +55,7 @@ public class PostRepositoryTest {
 		post.setCreationDate(new Date());
 		post.setTags(tags);
 		post.setAuthor(user);
+		post.setBannerUrl("");
 		this.postRepository.save(post);
 		tags.add("Test");
 		Post post2 = new Post();
@@ -65,6 +66,7 @@ public class PostRepositoryTest {
 		post2.setCreationDate(new Date());
 		post2.setTags(tags);
 		post2.setAuthor(user);
+		post2.setBannerUrl("");
 		this.postRepository.save(post2);
 	}
 	
@@ -131,7 +133,7 @@ public class PostRepositoryTest {
 		post.setCreationDate(new Date());
 		post.setTags(tags);
 		post.setAuthor(user);
-		
+		post.setBannerUrl("");
 		post = this.postRepository.save(post);
 		
 		assertEquals(3L, post.getPostId().longValue());

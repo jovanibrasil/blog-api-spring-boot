@@ -48,12 +48,12 @@ public class PostController {
 	private PostService postService;
 	
 	@Value("${posts.page-size}")
-	private int postsListSize;
+	private int POSTS_LIST_SIZE;
 	@Value("${posts.top-list.page-size}")
-	private int topPostsListSize;
+	private int TOP_POSTS_LIST_SIZE;
 	
 	/**
-	 * Get post by post id.
+	 * Retrieves a post given a post id.
 	 * 
 	 * @param id is the post id. 
 	 * 
@@ -77,7 +77,7 @@ public class PostController {
 	}
 	
 	/**
-	 * Create a new empty post. 
+	 * Creates a new empty post. 
 	 * 
 	 */
 	@PostMapping("/empty")
@@ -102,7 +102,7 @@ public class PostController {
 	}
 	
 	/**
-	 * Create a new post
+	 * Creates a new post
 	 * 
 	 */
 	@PostMapping(consumes = { "multipart/form-data" })
@@ -139,7 +139,7 @@ public class PostController {
 	}
 	
 	/**
-	 * Update a specified post.
+	 * Updates a specified post.
 	 * 
 	 */
 	@PutMapping(consumes = { "multipart/form-data" })
@@ -174,7 +174,7 @@ public class PostController {
 	}
 	
 	/**
-	 * Get a list with size "length" that contains posts ordered by the parameter "order". No user is specified.
+	 * Retrieves a list with size "length" that contains posts ordered by the parameter "order". No user is specified.
 	 * 
 	 * @param length is the size of the post list that will be returned.
 	 * 
@@ -184,7 +184,7 @@ public class PostController {
 			@RequestParam(value="ord", defaultValue="lastUpdateDate") String ord, @RequestParam(value="dir", defaultValue="DESC") String dir) { 
 		
 		Response<Page<PostDTO>> response = new Response<>();
-		PageRequest pageRequest = PageRequest.of(page, this.postsListSize, Direction.valueOf(dir), ord);
+		PageRequest pageRequest = PageRequest.of(page, this.POSTS_LIST_SIZE, Direction.valueOf(dir), ord);
 		Optional<Page<Post>> optLatestPosts = postService.findPosts(pageRequest);
 		
 		if(!optLatestPosts.isPresent()) {
@@ -200,7 +200,7 @@ public class PostController {
 	}
 	
 	/**
-	 * Get a list of n latest posts of a specified user.
+	 * Retrieves a list of n latest posts of a specified user.
 	 * 
 	 * @param length is the size of the post list that will be returned.
 	 * @param userId is the user identification. 
@@ -212,7 +212,7 @@ public class PostController {
 			@RequestParam(value="dir", defaultValue="DESC") String dir) { 
 		
 		Response<ArrayList<PostDTO>> response = new Response<>();
-		PageRequest pageRequest = PageRequest.of(page, this.postsListSize, Direction.valueOf(dir), ord);
+		PageRequest pageRequest = PageRequest.of(page, this.POSTS_LIST_SIZE, Direction.valueOf(dir), ord);
 		Optional<Page<Post>> optLatestPosts = postService.findPostsByUserName(userId, pageRequest);
 		
 		if(!optLatestPosts.isPresent()) {
@@ -232,13 +232,19 @@ public class PostController {
 		
 	}
 	
+	/**
+	 * Retrieves a list of PostInfo objects. A PostInfo object contains id and title of
+	 * an post. The size of the list id determined by TOP_POSTS_LIST_SIZE.
+	 * 
+	 * @return
+	 */
 	@GetMapping("/top") 
 	public ResponseEntity<Response<ArrayList<PostInfo>>> getTopPostsInfoList() { 
 		
 		log.info("Getting a list of post information (title + id)");
 		
 		Response<ArrayList<PostInfo>> response = new Response<>();
-		PageRequest page = PageRequest.of(0, this.topPostsListSize, Sort.by("lastUpdateDate"));
+		PageRequest page = PageRequest.of(0, this.TOP_POSTS_LIST_SIZE, Sort.by("lastUpdateDate"));
 		Optional<Page<Post>> optLatestPosts = postService.findPosts(page);
 		
 		if(!optLatestPosts.isPresent()) {
@@ -260,7 +266,7 @@ public class PostController {
 	}
 	
 	/**
-	 * Returns a list of post summaries. A post summary is an object with basic information
+	 * Retrieves a list of post summaries. A post summary is an object with basic information
 	 * about a specific post, like id, title and tags.  
 	 * 
 	 * @param page
@@ -274,7 +280,7 @@ public class PostController {
 		log.info("Get a list of post summaries. category: {}", cat);
 		Response<ArrayList<SummaryDTO>> response = new Response<>();
 		Optional<Page<Post>> optLatestPosts;
-		PageRequest pageRequest = PageRequest.of(page, this.postsListSize, Sort.by("creationDate"));
+		PageRequest pageRequest = PageRequest.of(page, this.POSTS_LIST_SIZE, Sort.by("creationDate"));
 		if(cat.toLowerCase().equals("all")) {
 			optLatestPosts = postService.findPosts(pageRequest);
 		}else {
@@ -302,7 +308,7 @@ public class PostController {
 	
 	/**
 	 * 
-	 * Delete a specific post.
+	 * Deletes a specific post.
 	 * 
 	 * @param id is the id of the post that will be deleted.
 	 * @return

@@ -40,9 +40,9 @@ import com.blog.services.PostService;
 @CrossOrigin(origins = "*")
 @RestController
 @RequestMapping("/posts")
-public class PostsController {
+public class PostController {
 
-	private static final Logger log = LoggerFactory.getLogger(PostsController.class);
+	private static final Logger log = LoggerFactory.getLogger(PostController.class);
 	
 	@Autowired
 	private PostService postService;
@@ -232,6 +232,33 @@ public class PostsController {
 		
 	}
 	
+	@GetMapping("/top") 
+	public ResponseEntity<Response<ArrayList<PostInfo>>> getTopPostsInfoList() { 
+		
+		log.info("Getting a list of post information (title + id)");
+		
+		Response<ArrayList<PostInfo>> response = new Response<>();
+		PageRequest page = PageRequest.of(0, this.topPostsListSize, Sort.by("lastUpdateDate"));
+		Optional<Page<Post>> optLatestPosts = postService.findPosts(page);
+		
+		if(!optLatestPosts.isPresent()) {
+			log.error("It was not possible to create the list of info list.");
+			response.addError("It was not possible to create the list of info list.");
+			return ResponseEntity.badRequest().body(response);
+		}
+		
+		ArrayList<PostInfo> postInfoList = new ArrayList<>();
+		
+		optLatestPosts.get().forEach(post -> {
+			PostInfo summaryDTO = new PostInfo(post.getPostId(), post.getTitle());
+			postInfoList.add(summaryDTO);
+		});
+		
+		response.setData(postInfoList);
+		return ResponseEntity.ok(response);
+		
+	}
+	
 	/**
 	 * Returns a list of post summaries. A post summary is an object with basic information
 	 * about a specific post, like id, title and tags.  
@@ -240,7 +267,7 @@ public class PostsController {
 	 * @param cat
 	 * @return
 	 */
-	@GetMapping("/summaries") 
+	@GetMapping 
 	public ResponseEntity<Response<ArrayList<SummaryDTO>>> getSummaries(
 			@RequestParam(value="page", defaultValue="0") int page,
 			@RequestParam(value="category", defaultValue="all") String cat) { 
@@ -271,33 +298,6 @@ public class PostsController {
 		});	
 		response.setData(summaries);
 		return ResponseEntity.ok(response);
-	}
-	
-	@GetMapping("/top") 
-	public ResponseEntity<Response<ArrayList<PostInfo>>> getTopPostsInfoList() { 
-		
-		log.info("Getting a list of post information (title + id)");
-		
-		Response<ArrayList<PostInfo>> response = new Response<>();
-		PageRequest page = PageRequest.of(0, this.topPostsListSize, Sort.by("lastUpdateDate"));
-		Optional<Page<Post>> optLatestPosts = postService.findPosts(page);
-		
-		if(!optLatestPosts.isPresent()) {
-			log.error("It was not possible to create the list of info list.");
-			response.addError("It was not possible to create the list of info list.");
-			return ResponseEntity.badRequest().body(response);
-		}
-		
-		ArrayList<PostInfo> postInfoList = new ArrayList<>();
-		
-		optLatestPosts.get().forEach(post -> {
-			PostInfo summaryDTO = new PostInfo(post.getPostId(), post.getTitle());
-			postInfoList.add(summaryDTO);
-		});
-		
-		response.setData(postInfoList);
-		return ResponseEntity.ok(response);
-		
 	}
 	
 	/**

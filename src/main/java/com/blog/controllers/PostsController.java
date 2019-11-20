@@ -207,7 +207,7 @@ public class PostsController {
 	 * 
 	 */
 	@GetMapping("/byuser/{username}") 
-	public ResponseEntity<Response<ArrayList<PostDTO>>> getPostListByUser(@PathVariable("username") String userId, 
+	public ResponseEntity<Response<ArrayList<PostDTO>>> getPostsByUser(@PathVariable("username") String userId, 
 			@RequestParam(value="page", defaultValue="0") int page, @RequestParam(value="ord", defaultValue="lastUpdateDate") String ord, 
 			@RequestParam(value="dir", defaultValue="DESC") String dir) { 
 		
@@ -232,14 +232,22 @@ public class PostsController {
 		
 	}
 	
+	/**
+	 * Returns a list of post summaries. A post summary is an object with basic information
+	 * about a specific post, like id, title and tags.  
+	 * 
+	 * @param page
+	 * @param cat
+	 * @return
+	 */
 	@GetMapping("/summaries") 
-	public ResponseEntity<Response<ArrayList<SummaryDTO>>> getSummarylist(
+	public ResponseEntity<Response<ArrayList<SummaryDTO>>> getSummaries(
 			@RequestParam(value="page", defaultValue="0") int page,
 			@RequestParam(value="category", defaultValue="all") String cat) { 
-		log.info("Get post summaries. category: {}", cat);
+		log.info("Get a list of post summaries. category: {}", cat);
 		Response<ArrayList<SummaryDTO>> response = new Response<>();
 		Optional<Page<Post>> optLatestPosts;
-		PageRequest pageRequest = PageRequest.of(page, this.postsListSize, Sort.by("lastUpdateDate"));
+		PageRequest pageRequest = PageRequest.of(page, this.postsListSize, Sort.by("creationDate"));
 		if(cat.toLowerCase().equals("all")) {
 			optLatestPosts = postService.findPosts(pageRequest);
 		}else {

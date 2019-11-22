@@ -51,6 +51,10 @@ services:
       - 3306:3306
     networks:
       - net
+    deploy:
+      resources:
+        limits:
+          memory: 256M
   search-api: 
     image: search-api
     container_name: search-api 
@@ -60,6 +64,10 @@ services:
       - net
     depends_on: 
       - solr-master
+    deploy:
+      resources:
+        limits:
+          memory: 128M
   solr-master: 
     image: solr-master
     container_name: solr-master
@@ -71,3 +79,7 @@ services:
       - BLOG_MYSQL_URL=${BLOG_MYSQL_URL}
       - BLOG_MYSQL_USERNAME=${BLOG_MYSQL_USERNAME}
       - BLOG_MYSQL_PASSWORD=${BLOG_MYSQL_PASSWORD}
+    deploy:
+      resources:
+        limits:
+          memory: 256M

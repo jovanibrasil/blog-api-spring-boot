@@ -89,7 +89,8 @@ public class PostControllerTest {
 		post1.setTags(Arrays.asList("Scala"));
 		post1.setAuthor(user);
 		
-		BDDMockito.given(this.authClient.checkToken(Mockito.anyString())).willReturn(new TempUser("jovanibrasil", ProfileTypeEnum.ROLE_ADMIN));
+		BDDMockito.given(this.authClient.checkToken(Mockito.anyString()))
+			.willReturn(new TempUser("jovanibrasil", ProfileTypeEnum.ROLE_ADMIN));
 		
 	}
 		

@@ -15,7 +15,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.http.ResponseEntity;
-import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -174,32 +173,6 @@ public class PostController {
 	}
 	
 	/**
-	 * Retrieves a list with size "length" that contains posts ordered by the parameter "order". No user is specified.
-	 * 
-	 * @param length is the size of the post list that will be returned.
-	 * 
-	 */
-	@GetMapping
-	public ResponseEntity<Response<Page<PostDTO>>> getPosts(Model model, @RequestParam(value="page", defaultValue="0") int page,
-			@RequestParam(value="ord", defaultValue="lastUpdateDate") String ord, @RequestParam(value="dir", defaultValue="DESC") String dir) { 
-		
-		Response<Page<PostDTO>> response = new Response<>();
-		PageRequest pageRequest = PageRequest.of(page, this.POSTS_LIST_SIZE, Direction.valueOf(dir), ord);
-		Optional<Page<Post>> optLatestPosts = postService.findPosts(pageRequest);
-		
-		if(!optLatestPosts.isPresent()) {
-			log.error("It was not possible to create the list of posts.");
-			response.addError("It was not possible to create the list of posts.");
-			return ResponseEntity.badRequest().body(response);
-		}
-		
-		Page<PostDTO> posts = optLatestPosts.get().map(post -> DtoUtils.postToPostDTO(post));
-		response.setData(posts);
-		return ResponseEntity.ok(response);
-		
-	}
-	
-	/**
 	 * Retrieves a list of n latest posts of a specified user.
 	 * 
 	 * @param length is the size of the post list that will be returned.
@@ -208,7 +181,8 @@ public class PostController {
 	 */
 	@GetMapping("/byuser/{username}") 
 	public ResponseEntity<Response<ArrayList<PostDTO>>> getPostsByUser(@PathVariable("username") String userId, 
-			@RequestParam(value="page", defaultValue="0") int page, @RequestParam(value="ord", defaultValue="lastUpdateDate") String ord, 
+			@RequestParam(value="page", defaultValue="0") int page, 
+			@RequestParam(value="ord", defaultValue="lastUpdateDate") String ord, 
 			@RequestParam(value="dir", defaultValue="DESC") String dir) { 
 		
 		Response<ArrayList<PostDTO>> response = new Response<>();
@@ -230,6 +204,73 @@ public class PostController {
 		response.setData(posts);
 		return ResponseEntity.ok(response);
 		
+	}
+	
+	/**
+	 * Retrieves a list with size "length" that contains posts ordered by the parameter "order". No user is specified.
+	 * 
+	 * @param length is the size of the post list that will be returned.
+	 * 
+	 */
+	@GetMapping
+	public ResponseEntity<Response<Page<PostDTO>>> getPosts(@RequestParam(value="page", defaultValue="0") int page,
+			@RequestParam(value="ord", defaultValue="lastUpdateDate") String ord, @RequestParam(value="dir", defaultValue="DESC") String dir) { 
+		
+		Response<Page<PostDTO>> response = new Response<>();
+		PageRequest pageRequest = PageRequest.of(page, this.POSTS_LIST_SIZE, Direction.valueOf(dir), ord);
+		Optional<Page<Post>> optLatestPosts = postService.findPosts(pageRequest);
+		
+		if(!optLatestPosts.isPresent()) {
+			log.error("It was not possible to create the list of posts.");
+			response.addError("It was not possible to create the list of posts.");
+			return ResponseEntity.badRequest().body(response);
+		}
+		
+		Page<PostDTO> posts = optLatestPosts.get().map(post -> DtoUtils.postToPostDTO(post));
+		response.setData(posts);
+		return ResponseEntity.ok(response);
+		
+	}
+	
+	/**
+	 * Retrieves a list of post summaries. A post summary is an object with basic information
+	 * about a specific post, like id, title and tags.  
+	 * 
+	 * @param page
+	 * @param cat
+	 * @return
+	 */
+	@GetMapping(value = "/summaries")
+	public ResponseEntity<Response<Page<SummaryDTO>>> getSummaries(
+			@RequestParam(value="page", defaultValue="0") int page,
+			@RequestParam(value="category", defaultValue="all") String cat) { 
+		log.info("Get a list of post summaries. category: {}", cat);
+		Response<Page<SummaryDTO>> response = new Response<>();
+		Optional<Page<Post>> optLatestPosts;
+		PageRequest pageRequest = PageRequest.of(page, this.POSTS_LIST_SIZE, Sort.by("creationDate"));
+		if(cat.toLowerCase().equals("all")) {
+			optLatestPosts = postService.findPosts(pageRequest);
+		}else {
+			optLatestPosts = postService.findPostsByCategory(cat, pageRequest);
+		}
+		
+		if(!optLatestPosts.isPresent()) {
+			log.error("It was not possible to create the list of summaries.");
+			response.addError("It was not possible to create the list of summaries.");
+			return ResponseEntity.badRequest().body(response);
+		}
+		
+		Page<SummaryDTO> summaries = optLatestPosts.get()
+				.map(post -> {
+					return new SummaryDTO(post.getPostId(), 
+							post.getTitle(), post.getCreationDate(),	
+							post.getLastUpdateDate(), post.getSummary(), 
+							post.getAuthor().getUserName(), post.getTags(), 
+							post.getBannerUrl());
+			});
+			
+		response.setData(summaries);
+		return ResponseEntity.ok(response);
 	}
 	
 	/**
@@ -263,47 +304,6 @@ public class PostController {
 		response.setData(postInfoList);
 		return ResponseEntity.ok(response);
 		
-	}
-	
-	/**
-	 * Retrieves a list of post summaries. A post summary is an object with basic information
-	 * about a specific post, like id, title and tags.  
-	 * 
-	 * @param page
-	 * @param cat
-	 * @return
-	 */
-	@GetMapping 
-	public ResponseEntity<Response<ArrayList<SummaryDTO>>> getSummaries(
-			@RequestParam(value="page", defaultValue="0") int page,
-			@RequestParam(value="category", defaultValue="all") String cat) { 
-		log.info("Get a list of post summaries. category: {}", cat);
-		Response<ArrayList<SummaryDTO>> response = new Response<>();
-		Optional<Page<Post>> optLatestPosts;
-		PageRequest pageRequest = PageRequest.of(page, this.POSTS_LIST_SIZE, Sort.by("creationDate"));
-		if(cat.toLowerCase().equals("all")) {
-			optLatestPosts = postService.findPosts(pageRequest);
-		}else {
-			optLatestPosts = postService.findPostsByCategory(cat, pageRequest);
-		}
-		
-		if(!optLatestPosts.isPresent()) {
-			log.error("It was not possible to create the list of summaries.");
-			response.addError("It was not possible to create the list of summaries.");
-			return ResponseEntity.badRequest().body(response);
-		}
-		
-		ArrayList<SummaryDTO> summaries = new ArrayList<>();
-		optLatestPosts.get().forEach(post -> {
-			SummaryDTO summaryDTO = new SummaryDTO(post.getPostId(), 
-					post.getTitle(), post.getCreationDate(),	
-					post.getLastUpdateDate(), post.getSummary(), 
-					post.getAuthor().getUserName(), post.getTags(), 
-					post.getBannerUrl());
-			summaries.add(summaryDTO);
-		});	
-		response.setData(summaries);
-		return ResponseEntity.ok(response);
 	}
 	
 	/**

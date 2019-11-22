@@ -18,11 +18,11 @@ public class Feedback {
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private Long id;
-	@Column(nullable=false)
-	private String name;
-	@Column(nullable=false)
+	@Column(nullable=false, length = 40)
+	private String userName;
+	@Column(nullable=false, length = 40)
 	private String email;
-	@Column(nullable=false)
+	@Column(nullable=false, length = 255)
 	private String content;
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date feedbackDate;
@@ -30,7 +30,7 @@ public class Feedback {
 	public Feedback() { }
 	
 	public Feedback(String name, String email, String content) {
-		this.name = name;
+		this.userName = name;
 		this.email = email;
 		this.content = content;
 		this.feedbackDate = new Date();
@@ -44,12 +44,12 @@ public class Feedback {
 		this.id = id;
 	}
 
-	public String getName() {
-		return name;
+	public String getUserName() {
+		return userName;
 	}
 
-	public void setName(String name) {
-		this.name = name;
+	public void setUserName(String name) {
+		this.userName = name;
 	}
 
 	public String getEmail() {
@@ -74,6 +74,12 @@ public class Feedback {
 
 	public void setFeedbackDate(Date feedbackDate) {
 		this.feedbackDate = feedbackDate;
+	}
+
+	@Override
+	public String toString() {
+		return "Feedback [id=" + id + ", userName=" + userName + ", email=" + email + ", content=" + content
+				+ ", feedbackDate=" + feedbackDate + "]";
 	}
 	
 }

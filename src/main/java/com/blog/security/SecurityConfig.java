@@ -42,12 +42,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 			.and()
 			.authorizeRequests()
 			.antMatchers("/search", "/subscriptions", "/posts/top", "/posts/summaries", 
-					"/posts/*", "/posts", "/posts/byuser/*").permitAll()
+					"/posts/*", "/feedbacks", "/posts", "/posts/byuser/*").permitAll()
 			.antMatchers(HttpMethod.DELETE, "/posts/*").hasRole("ADMIN")
 			.antMatchers(HttpMethod.POST, "/posts").hasRole("ADMIN")
 			.antMatchers(HttpMethod.POST, "/posts/empty").hasRole("ADMIN")
 			.antMatchers(HttpMethod.PUT, "/posts").hasRole("ADMIN")
 			.antMatchers(HttpMethod.GET, "/subscriptions").hasRole("ADMIN")
+			.antMatchers(HttpMethod.GET, "/feedbacks").hasRole("ADMIN")
 			.antMatchers("/users").hasRole("SERVICE"); 
 		
 			//http.addFilterBefore(new LoginFilter("/users/login", authenticationManager()), UsernamePasswordAuthenticationFilter.class);

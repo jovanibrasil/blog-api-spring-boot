@@ -1,32 +1,32 @@
 package com.blog.dtos;
 
+import java.util.Date;
+
 import javax.validation.constraints.Email;
-import javax.validation.constraints.NotNull;
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 
 public class FeedbackDTO {
 	
-	// min e max do name e do email
-	
-	@NotNull
-	@Size(min=2, max=40, message="Nome de usuário deve ter entre 2 e 40 caracteres.")
-	private String name;
-	@NotNull
+	@NotBlank(message = "Email must not be null or empty")
+	@Size(min = 2, max=40, message="Username must contains between 2 and 40 characters.")
+	private String userName;
+	@NotBlank(message = "Email must not be blank")
 	@Email(message="Email must be valid.")
+	@Size(max=40, message="Username must not contains more than 40 characters.")
 	private String email;
-	@Size(min=10, max=1000, message="Conteudo do feedback deve ter entre 10 e 1000 caracteres.")
+	@Size(min=10, max=255, message="Feedback content must contains between 10 and 255 characters.")
 	private String content;
-	@NotNull
-	private String captchaCode;
+	private Date feedbackDate;
 	
 	public FeedbackDTO() {}
 
-	public String getName() {
-		return name;
+	public String getUserName() {
+		return userName;
 	}
 
-	public void setName(String name) {
-		this.name = name;
+	public void setUserName(String name) {
+		this.userName = name;
 	}
 
 	public String getEmail() {
@@ -45,12 +45,18 @@ public class FeedbackDTO {
 		this.content = content;
 	}
 
-	public String getCaptchaCode() {
-		return captchaCode;
+	public Date getFeedbackDate() {
+		return feedbackDate;
 	}
 
-	public void setCaptchaCode(String captchaCode) {
-		this.captchaCode = captchaCode;
+	public void setFeedbackDate(Date feedbackDate) {
+		this.feedbackDate = feedbackDate;
+	}
+
+	@Override
+	public String toString() {
+		return "FeedbackDTO [userName=" + userName + ", email=" + email + ", content=" + content + ", feedbackDate="
+				+ feedbackDate + "]";
 	}
 	
 }

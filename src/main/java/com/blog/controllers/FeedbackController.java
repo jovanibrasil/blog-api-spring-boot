@@ -6,13 +6,13 @@ import java.util.Optional;
 
 import javax.validation.Valid;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -25,29 +25,42 @@ import com.blog.services.FeedbackService;
 
 @CrossOrigin(origins = "*")
 @RestController
-@RequestMapping("/feedback")
+@RequestMapping("/feedbacks")
 public class FeedbackController {
 
 	@Autowired
 	private FeedbackService feedbackService;
+
+	private static final Logger log = LoggerFactory.getLogger(FeedbackController.class);
 	
+	/**
+	 * Saves an user feedback.
+	 * 
+	 * @param feedbackDTO
+	 * @param bindingResult
+	 * @return
+	 */
 	@PostMapping
-	public ResponseEntity<Response<String>> postFeedback(@Valid @RequestBody FeedbackDTO feedbackDTO, BindingResult bindingResult){
+	public ResponseEntity<Response<String>> saveFeedback(
+			@Valid @RequestBody FeedbackDTO feedbackDTO, 
+			BindingResult bindingResult){
 		
 		Response<String> response = new Response<>();
-		
 		if(bindingResult.hasErrors()) {
 			bindingResult.getAllErrors().forEach(err -> response.addError(err.getDefaultMessage()));
 			return ResponseEntity.badRequest().body(response);
 		}
 		
-		Feedback feedback = new Feedback(feedbackDTO.getName(), 
+		log.info("Saving feedback ...");
+		
+		Feedback feedback = new Feedback(feedbackDTO.getUserName(), 
 				feedbackDTO.getEmail(), feedbackDTO.getContent());
 		
 		Optional<Feedback> optFeedback = this.feedbackService.create(feedback);
 		
 		if(!optFeedback.isPresent()) {
-			response.setData("Não foi possível registrar o feedback.");
+			log.error("It was not possible to create the feedback.");
+			response.setData("It was not possible to create the feedback.");
 			return ResponseEntity.badRequest().body(response);
 		}
 		
@@ -56,16 +69,20 @@ public class FeedbackController {
 		
 	}
 	
-	
-	@GetMapping("/list/{length}") 
-	public ResponseEntity<Response<ArrayList<FeedbackDTO>>> getPostlist(@PathVariable("length") Long length, Model model) { 
+	/**
+	 * Retrieves a list of feedbacks.
+	 * 
+	 * @return
+	 */
+	@GetMapping 
+	public ResponseEntity<Response<ArrayList<FeedbackDTO>>> getFeedbacks() { 
 		
 		Response<ArrayList<FeedbackDTO>> response = new Response<>();
-		
-		Optional<List<Feedback>> optLatestFeedbacks = this.feedbackService.findFeedbacks(length);
+		log.info("Retrieving a list of feedbacks ...");
+		Optional<List<Feedback>> optLatestFeedbacks = this.feedbackService.findFeedbacks(2L);
 		
 		if(!optLatestFeedbacks.isPresent()) {
-			//log.error("It was not possible to create the list of posts.");
+			log.error("It was not possible to create the list of feedbacks.");
 			response.addError("It was not possible to create the list of feedbacks.");
 			return ResponseEntity.badRequest().body(response);
 		}
@@ -75,8 +92,9 @@ public class FeedbackController {
 		optLatestFeedbacks.get().forEach(feedback -> {
 			System.out.println(feedback);
 			FeedbackDTO feedbackDTO = new FeedbackDTO();
-//			feedbackDTO.setTitle(feedback.getTitle());
-//			feedbackDTO.setContent(feedback.getContent());
+			feedbackDTO.setUserName(feedback.getUserName());
+			feedbackDTO.setEmail(feedback.getEmail());
+			feedbackDTO.setContent(feedback.getContent());
 			feedbacks.add(feedbackDTO);
 		});
 		

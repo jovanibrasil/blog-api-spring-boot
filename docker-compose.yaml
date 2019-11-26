@@ -76,9 +76,9 @@ services:
     networks:
       - net
     environment:
-      - BLOG_MYSQL_URL=${BLOG_MYSQL_URL}
-      - BLOG_MYSQL_USERNAME=${BLOG_MYSQL_USERNAME}
-      - BLOG_MYSQL_PASSWORD=${BLOG_MYSQL_PASSWORD}
+      - BLOG_MYSQL_URL=jdbc:mysql://mysql-database:3306/blogdb?useSSL=false
+      - BLOG_MYSQL_USERNAME=root
+      - BLOG_MYSQL_PASSWORD=root
     deploy:
       resources:
         limits:

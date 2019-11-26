@@ -161,11 +161,9 @@ public class PostControllerTest {
 	 */
 	@Test
 	public void testGetSummaryListJavaTag() throws Exception {
-		BDDMockito.given(this.postService.findPostsByCategory("Java",  PageRequest.of(0, 10, Sort.by("lastUpdateDate")))).willReturn(
-				Optional.of(new PageImpl<Post>(Arrays.asList(post0))));
-		BDDMockito.given(this.postService.findPostsByCategory("Java", PageRequest.of(0, 1, Sort.by("lastUpdateDate"))))
-			.willReturn(Optional.of(new PageImpl<Post>(Arrays.asList(post0))));
-		
+		BDDMockito.given(this.postService.findPostsByCategory("Java", PageRequest.of(0, 1, Sort.by("creationDate"))))
+				.willReturn(Optional.of(new PageImpl<Post>(Arrays.asList(post0))));
+
 		mvc.perform(MockMvcRequestBuilders.get("/posts/summaries?category=Java"))
 				.andExpect(status().isOk())
 				.andExpect(jsonPath("$.errors").isEmpty());
@@ -173,10 +171,8 @@ public class PostControllerTest {
 	
 	@Test
 	public void testGetSummaryListScalaTag() throws Exception {
-		BDDMockito.given(this.postService.findPostsByCategory("Scala", PageRequest.of(0, 10, Sort.by("lastUpdateDate")))).willReturn(
+		BDDMockito.given(this.postService.findPostsByCategory("Scala", PageRequest.of(0, 1, Sort.by("creationDate")))).willReturn(
 				Optional.of(new PageImpl<Post>(Arrays.asList(post1))));
-		BDDMockito.given(this.postService.findPostsByCategory("Scala", PageRequest.of(0, 1, Sort.by("lastUpdateDate"))))
-			.willReturn(Optional.of(new PageImpl<Post>(Arrays.asList(post1))));
 		
 		mvc.perform(MockMvcRequestBuilders.get("/posts/summaries?category=Scala"))
 				.andExpect(status().isOk())

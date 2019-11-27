@@ -214,7 +214,7 @@ public class PostController {
 	 */
 	@GetMapping
 	public ResponseEntity<Response<Page<PostDTO>>> getPosts(@RequestParam(value="page", defaultValue="0") int page,
-			@RequestParam(value="ord", defaultValue="lastUpdateDate") String ord, @RequestParam(value="dir", defaultValue="ASC") String dir) {
+			@RequestParam(value="ord", defaultValue="lastUpdateDate") String ord, @RequestParam(value="dir", defaultValue="DESC") String dir) {
 		
 		Response<Page<PostDTO>> response = new Response<>();
 		PageRequest pageRequest = PageRequest.of(page, this.POSTS_LIST_SIZE, Direction.valueOf(dir), ord);
@@ -247,7 +247,7 @@ public class PostController {
 		log.info("Get a list of post summaries. category: {}", cat);
 		Response<Page<SummaryDTO>> response = new Response<>();
 		Optional<Page<Post>> optLatestPosts;
-		PageRequest pageRequest = PageRequest.of(page, this.POSTS_LIST_SIZE, Sort.by(Direction.ASC ,"creationDate"));
+		PageRequest pageRequest = PageRequest.of(page, this.POSTS_LIST_SIZE, Sort.by(Direction.DESC ,"creationDate"));
 		if(cat.toLowerCase().equals("all")) {
 			optLatestPosts = postService.findPosts(pageRequest);
 		}else {
@@ -285,7 +285,7 @@ public class PostController {
 		log.info("Getting a list of post information (title + id)");
 		
 		Response<ArrayList<PostInfo>> response = new Response<>();
-		PageRequest page = PageRequest.of(0, this.TOP_POSTS_LIST_SIZE, Sort.by(Direction.ASC, "lastUpdateDate"));
+		PageRequest page = PageRequest.of(0, this.TOP_POSTS_LIST_SIZE, Sort.by(Direction.DESC, "lastUpdateDate"));
 		Optional<Page<Post>> optLatestPosts = postService.findPosts(page);
 		
 		if(!optLatestPosts.isPresent()) {

@@ -44,3 +44,10 @@ target/**
 
 # sts files
 .sts4-cache/
+
+#IntelliJ
+
+.factorypath
+.idea/
+blog-api.iml
+

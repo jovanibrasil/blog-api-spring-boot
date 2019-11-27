@@ -1,8 +1,11 @@
 package com.blog.integrations;
 
+import com.blog.config.BlogDataSourceProperties;
+import com.blog.config.BlogServiceProperties;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -17,6 +20,7 @@ import com.blog.exceptions.MicroServiceIntegrationException;
 import com.blog.security.TempUser;
 
 @Component
+@EnableConfigurationProperties(BlogServiceProperties.class)
 public class AuthClient {
 
 	@Value("${urls.auth.check-token}")
@@ -24,7 +28,13 @@ public class AuthClient {
 	
 	@Value("${urls.auth.get-token}")
 	private String getTokenUrl;
-	
+
+	private BlogServiceProperties blogServiceProperties;
+
+	public AuthClient(BlogServiceProperties blogServiceProperties){
+		this.blogServiceProperties = blogServiceProperties;
+	}
+
 	public TempUser checkToken(String token) {
 		try {
 			RestTemplate restTemplate = new RestTemplate();
@@ -44,8 +54,8 @@ public class AuthClient {
 		try {
 			// create request body
 			JSONObject request = new JSONObject();
-			request.put("username", "BLOG");
-			request.put("password", "123456");
+			request.put("username", blogServiceProperties.getUsername());
+			request.put("password", blogServiceProperties.getPassword());
 			request.put("applications", new JSONArray("BLOG_APP"));
 			// set headers
 			HttpHeaders headers = new HttpHeaders();

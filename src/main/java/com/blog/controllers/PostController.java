@@ -46,9 +46,9 @@ public class PostController {
 	@Autowired
 	private PostService postService;
 	
-	@Value("${posts.page-size}")
+	@Value("${blog.posts.page-size}")
 	private int POSTS_LIST_SIZE;
-	@Value("${posts.top-list.page-size}")
+	@Value("${blog.posts.top-list.page-size}")
 	private int TOP_POSTS_LIST_SIZE;
 	
 	/**

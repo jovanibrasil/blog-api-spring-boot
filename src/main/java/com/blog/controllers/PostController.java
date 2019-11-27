@@ -52,7 +52,7 @@ public class PostController {
 	private int TOP_POSTS_LIST_SIZE;
 	
 	/**
-	 * Retrieves a post given a post id.
+	 * Returns a post given a post id.
 	 * 
 	 * @param id is the post id. 
 	 * 
@@ -109,7 +109,7 @@ public class PostController {
 			@RequestPart(name = "post") @Valid @NotNull PostDTO postDTO,
 			@RequestPart @NotNull MultipartFile[] postImages, BindingResult bindingResult) {
 		
-		log.info("Multiparts received: " + postImages.length);
+		log.info("Multipart received: " + postImages.length);
 		
 		Response<PostDTO> response = new Response<>();
 				
@@ -173,7 +173,7 @@ public class PostController {
 	}
 	
 	/**
-	 * Retrieves a list of n latest posts of a specified user.
+	 * Returns a list of n latest posts of a specified user.
 	 * 
 	 * @param length is the size of the post list that will be returned.
 	 * @param userId is the user identification. 
@@ -207,14 +207,14 @@ public class PostController {
 	}
 	
 	/**
-	 * Retrieves a list with size "length" that contains posts ordered by the parameter "order". No user is specified.
+	 * Returns a list with size "length" that contains posts ordered by the parameter "order". No user is specified.
 	 * 
 	 * @param length is the size of the post list that will be returned.
 	 * 
 	 */
 	@GetMapping
 	public ResponseEntity<Response<Page<PostDTO>>> getPosts(@RequestParam(value="page", defaultValue="0") int page,
-			@RequestParam(value="ord", defaultValue="lastUpdateDate") String ord, @RequestParam(value="dir", defaultValue="DESC") String dir) { 
+			@RequestParam(value="ord", defaultValue="lastUpdateDate") String ord, @RequestParam(value="dir", defaultValue="ASC") String dir) {
 		
 		Response<Page<PostDTO>> response = new Response<>();
 		PageRequest pageRequest = PageRequest.of(page, this.POSTS_LIST_SIZE, Direction.valueOf(dir), ord);
@@ -233,7 +233,7 @@ public class PostController {
 	}
 	
 	/**
-	 * Retrieves a list of post summaries. A post summary is an object with basic information
+	 * Returns a list of post summaries. A post summary is an object with basic information
 	 * about a specific post, like id, title and tags.  
 	 * 
 	 * @param page
@@ -247,7 +247,7 @@ public class PostController {
 		log.info("Get a list of post summaries. category: {}", cat);
 		Response<Page<SummaryDTO>> response = new Response<>();
 		Optional<Page<Post>> optLatestPosts;
-		PageRequest pageRequest = PageRequest.of(page, this.POSTS_LIST_SIZE, Sort.by("creationDate"));
+		PageRequest pageRequest = PageRequest.of(page, this.POSTS_LIST_SIZE, Sort.by(Direction.ASC ,"creationDate"));
 		if(cat.toLowerCase().equals("all")) {
 			optLatestPosts = postService.findPosts(pageRequest);
 		}else {
@@ -274,7 +274,7 @@ public class PostController {
 	}
 	
 	/**
-	 * Retrieves a list of PostInfo objects. A PostInfo object contains id and title of
+	 * Returns a list of PostInfo objects. A PostInfo object contains id and title of
 	 * an post. The size of the list id determined by TOP_POSTS_LIST_SIZE.
 	 * 
 	 * @return
@@ -285,7 +285,7 @@ public class PostController {
 		log.info("Getting a list of post information (title + id)");
 		
 		Response<ArrayList<PostInfo>> response = new Response<>();
-		PageRequest page = PageRequest.of(0, this.TOP_POSTS_LIST_SIZE, Sort.by("lastUpdateDate"));
+		PageRequest page = PageRequest.of(0, this.TOP_POSTS_LIST_SIZE, Sort.by(Direction.ASC, "lastUpdateDate"));
 		Optional<Page<Post>> optLatestPosts = postService.findPosts(page);
 		
 		if(!optLatestPosts.isPresent()) {

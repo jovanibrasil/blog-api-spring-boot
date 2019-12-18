@@ -4,6 +4,7 @@ import static org.hamcrest.CoreMatchers.equalTo;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.Optional;
@@ -39,8 +40,8 @@ public class SubscriptionControllerTest {
 	
 	@Test
 	public void testFindAllSubscriptions() throws Exception {
-		Subscription subscription0 = new Subscription(1L, "test0@gmail.com", new Date());
-		Subscription subscription1 = new Subscription(2L, "test1@gmail.com", new Date());
+		Subscription subscription0 = new Subscription(1L, "test0@gmail.com", LocalDateTime.now());
+		Subscription subscription1 = new Subscription(2L, "test1@gmail.com", LocalDateTime.now());
 				
 		BDDMockito.given(this.subscriptionService.findAllSubscriptions())
 			.willReturn(Arrays.asList(subscription0, subscription1));
@@ -65,7 +66,7 @@ public class SubscriptionControllerTest {
 	
 	@Test
 	public void testSubscribe() throws Exception {
-		Subscription subscription = new Subscription(1L, "test0@gmail.com", new Date());
+		Subscription subscription = new Subscription(1L, "test0@gmail.com", LocalDateTime.now());
 		BDDMockito.given(this.subscriptionService.saveSubscription(Mockito.any()))
 			.willReturn(Optional.of(subscription));
 		mvc.perform(MockMvcRequestBuilders.post("/subscriptions/test0@gmail.com")

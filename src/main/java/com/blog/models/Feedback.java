@@ -1,5 +1,6 @@
 package com.blog.models;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 
 import javax.persistence.Column;
@@ -24,8 +25,8 @@ public class Feedback {
 	private String email;
 	@Column(nullable=false, length = 255)
 	private String content;
-	@Temporal(TemporalType.TIMESTAMP)
-	private Date feedbackDate;
+	@Column(nullable = false, columnDefinition = "TIMESTAMP")
+	private LocalDateTime feedbackDate;
 	
 	public Feedback() { }
 	
@@ -33,7 +34,7 @@ public class Feedback {
 		this.userName = name;
 		this.email = email;
 		this.content = content;
-		this.feedbackDate = new Date();
+		this.feedbackDate = LocalDateTime.now();
 	}
 
 	public Long getId() {
@@ -68,11 +69,11 @@ public class Feedback {
 		this.content = content;
 	}
 
-	public Date getFeedbackDate() {
+	public LocalDateTime getFeedbackDate() {
 		return feedbackDate;
 	}
 
-	public void setFeedbackDate(Date feedbackDate) {
+	public void setFeedbackDate(LocalDateTime feedbackDate) {
 		this.feedbackDate = feedbackDate;
 	}
 

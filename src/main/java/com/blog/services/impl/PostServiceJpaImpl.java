@@ -1,5 +1,6 @@
 package com.blog.services.impl;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.Optional;
 
@@ -65,8 +66,8 @@ public class PostServiceJpaImpl implements PostService {
 	public Optional<Post> create(Post post, MultipartFile[] postImages) {
 		Optional<Post> optPost = this.findPostByPostId(post.getPostId());
 		if (!optPost.isPresent()) {
-			post.setLastUpdateDate(new Date());
-			post.setCreationDate(new Date());
+			post.setLastUpdateDate(LocalDateTime.now());
+			post.setCreationDate(LocalDateTime.now());
 			log.info("Saving post into mysql database. \n{}", post);
 			post = this.postRepo.save(post);
 			if(post!= null) { 
@@ -94,8 +95,8 @@ public class PostServiceJpaImpl implements PostService {
 		String userName = SecurityContextHolder.getContext().getAuthentication().getName();
 		User user = new User(userName);
 		Post post = new Post(user);
-		post.setLastUpdateDate(new Date());
-		post.setCreationDate(new Date());
+		post.setLastUpdateDate(LocalDateTime.now());
+		post.setCreationDate(LocalDateTime.now());
 		log.info("Saving post into mysql database. \n{}", post);
 		post = this.postRepo.save(post);
 		return Optional.of(post);
@@ -109,7 +110,7 @@ public class PostServiceJpaImpl implements PostService {
 			post.setTitle(receivedPost.getTitle());
 			post.setBody(receivedPost.getBody());
 			post.setSummary(receivedPost.getSummary());
-			post.setLastUpdateDate(new Date());
+			post.setLastUpdateDate(LocalDateTime.now());
 			post.setTags(receivedPost.getTags());
 			if(post!= null) { 
 				if(postImages.length == 0) {

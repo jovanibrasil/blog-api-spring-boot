@@ -1,5 +1,6 @@
 package com.blog.models;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 
 import javax.persistence.Column;
@@ -20,12 +21,12 @@ public class Subscription {
 	private Long id;
 	@Column(nullable=false, unique = true)
 	private String email;
-	@Temporal(TemporalType.TIMESTAMP)
-	private Date subscriptionDate;
+	@Column(nullable = false, columnDefinition = "TIMESTAMP")
+	private LocalDateTime subscriptionDate;
 
 	public Subscription() {}
 	
-	public Subscription(Long id, String email, Date subscriptionDate) {
+	public Subscription(Long id, String email, LocalDateTime subscriptionDate) {
 		super();
 		this.id = id;
 		this.email = email;
@@ -34,7 +35,7 @@ public class Subscription {
 	
 	public Subscription(String email) {
 		this.email = email;
-		this.subscriptionDate = new Date();
+		this.subscriptionDate = LocalDateTime.now();
 	}
 	
 	public Long getId() {
@@ -50,11 +51,11 @@ public class Subscription {
 		this.email = email;
 	}
 	
-	public Date getSubscriptionDate() {
+	public LocalDateTime getSubscriptionDate() {
 		return subscriptionDate;
 	}
 
-	public void setSubscriptionDate(Date subscriptionDate) {
+	public void setSubscriptionDate(LocalDateTime subscriptionDate) {
 		this.subscriptionDate = subscriptionDate;
 	}
 	

@@ -1,5 +1,8 @@
 package com.blog.dtos;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
+import java.time.LocalDateTime;
 import java.util.Date;
 
 import javax.validation.constraints.Email;
@@ -17,7 +20,8 @@ public class FeedbackDTO {
 	private String email;
 	@Size(min=10, max=255, message="Feedback content must contains between 10 and 255 characters.")
 	private String content;
-	private Date feedbackDate;
+	@JsonFormat(pattern="yyyy-MM-dd HH:mm:ss")
+	private LocalDateTime feedbackDate;
 	
 	public FeedbackDTO() {}
 
@@ -45,11 +49,11 @@ public class FeedbackDTO {
 		this.content = content;
 	}
 
-	public Date getFeedbackDate() {
+	public LocalDateTime getFeedbackDate() {
 		return feedbackDate;
 	}
 
-	public void setFeedbackDate(Date feedbackDate) {
+	public void setFeedbackDate(LocalDateTime feedbackDate) {
 		this.feedbackDate = feedbackDate;
 	}
 

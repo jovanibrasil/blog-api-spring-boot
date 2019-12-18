@@ -1,5 +1,8 @@
 package com.blog.dtos;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
 
@@ -24,9 +27,10 @@ public class PostDTO {
 	
 	@NotNull(message="Tags must not be null")
 	private List<String> tags;
-
-	private Date creationDate;
-	private Date lastUpdateDate;
+	@JsonFormat(pattern="yyyy-MM-dd HH:mm:ss")
+	private LocalDateTime creationDate;
+	@JsonFormat(pattern="yyyy-MM-dd HH:mm:ss")
+	private LocalDateTime lastUpdateDate;
 	private String userName;
 	
 	public PostDTO() {}
@@ -55,10 +59,10 @@ public class PostDTO {
 	public void setUserName(String userId) {
 		this.userName = userId;
 	}
-	public Date getLastUpdateDate() {
+	public LocalDateTime getLastUpdateDate() {
 		return lastUpdateDate;
 	}
-	public void setLastUpdateDate(Date lastUpdateDate) {
+	public void setLastUpdateDate(LocalDateTime lastUpdateDate) {
 		this.lastUpdateDate = lastUpdateDate;
 	}
 	
@@ -70,11 +74,11 @@ public class PostDTO {
 		this.summary = summary;
 	}
 
-	public Date getCreationDate() {
+	public LocalDateTime getCreationDate() {
 		return creationDate;
 	}
 
-	public void setCreationDate(Date creationDate) {
+	public void setCreationDate(LocalDateTime creationDate) {
 		this.creationDate = creationDate;
 	}
 	

@@ -1,5 +1,6 @@
 package com.blog.dtos;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
 
@@ -10,8 +11,9 @@ public class SummaryDTO {
 	private Long id;
 	private String title;
 	@JsonFormat(pattern="yyyy-MM-dd HH:mm:ss")
-	private Date creationDate;
-	private Date lastUpdateDate;
+	private LocalDateTime creationDate;
+	@JsonFormat(pattern="yyyy-MM-dd HH:mm:ss")
+	private LocalDateTime lastUpdateDate;
 	private String summary;
 	private String userName;
 	private List<String> tags;
@@ -19,7 +21,7 @@ public class SummaryDTO {
 	
 	public SummaryDTO() {}
 	
-	public SummaryDTO(Long id, String title, Date creationDate, Date lastUpdateDate, 
+	public SummaryDTO(Long id, String title, LocalDateTime creationDate, LocalDateTime lastUpdateDate,
 			String summary, String userName, List<String> tags, String bannerUrl) {
 		super();
 		this.id = id;
@@ -47,11 +49,11 @@ public class SummaryDTO {
 		this.title = title;
 	}
 
-	public Date getLastUpdateDate() {
+	public LocalDateTime getLastUpdateDate() {
 		return lastUpdateDate;
 	}
 
-	public void setLastUpdateDate(Date lastUpdateDate) {
+	public void setLastUpdateDate(LocalDateTime lastUpdateDate) {
 		this.lastUpdateDate = lastUpdateDate;
 	}
 
@@ -79,11 +81,11 @@ public class SummaryDTO {
 		this.tags = tags;
 	}
 
-	public Date getCreationDate() {
+	public LocalDateTime getCreationDate() {
 		return creationDate;
 	}
 
-	public void setCreationDate(Date creationDate) {
+	public void setCreationDate(LocalDateTime creationDate) {
 		this.creationDate = creationDate;
 	}
 

@@ -5,6 +5,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
@@ -64,7 +65,7 @@ public class PostServiceTest {
 		tags.add("Tag");
 		user = new User();
 		user.setFullUserName("User Name");
-		user.setLastUpdateDate(new Date());
+		user.setLastUpdateDate(LocalDateTime.now());
 		user.setProfileType(ProfileTypeEnum.ROLE_USER);
 		user.setUserName("jovanibrasil");
 		
@@ -72,8 +73,8 @@ public class PostServiceTest {
 		post.setTitle("Post title");
 		post.setBody("Post body");
 		post.setSummary("Post summary");
-		post.setLastUpdateDate(new Date());
-		post.setCreationDate(new Date());
+		post.setLastUpdateDate(LocalDateTime.now());
+		post.setCreationDate(LocalDateTime.now());
 		post.setTags(tags);
 		post.setAuthor(user);
 		Page<Post> page = new PageImpl<Post>(Arrays.asList(post));
@@ -224,8 +225,8 @@ public class PostServiceTest {
 		post2.setTitle("Post title");
 		post2.setBody("Post body");
 		post2.setSummary("Post summary");
-		post2.setLastUpdateDate(new Date());
-		post2.setCreationDate(new Date());
+		post2.setLastUpdateDate(LocalDateTime.now());
+		post2.setCreationDate(LocalDateTime.now());
 		post2.setTags(tags);
 		post2.setAuthor(user);
 		post2.setPostId(0L);

@@ -5,6 +5,7 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
+import java.time.ZoneId;
 import java.util.Calendar;
 import java.util.Optional;
 
@@ -73,7 +74,10 @@ public class SubscriptionRepositoryTest {
 	public void testSubscriptionDate() {
 		Subscription subscription1 = new Subscription("test@gmail.com");
 		subscriptionRepository.save(subscription1);
-		Long subscriptionTime = Math.abs(subscription1.getSubscriptionDate().getTime());
+		Long subscriptionTime = Math.abs(subscription1.getSubscriptionDate()
+				.atZone(ZoneId.systemDefault())
+				.toInstant()
+				.toEpochMilli());
 		assertTrue((Calendar.getInstance().getTime().getTime() - subscriptionTime) > 0);
 	}
 	

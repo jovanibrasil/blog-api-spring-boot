@@ -1,5 +1,6 @@
 package com.blog.models;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 
 import javax.persistence.Column;
@@ -40,15 +41,14 @@ public class User {
 	@Enumerated(EnumType.STRING)
 	@Column(nullable=false)
 	private ProfileTypeEnum profileType;
-	@Temporal(TemporalType.TIMESTAMP) 
+	@Column(nullable=false, columnDefinition = "TIMESTAMP")
+	private LocalDateTime lastUpdateDate;
 	@Column(nullable=false)
-	private Date lastUpdateDate;
-	@Column(nullable=false)
-	private Date creationDate;
+	private LocalDateTime creationDate;
 	
 	public User() {
-		this.lastUpdateDate = new Date();
-		this.creationDate = new Date();
+		this.lastUpdateDate = LocalDateTime.now();
+		this.creationDate = LocalDateTime.now();
 	}
 	
 	public User(String userName) {
@@ -119,19 +119,19 @@ public class User {
 		this.profileType = profileType;
 	}
 
-	public Date getLastUpdateDate() {
+	public LocalDateTime getLastUpdateDate() {
 		return lastUpdateDate;
 	}
 
-	public void setLastUpdateDate(Date lastUpdateDate) {
+	public void setLastUpdateDate(LocalDateTime lastUpdateDate) {
 		this.lastUpdateDate = lastUpdateDate;
 	}
 	
-	public Date getCreationDate() {
+	public LocalDateTime getCreationDate() {
 		return creationDate;
 	}
 
-	public void setCreationDate(Date creationDate) {
+	public void setCreationDate(LocalDateTime creationDate) {
 		this.creationDate = creationDate;
 	}
 	

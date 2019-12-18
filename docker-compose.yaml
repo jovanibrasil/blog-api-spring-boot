@@ -38,6 +38,8 @@ services:
       - net
     environment:
       - "SPRING_PROFILES_ACTIVE=dev"
+      - "VAULT_TOKEN=s8ynaMrJvQPVq2BEPRxgceHcG"
+      - "DATASOURCE_URL=jdbc:mysql://mysql-database:3306/usersdb"
       - CATALINA_OPTS=-Xmx206M -Xms128M -XX:MaxPermSize=50M
     deploy:
       resources:

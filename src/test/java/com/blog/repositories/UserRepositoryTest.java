@@ -3,6 +3,7 @@ package com.blog.repositories;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -33,7 +34,7 @@ public class UserRepositoryTest {
 		tags.add("Tag");
 		User user = new User();
 		user.setFullUserName("User Name");
-		user.setLastUpdateDate(new Date());
+		user.setLastUpdateDate(LocalDateTime.now());
 		user.setProfileType(ProfileTypeEnum.ROLE_USER);
 		user.setUserName("jovanibrasil");
 		user.setEmail("user@gmail.com");

@@ -4,10 +4,12 @@ import static org.hamcrest.CoreMatchers.equalTo;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.Optional;
 
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -74,8 +76,8 @@ public class PostControllerTest {
 		post0.setTitle("Post title");
 		post0.setBody("Post body");
 		post0.setSummary("Post summary");
-		post0.setLastUpdateDate(new Date());
-		post0.setCreationDate(new Date());
+		post0.setLastUpdateDate(LocalDateTime.now());
+		post0.setCreationDate(LocalDateTime.now());
 		post0.setTags(Arrays.asList("Java"));
 		post0.setAuthor(user);
 		
@@ -84,8 +86,8 @@ public class PostControllerTest {
 		post1.setTitle("Post2 title");
 		post1.setBody("Post2 body");
 		post1.setSummary("Post2 summary");
-		post1.setLastUpdateDate(new Date());
-		post1.setCreationDate(new Date());
+		post1.setLastUpdateDate(LocalDateTime.now());
+		post1.setCreationDate(LocalDateTime.now());
 		post1.setTags(Arrays.asList("Scala"));
 		post1.setAuthor(user);
 		
@@ -292,6 +294,7 @@ public class PostControllerTest {
 	public static String asJsonString(final Object obj) {
 	    try {
 	        final ObjectMapper mapper = new ObjectMapper();
+			mapper.registerModule(new JavaTimeModule());
 	        final String jsonContent = mapper.writeValueAsString(obj);
 	        return jsonContent;
 	    } catch (Exception e) {

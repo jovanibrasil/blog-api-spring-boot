@@ -1,5 +1,6 @@
 package com.blog.models;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -32,14 +33,12 @@ public class Post {
 	
 	@Column(nullable=false)
 	private String title;
-	
-	@Temporal(TemporalType.TIMESTAMP)
-	@Column(nullable=false)
-	private Date creationDate;
-	
-	@Temporal(TemporalType.TIMESTAMP)
-	@Column(nullable=false)
-	private Date lastUpdateDate;
+
+	@Column(nullable=false, columnDefinition = "TIMESTAMP")
+	private LocalDateTime creationDate;
+
+	@Column(nullable=false, columnDefinition = "TIMESTAMP")
+	private LocalDateTime lastUpdateDate;
 	
 	@Column(nullable=false, length=1000)
 	private String summary;
@@ -72,8 +71,8 @@ public class Post {
 		this.summary = "";
 		this.body = "";
 		this.author = author;
-		this.lastUpdateDate = new Date();
-		this.creationDate = new Date();
+		this.lastUpdateDate = LocalDateTime.now();
+		this.creationDate = LocalDateTime.now();
 		this.tags = new ArrayList<String>(); 
 	}
 	
@@ -83,7 +82,7 @@ public class Post {
 		this.summary = summary;
 		this.body = body;
 		this.author = author;
-		this.lastUpdateDate = new Date();
+		this.lastUpdateDate = LocalDateTime.now();
 		this.tags = tags; 
 	}
 	
@@ -92,8 +91,8 @@ public class Post {
 		this.summary = summary;
 		this.body = body;
 		this.author = author;
-		this.creationDate = new Date();
-		this.lastUpdateDate = new Date();
+		this.creationDate = LocalDateTime.now();
+		this.lastUpdateDate = LocalDateTime.now();
 		this.tags = tags;
 	}
 
@@ -129,10 +128,10 @@ public class Post {
 		this.author = author;
 	}
 	
-	public Date getLastUpdateDate() {
+	public LocalDateTime getLastUpdateDate() {
 		return lastUpdateDate;
 	}
-	public void setLastUpdateDate(Date date) {
+	public void setLastUpdateDate(LocalDateTime date) {
 		this.lastUpdateDate = date;
 	}
 	
@@ -159,11 +158,11 @@ public class Post {
 		this.tags.add(tag);
 	}
 
-	public Date getCreationDate() {
+	public LocalDateTime getCreationDate() {
 		return creationDate;
 	}
 
-	public void setCreationDate(Date creationDate) {
+	public void setCreationDate(LocalDateTime creationDate) {
 		this.creationDate = creationDate;
 	}
 

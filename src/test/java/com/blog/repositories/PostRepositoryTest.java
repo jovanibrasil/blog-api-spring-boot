@@ -2,6 +2,7 @@ package com.blog.repositories;
 
 import static org.junit.Assert.assertEquals;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -41,7 +42,7 @@ public class PostRepositoryTest {
 		tags.add("Tag");
 		User user = new User();
 		user.setFullUserName("User Name");
-		user.setLastUpdateDate(new Date());
+		user.setLastUpdateDate(LocalDateTime.now());
 		user.setProfileType(ProfileTypeEnum.ROLE_USER);
 		user.setUserName("jovanibrasil");
 		user.setEmail("user@gmail.com");
@@ -51,8 +52,8 @@ public class PostRepositoryTest {
 		post.setTitle("Post title");
 		post.setBody("Post body");
 		post.setSummary("Post summary");
-		post.setLastUpdateDate(new Date());
-		post.setCreationDate(new Date());
+		post.setLastUpdateDate(LocalDateTime.now());
+		post.setCreationDate(LocalDateTime.now());
 		post.setTags(tags);
 		post.setAuthor(user);
 		post.setBannerUrl("");
@@ -62,8 +63,8 @@ public class PostRepositoryTest {
 		post2.setTitle("Post2 title");
 		post2.setBody("Post2 body");
 		post2.setSummary("Post2 summary");
-		post2.setLastUpdateDate(new Date());
-		post2.setCreationDate(new Date());
+		post2.setLastUpdateDate(LocalDateTime.now());
+		post2.setCreationDate(LocalDateTime.now());
 		post2.setTags(tags);
 		post2.setAuthor(user);
 		post2.setBannerUrl("");
@@ -118,9 +119,9 @@ public class PostRepositoryTest {
 		tags.add("Tag");
 		User user = new User();
 		user.setFullUserName("User Name");
-		user.setLastUpdateDate(new Date());
+		user.setLastUpdateDate(LocalDateTime.now());
 		user.setProfileType(ProfileTypeEnum.ROLE_USER);
-		user.setCreationDate(new Date());
+		user.setCreationDate(LocalDateTime.now());
 		user.setUserName("jovanibrasil");
 		user.setEmail("user@gmail.com");
 		userRepository.save(user);
@@ -129,8 +130,8 @@ public class PostRepositoryTest {
 		post.setTitle("Post title");
 		post.setBody("Post body");
 		post.setSummary("Post summary");
-		post.setLastUpdateDate(new Date());
-		post.setCreationDate(new Date());
+		post.setLastUpdateDate(LocalDateTime.now());
+		post.setCreationDate(LocalDateTime.now());
 		post.setTags(tags);
 		post.setAuthor(user);
 		post.setBannerUrl("");

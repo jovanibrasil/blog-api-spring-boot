@@ -22,7 +22,11 @@ import javax.persistence.TemporalType;
 import javax.persistence.Transient;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import lombok.*;
 
+@Getter
+@Setter
+@NoArgsConstructor
 @Entity
 @Table(name="posts")
 public class Post {
@@ -63,8 +67,6 @@ public class Post {
 	@Column(nullable = false)
 	private String bannerUrl;
 
-	public Post() {}
-	
 	public Post(User author) {
 		this.postId = 0L;
 		this.title = "";
@@ -96,61 +98,6 @@ public class Post {
 		this.tags = tags;
 	}
 
-	public Long getPostId() {
-		return postId;
-	}
-	
-	public void setPostId(Long id) {
-		this.postId = id;
-	}
-	
-	public String getTitle() {
-		return title;
-	}
-
-	public void setTitle(String title) {
-		this.title = title;
-	}
-	
-	public String getBody() {
-		return body;
-	}
-
-	public void setBody(String body) {
-		this.body = body;
-	}
-	
-	public User getAuthor() {
-		return author;
-	}
-
-	public void setAuthor(User author) {
-		this.author = author;
-	}
-	
-	public LocalDateTime getLastUpdateDate() {
-		return lastUpdateDate;
-	}
-	public void setLastUpdateDate(LocalDateTime date) {
-		this.lastUpdateDate = date;
-	}
-	
-	public String getSummary() {
-		return summary;
-	}
-
-	public void setSummary(String summary) {
-		this.summary = summary;
-	}
-
-	public List<String> getTags() {
-		return tags;
-	}
-
-	public void setTags(List<String> tags) {
-		this.tags = tags;
-	}
-	
 	public void addTag(String tag) {
 		if(this.tags == null) {
 			this.tags = new ArrayList<>();
@@ -158,27 +105,4 @@ public class Post {
 		this.tags.add(tag);
 	}
 
-	public LocalDateTime getCreationDate() {
-		return creationDate;
-	}
-
-	public void setCreationDate(LocalDateTime creationDate) {
-		this.creationDate = creationDate;
-	}
-
-	public String getBannerUrl() {
-		return bannerUrl;
-	}
-
-	public void setBannerUrl(String bannerUrl) {
-		this.bannerUrl = bannerUrl;
-	}
-	
-	@Override
-	public String toString() {
-		return "Post [postId=" + postId + ", title=" + title + ", creationDate=" + creationDate + ", lastUpdateDate="
-				+ lastUpdateDate + ", summary=" + summary + ", body=" + body 
-				+ ", author=" + author + ", tags=" + tags + "]";
-	}	
-	
 }

@@ -91,10 +91,11 @@ public class FeedbackController {
 		
 		optLatestFeedbacks.get().forEach(feedback -> {
 			System.out.println(feedback);
-			FeedbackDTO feedbackDTO = new FeedbackDTO();
-			feedbackDTO.setUserName(feedback.getUserName());
-			feedbackDTO.setEmail(feedback.getEmail());
-			feedbackDTO.setContent(feedback.getContent());
+			FeedbackDTO feedbackDTO = FeedbackDTO.builder()
+					.userName(feedback.getUserName())
+					.email(feedback.getEmail())
+				    .content(feedback.getContent())
+					.build();
 			feedbacks.add(feedbackDTO);
 		});
 		

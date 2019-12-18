@@ -174,8 +174,7 @@ public class PostController {
 	
 	/**
 	 * Returns a list of n latest posts of a specified user.
-	 * 
-	 * @param length is the size of the post list that will be returned.
+	 *
 	 * @param userId is the user identification. 
 	 * 
 	 */
@@ -208,9 +207,7 @@ public class PostController {
 	
 	/**
 	 * Returns a list with size "length" that contains posts ordered by the parameter "order". No user is specified.
-	 * 
-	 * @param length is the size of the post list that will be returned.
-	 * 
+	 *
 	 */
 	@GetMapping
 	public ResponseEntity<Response<Page<PostDTO>>> getPosts(@RequestParam(value="page", defaultValue="0") int page,
@@ -261,13 +258,18 @@ public class PostController {
 		}
 		
 		Page<SummaryDTO> summaries = optLatestPosts.get()
-				.map(post -> {
-					return new SummaryDTO(post.getPostId(), 
-							post.getTitle(), post.getCreationDate(),	
-							post.getLastUpdateDate(), post.getSummary(), 
-							post.getAuthor().getUserName(), post.getTags(), 
-							post.getBannerUrl());
-			});
+				.map(post ->
+					SummaryDTO.builder()
+							.id(post.getPostId())
+							.title(post.getTitle())
+							.creationDate(post.getCreationDate())
+							.lastUpdateDate(post.getLastUpdateDate())
+							.summary(post.getSummary())
+							.userName(post.getAuthor().getUserName())
+							.tags(post.getTags())
+							.bannerUrl(post.getBannerUrl())
+							.build()
+				);
 			
 		response.setData(summaries);
 		return ResponseEntity.ok(response);

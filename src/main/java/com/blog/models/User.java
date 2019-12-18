@@ -12,7 +12,10 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import com.blog.enums.ProfileTypeEnum;
+import lombok.*;
 
+@Getter
+@Setter
 @Entity
 @Table(name="users")
 public class User {
@@ -50,89 +53,9 @@ public class User {
 		this.lastUpdateDate = LocalDateTime.now();
 		this.creationDate = LocalDateTime.now();
 	}
-	
+
 	public User(String userName) {
 		this.userName = userName;
 	}
-	
-	public String getUserName() {
-		return userName;
-	}
 
-	public void setUserName(String userName) {
-		this.userName = userName;
-	}
-
-	public String getFullUserName() {
-		return fullUserName;
-	}
-
-	public void setFullUserName(String fullUserName) {
-		this.fullUserName = fullUserName;
-	}
-
-	public String getEmail() {
-		return email;
-	}
-
-	public void setEmail(String email) {
-		this.email = email;
-	}
-
-	public String getPhoneNumber() {
-		return phoneNumber;
-	}
-
-	public void setPhoneNumber(String phoneNumber) {
-		this.phoneNumber = phoneNumber;
-	}
-
-	public String getGithubUserName() {
-		return githubUserName;
-	}
-
-	public void setGithubUserName(String githubUserName) {
-		this.githubUserName = githubUserName;
-	}
-
-	public String getLinkedinUserName() {
-		return linkedinUserName;
-	}
-
-	public void setLinkedinUserName(String linkedinUserName) {
-		this.linkedinUserName = linkedinUserName;
-	}
-
-	public String getGoogleScholarLink() {
-		return googleScholarLink;
-	}
-
-	public void setGoogleScholarLink(String googleScholarUserName) {
-		this.googleScholarLink = googleScholarUserName;
-	}
-
-	public ProfileTypeEnum getProfileType() {
-		return profileType;
-	}
-
-	public void setProfileType(ProfileTypeEnum profileType) {
-		this.profileType = profileType;
-	}
-
-	public LocalDateTime getLastUpdateDate() {
-		return lastUpdateDate;
-	}
-
-	public void setLastUpdateDate(LocalDateTime lastUpdateDate) {
-		this.lastUpdateDate = lastUpdateDate;
-	}
-	
-	public LocalDateTime getCreationDate() {
-		return creationDate;
-	}
-
-	public void setCreationDate(LocalDateTime creationDate) {
-		this.creationDate = creationDate;
-	}
-	
 }

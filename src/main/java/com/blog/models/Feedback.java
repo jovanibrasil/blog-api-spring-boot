@@ -1,5 +1,7 @@
 package com.blog.models;
 
+import lombok.*;
+
 import java.time.LocalDateTime;
 import java.util.Date;
 
@@ -12,6 +14,9 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
+@Getter
+@Setter
+@NoArgsConstructor
 @Entity
 @Table(name="feedbacks")
 public class Feedback {
@@ -27,9 +32,7 @@ public class Feedback {
 	private String content;
 	@Column(nullable = false, columnDefinition = "TIMESTAMP")
 	private LocalDateTime feedbackDate;
-	
-	public Feedback() { }
-	
+
 	public Feedback(String name, String email, String content) {
 		this.userName = name;
 		this.email = email;
@@ -37,50 +40,4 @@ public class Feedback {
 		this.feedbackDate = LocalDateTime.now();
 	}
 
-	public Long getId() {
-		return id;
-	}
-
-	public void setId(Long id) {
-		this.id = id;
-	}
-
-	public String getUserName() {
-		return userName;
-	}
-
-	public void setUserName(String name) {
-		this.userName = name;
-	}
-
-	public String getEmail() {
-		return email;
-	}
-
-	public void setEmail(String email) {
-		this.email = email;
-	}
-
-	public String getContent() {
-		return content;
-	}
-
-	public void setContent(String content) {
-		this.content = content;
-	}
-
-	public LocalDateTime getFeedbackDate() {
-		return feedbackDate;
-	}
-
-	public void setFeedbackDate(LocalDateTime feedbackDate) {
-		this.feedbackDate = feedbackDate;
-	}
-
-	@Override
-	public String toString() {
-		return "Feedback [id=" + id + ", userName=" + userName + ", email=" + email + ", content=" + content
-				+ ", feedbackDate=" + feedbackDate + "]";
-	}
-	
 }

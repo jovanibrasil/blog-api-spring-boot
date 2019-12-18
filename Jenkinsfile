@@ -4,6 +4,10 @@ pipeline {
     environment {
         VAULT_TOKEN = credentials('VAULT_TOKEN')
     }
+
+    parameters {
+        string(name: 'TASK', defaultValue: 'BUILD')
+    }
     
     stages {
  
@@ -24,20 +28,21 @@ pipeline {
             }
         }
 
-        stage("Test"){
+        stage("Build"){
+            when{
+               expression { return params.TASK == 'BUILD' }
+            }
             steps {
             	echo 'Running tests ...'
                 sh 'make run-tests'
-            }
-        }
-
-        stage("Registry image"){
-            steps {
-                echo 'TODO'
+                // Registry image or war file TODO
             }
         }
 
         stage("Deploy"){
+            when{
+               expression { return params.TASK == 'DEPLOY' }
+            }
             steps {
                 sh 'make deploy-production VAULT_TOKEN=${VAULT_TOKEN} PROFILE=prod'
             }

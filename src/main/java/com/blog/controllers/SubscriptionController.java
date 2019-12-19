@@ -28,9 +28,9 @@ public class SubscriptionController {
 	
 	@Autowired
 	private SubscriptionService subscriptionService;
-	
+
 	private static final Logger log = LoggerFactory.getLogger(SubscriptionController.class);
-	
+
 	@GetMapping
 	public ResponseEntity<Response<?>> findAllSubscriptions(){
 		log.info("Finding all subscriptions ...");

@@ -46,14 +46,9 @@ public class FeedbackController {
 	 */
 	@PostMapping
 	public ResponseEntity<Response<String>> saveFeedback(
-			@Valid @RequestBody FeedbackDTO feedbackDTO, 
-			BindingResult bindingResult, Locale locale){
+			@Valid @RequestBody FeedbackDTO feedbackDTO){
 		
 		Response<String> response = new Response<>();
-		if(bindingResult.hasErrors()) {
-			bindingResult.getAllErrors().forEach(err -> response.addError(err.getDefaultMessage()));
-			return ResponseEntity.badRequest().body(response);
-		}
 		
 		log.info("Saving feedback ...");
 		Feedback feedback = new Feedback(feedbackDTO.getUserName(),
@@ -78,7 +73,7 @@ public class FeedbackController {
 	 * @return
 	 */
 	@GetMapping 
-	public ResponseEntity<Response<ArrayList<FeedbackDTO>>> getFeedbacks(Locale locale) {
+	public ResponseEntity<Response<ArrayList<FeedbackDTO>>> getFeedbacks() {
 		
 		Response<ArrayList<FeedbackDTO>> response = new Response<>();
 		log.info("Retrieving a list of feedbacks ...");

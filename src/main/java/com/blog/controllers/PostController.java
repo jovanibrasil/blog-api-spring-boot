@@ -66,7 +66,7 @@ public class PostController {
 	 * 
 	 */
 	@GetMapping("/{id}")
-	public ResponseEntity<Response<PostDTO>> getPost(@NotNull @PathVariable("id") Long id, Locale locale) {
+	public ResponseEntity<Response<PostDTO>> getPost(@NotNull @PathVariable("id") Long id) {
 		
 		Response<PostDTO> response = new Response<>();
 		Optional<Post> optPost = postService.findPostByPostId(id);
@@ -88,7 +88,7 @@ public class PostController {
 	 * 
 	 */
 	@PostMapping("/empty")
-	public ResponseEntity<Response<PostDTO>> createPost(Locale locale) {
+	public ResponseEntity<Response<PostDTO>> createPost() {
 		Response<PostDTO> response = new Response<>();
 		
 		log.info("Creating new empty post");
@@ -115,18 +115,10 @@ public class PostController {
 	@PostMapping(consumes = { "multipart/form-data" })
 	public ResponseEntity<Response<PostDTO>> createPost(
 			@RequestPart(name = "post") @Valid @NotNull PostDTO postDTO,
-			@RequestPart @NotNull MultipartFile[] postImages, BindingResult bindingResult, Locale locale) {
-		
-		log.info("Multipart received: " + postImages.length);
+			@RequestPart @NotNull MultipartFile[] postImages) {
 		
 		Response<PostDTO> response = new Response<>();
-				
-		if(bindingResult.hasErrors()) {
-			log.info("It was not possible to create the specified post. Invalid fields.");
-			bindingResult.getAllErrors().forEach(err -> response.addError(err.getDefaultMessage()));
-			return ResponseEntity.badRequest().body(response);
-		}
-		
+
 		Post post = DtoUtils.postDTOtoPost(postDTO);
 		log.info("Creating new post");
 		Optional<Post> optPost = postService.create(post, postImages);
@@ -152,17 +144,11 @@ public class PostController {
 	@PutMapping(consumes = { "multipart/form-data" })
 	public ResponseEntity<Response<PostDTO>> updatePost(
 			@RequestPart(name = "post") @Valid @NotNull PostDTO postDTO,
-			@RequestPart MultipartFile[] postImages, 
-			BindingResult bindingResult, Locale locale) {
+			@RequestPart MultipartFile[] postImages) {
 		
 		log.info("Updating post ...");
 		Response<PostDTO> response = new Response<>();
-		if(bindingResult.hasErrors()) {
-			log.error("It was not possible to update the specified post. Invalid data.");
-			bindingResult.getAllErrors().forEach(err -> response.addError(err.getDefaultMessage()));
-			return ResponseEntity.badRequest().body(response);
-		}
-		
+
 		Post post = DtoUtils.postDTOtoPost(postDTO);
 		Optional<Post> optPost = postService.update(post, postImages);
 		
@@ -190,7 +176,7 @@ public class PostController {
 	public ResponseEntity<Response<ArrayList<PostDTO>>> getPostsByUser(@PathVariable("username") String userId, 
 			@RequestParam(value="page", defaultValue="0") int page, 
 			@RequestParam(value="ord", defaultValue="lastUpdateDate") String ord, 
-			@RequestParam(value="dir", defaultValue="DESC") String dir, Locale locale) {
+			@RequestParam(value="dir", defaultValue="DESC") String dir) {
 		
 		Response<ArrayList<PostDTO>> response = new Response<>();
 		PageRequest pageRequest = PageRequest.of(page, this.POSTS_LIST_SIZE, Direction.valueOf(dir), ord);
@@ -221,8 +207,7 @@ public class PostController {
 	public ResponseEntity<Response<Page<PostDTO>>> getPosts(@RequestParam(value="page", defaultValue="0") int page,
 			@RequestParam(value="ord",
 			defaultValue="lastUpdateDate") String ord,
-			@RequestParam(value="dir", defaultValue="DESC") String dir,
-			Locale locale) {
+			@RequestParam(value="dir", defaultValue="DESC") String dir) {
 		
 		Response<Page<PostDTO>> response = new Response<>();
 		PageRequest pageRequest = PageRequest.of(page, this.POSTS_LIST_SIZE, Direction.valueOf(dir), ord);
@@ -251,7 +236,7 @@ public class PostController {
 	@GetMapping(value = "/summaries")
 	public ResponseEntity<Response<Page<SummaryDTO>>> getSummaries(
 			@RequestParam(value="page", defaultValue="0") int page,
-			@RequestParam(value="category", defaultValue="all") String cat, Locale locale) {
+			@RequestParam(value="category", defaultValue="all") String cat) {
 		log.info("Get a list of post summaries. category: {}", cat);
 		Response<Page<SummaryDTO>> response = new Response<>();
 		Optional<Page<Post>> optLatestPosts;
@@ -293,7 +278,7 @@ public class PostController {
 	 * @return
 	 */
 	@GetMapping("/top") 
-	public ResponseEntity<Response<ArrayList<PostInfo>>> getTopPostsInfoList(Locale locale) {
+	public ResponseEntity<Response<ArrayList<PostInfo>>> getTopPostsInfoList() {
 		
 		log.info("Getting a list of post information (title + id)");
 		
@@ -327,7 +312,7 @@ public class PostController {
 	 * @return
 	 */
 	@DeleteMapping(value="/{id}")
-	public ResponseEntity<Response<PostDTO>> deletePost(@PathVariable("id") Long id, Locale locale){
+	public ResponseEntity<Response<PostDTO>> deletePost(@PathVariable("id") Long id){
 		log.info("Deleting post ...");
 		Response<PostDTO> response = new Response<>();
 		

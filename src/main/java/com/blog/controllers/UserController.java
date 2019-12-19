@@ -49,7 +49,7 @@ public class UserController {
 	 * of error messages on failure.  
 	 */
 	@GetMapping("/{userName}")
-	public ResponseEntity<Response<UserDTO>> getUser(@PathVariable("userName") String userName, Locale locale){
+	public ResponseEntity<Response<UserDTO>> getUser(@PathVariable("userName") String userName){
 		
 		Response<UserDTO> response = new Response<>();
 		Optional<User> optUser = this.userService.findByUserName(userName);
@@ -80,29 +80,22 @@ public class UserController {
 	 * Saves a userDTO.
 	 * 
 	 * @param userDTO is an UserDTO.
-	 * @param bindingResult is an object with the result of userDTO validation.
 	 * @return An Response object with the saved UserDTO and empty error message list on success, and an Response object 
 	 * with empty data and error messages on failure.  
 	 */
 	@PostMapping
-	public ResponseEntity<Response<UserDTO>> saveUser(@Valid @RequestBody UserDTO userDTO, BindingResult bindingResult, Locale locale){
+	public ResponseEntity<Response<UserDTO>> saveUser(@Valid @RequestBody UserDTO userDTO){
 		Response<UserDTO> response = new Response<UserDTO>();
-		
-		if(bindingResult.hasErrors()) {
-			log.error("It was not possible to create the specified user. DTO binding error.");
-			bindingResult.getAllErrors().forEach(err -> response.addError(err.getDefaultMessage()));
+
+		Optional<User> optUser = userService.findByUserName(userDTO.getUserName());
+		if(optUser.isPresent()){
+			log.error("It was not possible to create the specified user. Username already exists.");
+			response.addError(msgSrc.getMessage("error.user.name.unique"));
 			return ResponseEntity.badRequest().body(response);
 		}
-		
-		this.validateUser(userDTO, bindingResult);
-		if(bindingResult.hasErrors()) {
-			log.error("It was not possible to create the specified user. Validation Error.");
-			bindingResult.getAllErrors().forEach(err -> response.addError(err.getDefaultMessage()));
-			return ResponseEntity.badRequest().body(response);
-		}
-		
+
 		User user = this.userDTOtoUser(userDTO);
-		Optional<User> optUser = this.userService.save(user);
+		optUser = this.userService.save(user);
 		if(!optUser.isPresent()) {
 			log.error("It was not possible to create the specified user.");
 			response.addError(msgSrc.getMessage("error.user.create"));
@@ -112,21 +105,6 @@ public class UserController {
 		userDTO = this.userToUserDTO(user);
 		response.setData(userDTO);
 		return ResponseEntity.ok(response);
-	}
-		
-	/**
-	 * 
-	 * Validates an UserDTO object accordingly the constraints.
-	 * 
-	 * 1) Verify if the user already exists.
-	 *  
-	 * 
-	 * @param userDTO is the UserDto object that you wish to have validated.
-	 * @param result bindingResult is an object with the result of userDTO validation.
-	 */
-	private void validateUser(UserDTO userDTO, BindingResult result) {
-		userService.findByUserName(userDTO.getUserName()).ifPresent(u -> 
-			result.addError(new ObjectError("User", "Username already exists.")));
 	}
 	
 	/**

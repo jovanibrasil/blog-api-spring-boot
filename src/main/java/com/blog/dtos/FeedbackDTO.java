@@ -15,14 +15,15 @@ import javax.validation.constraints.Size;
 @Builder
 public class FeedbackDTO {
 	
-	@NotBlank(message = "Email must not be null or empty")
-	@Size(min = 2, max=40, message="Username must contains between 2 and 40 characters.")
+	@NotBlank(message = "{error.user.name.notblank}")
+	@Size(min = 4, max=16, message="{error.user.name.size}")
 	private String userName;
-	@NotBlank(message = "Email must not be blank")
-	@Email(message="Email must be valid.")
-	@Size(max=40, message="Username must not contains more than 40 characters.")
+	@NotBlank(message = "{error.user.email.notblank}")
+	@Email(message="{error.user.email.invalid}")
+	@Size(max=40, message="{error.user.email.size}")
 	private String email;
-	@Size(min=10, max=255, message="Feedback content must contains between 10 and 255 characters.")
+	@Size(min=10, max=255, message="{error.feedback.size}")
+	@NotBlank(message = "{error.feedback.notblank}")
 	private String content;
 	@JsonFormat(pattern="yyyy-MM-dd HH:mm:ss")
 	private LocalDateTime feedbackDate;

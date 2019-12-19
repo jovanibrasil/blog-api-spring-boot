@@ -2,10 +2,12 @@ package com.blog.controllers;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Optional;
 
 import javax.validation.Valid;
 
+import com.blog.exceptions.CustomMessageSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,11 +30,13 @@ import com.blog.services.FeedbackService;
 @RequestMapping("/feedbacks")
 public class FeedbackController {
 
-	@Autowired
 	private FeedbackService feedbackService;
+	private CustomMessageSource msgSrc;
 
 	private static final Logger log = LoggerFactory.getLogger(FeedbackController.class);
-	
+
+
+
 	/**
 	 * Saves an user feedback.
 	 * 
@@ -43,7 +47,7 @@ public class FeedbackController {
 	@PostMapping
 	public ResponseEntity<Response<String>> saveFeedback(
 			@Valid @RequestBody FeedbackDTO feedbackDTO, 
-			BindingResult bindingResult){
+			BindingResult bindingResult, Locale locale){
 		
 		Response<String> response = new Response<>();
 		if(bindingResult.hasErrors()) {
@@ -52,15 +56,14 @@ public class FeedbackController {
 		}
 		
 		log.info("Saving feedback ...");
-		
-		Feedback feedback = new Feedback(feedbackDTO.getUserName(), 
+		Feedback feedback = new Feedback(feedbackDTO.getUserName(),
 				feedbackDTO.getEmail(), feedbackDTO.getContent());
 		
 		Optional<Feedback> optFeedback = this.feedbackService.create(feedback);
 		
 		if(!optFeedback.isPresent()) {
 			log.error("It was not possible to create the feedback.");
-			response.setData("It was not possible to create the feedback.");
+			response.setData(msgSrc.getMessage("error.feedback.creation"));
 			return ResponseEntity.badRequest().body(response);
 		}
 		
@@ -75,7 +78,7 @@ public class FeedbackController {
 	 * @return
 	 */
 	@GetMapping 
-	public ResponseEntity<Response<ArrayList<FeedbackDTO>>> getFeedbacks() { 
+	public ResponseEntity<Response<ArrayList<FeedbackDTO>>> getFeedbacks(Locale locale) {
 		
 		Response<ArrayList<FeedbackDTO>> response = new Response<>();
 		log.info("Retrieving a list of feedbacks ...");
@@ -83,7 +86,7 @@ public class FeedbackController {
 		
 		if(!optLatestFeedbacks.isPresent()) {
 			log.error("It was not possible to create the list of feedbacks.");
-			response.addError("It was not possible to create the list of feedbacks.");
+			response.addError(msgSrc.getMessage("error.feedback.findall"));
 			return ResponseEntity.badRequest().body(response);
 		}
 		

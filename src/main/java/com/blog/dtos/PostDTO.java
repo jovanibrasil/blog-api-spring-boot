@@ -9,6 +9,7 @@ import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
 
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
@@ -18,18 +19,19 @@ public class PostDTO {
 	@NotNull
 	private Long id;
 	
-	@NotNull(message="Title must not be null")
-	@Size(min=2, max=50, message="Título do Post deve ter entre 2 e 10 caracteres.")
+	@NotBlank(message="{error.post.title.notblank}")
+	@Size(min=2, max=50, message="{error.post.title.size}")
 	private String title;
 	
-	@NotNull(message="Summary must not be null")
-	@Size(min=2, max=5000, message="Sumário deve ter entre 2 e 1000 caracteres.")
+	@NotBlank(message="{error.post.summary.notblank}")
+	@Size(min=2, max=5000, message="{error.post.summary.size}")
 	private String summary;
-	
-	@Size(min=2, max=30000, message="Corpo do post deve ter entre 2 e 1000 caracteres.")
+
+	@NotBlank(message="{error.post.body.notblank}")
+	@Size(min=2, max=30000, message="{error.post.body.size}")
 	private String body;
 	
-	@NotNull(message="Tags must not be null")
+	@NotNull(message="{error.post.tags.notnull}")
 	private List<String> tags;
 	@JsonFormat(pattern="yyyy-MM-dd HH:mm:ss")
 	private LocalDateTime creationDate;

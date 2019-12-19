@@ -1,9 +1,11 @@
 package com.blog.controllers;
 
+import java.util.Locale;
 import java.util.Optional;
 
 import javax.validation.Valid;
 
+import com.blog.exceptions.CustomMessageSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,10 +32,15 @@ import com.blog.services.UserService;
 public class UserController {
 
 	private static final Logger log = LoggerFactory.getLogger(UserController.class);
-	
-	@Autowired
-	private UserService userService;	
-	
+
+	private UserService userService;
+	private CustomMessageSource msgSrc;
+
+	public UserController(UserService userService, CustomMessageSource msgSrc) {
+		this.userService = userService;
+		this.msgSrc = msgSrc;
+	}
+
 	/**
 	 * Retrieve a UserDTO by a given user name.
 	 * 
@@ -42,14 +49,14 @@ public class UserController {
 	 * of error messages on failure.  
 	 */
 	@GetMapping("/{userName}")
-	public ResponseEntity<Response<UserDTO>> getUser(@PathVariable("userName") String userName){
+	public ResponseEntity<Response<UserDTO>> getUser(@PathVariable("userName") String userName, Locale locale){
 		
 		Response<UserDTO> response = new Response<>();
 		Optional<User> optUser = this.userService.findByUserName(userName);
 		
 		if(!optUser.isPresent()) {
 			log.error("It was not possible to find the specified user.");
-			response.addError("It was not possible to find the specified user.");
+			response.addError(msgSrc.getMessage("error.user.find"));
 			return ResponseEntity.badRequest().body(response);
 		}
 		
@@ -78,7 +85,7 @@ public class UserController {
 	 * with empty data and error messages on failure.  
 	 */
 	@PostMapping
-	public ResponseEntity<Response<UserDTO>> saveUser(@Valid @RequestBody UserDTO userDTO, BindingResult bindingResult){
+	public ResponseEntity<Response<UserDTO>> saveUser(@Valid @RequestBody UserDTO userDTO, BindingResult bindingResult, Locale locale){
 		Response<UserDTO> response = new Response<UserDTO>();
 		
 		if(bindingResult.hasErrors()) {
@@ -98,7 +105,7 @@ public class UserController {
 		Optional<User> optUser = this.userService.save(user);
 		if(!optUser.isPresent()) {
 			log.error("It was not possible to create the specified user.");
-			response.addError("It was not possible to create the user.");
+			response.addError(msgSrc.getMessage("error.user.create"));
 			return ResponseEntity.badRequest().body(response);
 		}
 		log.info("Creating user {}", user.getUserName());

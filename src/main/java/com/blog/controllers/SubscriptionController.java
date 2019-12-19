@@ -42,8 +42,8 @@ public class SubscriptionController {
 	
 	@PostMapping("/{email}")
 	public ResponseEntity<Response<?>> subscribe(@PathVariable("email") 
-		@Valid @NotBlank(message = "Email não deve estar em branco.")  
-		@Email(message = "Formato de email inválido.") String email){
+		@Valid @NotBlank(message = "{error.user.email.notblank}")
+		@Email(message = "{error.user.email.format}") String email){
 		log.info("Subscribing {} ...", email);
 		Response<?> response = new Response<>();
 		Subscription subscription = new Subscription(email);

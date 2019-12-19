@@ -15,26 +15,25 @@ public class UserDTO {
 	
 	@NonNull
 	private Long userId;
-	// basic user data
-	@Length(min=4, max=16, message="The user name must contains between 4 and 16 characters.")
-    @NotBlank(message="The user name must not be empty.")
+	@Length(min=4, max=16, message="{error.user.name.size}")
+    @NotBlank(message="{error.user.name.notblank}")
 	private String userName;
-	@NotBlank(message="The email must not be empty.")
-	@Email @Length(max=30, message="The email must contains a maximum of 60 characters.")
+	@NotBlank(message="{error.user.email.notblank}")
+	@Email @Length(max=40, message="{error.user.email.size}")
 	private String email;
     
 	// Extra user information
-	@Length(max=60, message="The full user name must contains a maximum of 60 characters.")
+	@Length(max=60, message="{error.user.name.full.maxsize}")
 	private String fullUserName;
-	@Length(max=20, message="The github name must contains a maximum of 20 characters.")
+	@Length(max=20, message="{error.user.phone.maxsize}")
     private String phone;
     
-	// network references
-    @Length(max=20, message="The github user name must contains a maximum of 20 characters.")
+	// Network references
+    @Length(max=20, message="{error.user.github.maxsize}")
     private String githubUserName;
-    @Length(max=20, message="The linkedin user name must contains a maximum of 20 characters.")
+    @Length(max=20, message="{error.user.linkedin.maxsize}")
     private String linkedinUserName;
-    @Length(max=100, message="The Google Scholar link must contains a maximum of 100 characters.")
+    @Length(max=100, message="{error.user.googlescholar.maxsize}")
     private String googlescholarLink;
 
 }

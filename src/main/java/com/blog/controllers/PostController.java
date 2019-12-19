@@ -1,11 +1,14 @@
 package com.blog.controllers;
 
 import java.util.ArrayList;
+import java.util.Locale;
 import java.util.Optional;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 
+import com.blog.exceptions.CustomMessageSource;
+import org.apache.tomcat.jni.Local;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,14 +46,19 @@ public class PostController {
 
 	private static final Logger log = LoggerFactory.getLogger(PostController.class);
 	
-	@Autowired
 	private PostService postService;
+	private CustomMessageSource msgSrc;
 	
 	@Value("${blog.posts.page-size}")
 	private int POSTS_LIST_SIZE;
 	@Value("${blog.posts.top-list.page-size}")
 	private int TOP_POSTS_LIST_SIZE;
-	
+
+	public PostController(PostService postService, CustomMessageSource msgSrc) {
+		this.postService = postService;
+		this.msgSrc = msgSrc;
+	}
+
 	/**
 	 * Returns a post given a post id.
 	 * 
@@ -58,14 +66,14 @@ public class PostController {
 	 * 
 	 */
 	@GetMapping("/{id}")
-	public ResponseEntity<Response<PostDTO>> getPost(@NotNull @PathVariable("id") Long id) {
+	public ResponseEntity<Response<PostDTO>> getPost(@NotNull @PathVariable("id") Long id, Locale locale) {
 		
 		Response<PostDTO> response = new Response<>();
 		Optional<Post> optPost = postService.findPostByPostId(id);
 		
 		if(!optPost.isPresent()) {
 			log.error("It was not possible to find the specified post.");
-			response.addError("It was not possible to find the specified post.");
+			response.addError(msgSrc.getMessage("error.post.find"));
 			return ResponseEntity.badRequest().body(response);
 		}
 		
@@ -80,7 +88,7 @@ public class PostController {
 	 * 
 	 */
 	@PostMapping("/empty")
-	public ResponseEntity<Response<PostDTO>> createPost() {
+	public ResponseEntity<Response<PostDTO>> createPost(Locale locale) {
 		Response<PostDTO> response = new Response<>();
 		
 		log.info("Creating new empty post");
@@ -88,7 +96,7 @@ public class PostController {
 		
 		if(!optPost.isPresent()) {
 			log.info("It was not possible to create the specified post.");
-			response.addError("It was not possible to created the post.");
+			response.addError(msgSrc.getMessage("error.post.create"));
 			return ResponseEntity.badRequest().body(response);
 		}
 		PostDTO postDTO = new PostDTO();
@@ -107,7 +115,7 @@ public class PostController {
 	@PostMapping(consumes = { "multipart/form-data" })
 	public ResponseEntity<Response<PostDTO>> createPost(
 			@RequestPart(name = "post") @Valid @NotNull PostDTO postDTO,
-			@RequestPart @NotNull MultipartFile[] postImages, BindingResult bindingResult) {
+			@RequestPart @NotNull MultipartFile[] postImages, BindingResult bindingResult, Locale locale) {
 		
 		log.info("Multipart received: " + postImages.length);
 		
@@ -125,7 +133,7 @@ public class PostController {
 		
 		if(!optPost.isPresent()) {
 			log.info("It was not possible to create the specified post.");
-			response.addError("It was not possible to created the post.");
+			response.addError(msgSrc.getMessage("error.post.create"));
 			return ResponseEntity.badRequest().body(response);
 		}
 		
@@ -145,7 +153,7 @@ public class PostController {
 	public ResponseEntity<Response<PostDTO>> updatePost(
 			@RequestPart(name = "post") @Valid @NotNull PostDTO postDTO,
 			@RequestPart MultipartFile[] postImages, 
-			BindingResult bindingResult) {
+			BindingResult bindingResult, Locale locale) {
 		
 		log.info("Updating post ...");
 		Response<PostDTO> response = new Response<>();
@@ -160,7 +168,7 @@ public class PostController {
 		
 		if(!optPost.isPresent()) {
 			log.error("It was not possible to update the specified post. Internal error.");
-			response.addError("It was not possible to update the post.");
+			response.addError(msgSrc.getMessage("error.post.update"));
 			return ResponseEntity.badRequest().body(response);
 		}
 		postDTO.setId(optPost.get().getPostId());
@@ -182,7 +190,7 @@ public class PostController {
 	public ResponseEntity<Response<ArrayList<PostDTO>>> getPostsByUser(@PathVariable("username") String userId, 
 			@RequestParam(value="page", defaultValue="0") int page, 
 			@RequestParam(value="ord", defaultValue="lastUpdateDate") String ord, 
-			@RequestParam(value="dir", defaultValue="DESC") String dir) { 
+			@RequestParam(value="dir", defaultValue="DESC") String dir, Locale locale) {
 		
 		Response<ArrayList<PostDTO>> response = new Response<>();
 		PageRequest pageRequest = PageRequest.of(page, this.POSTS_LIST_SIZE, Direction.valueOf(dir), ord);
@@ -190,7 +198,7 @@ public class PostController {
 		
 		if(!optLatestPosts.isPresent()) {
 			log.error("It was not possible to get the list of posts.");
-			response.addError("It was not possible to get the list of posts.");
+			response.addError(msgSrc.getMessage("error.post.findall"));
 			return ResponseEntity.badRequest().body(response);
 		}
 		
@@ -211,7 +219,10 @@ public class PostController {
 	 */
 	@GetMapping
 	public ResponseEntity<Response<Page<PostDTO>>> getPosts(@RequestParam(value="page", defaultValue="0") int page,
-			@RequestParam(value="ord", defaultValue="lastUpdateDate") String ord, @RequestParam(value="dir", defaultValue="DESC") String dir) {
+			@RequestParam(value="ord",
+			defaultValue="lastUpdateDate") String ord,
+			@RequestParam(value="dir", defaultValue="DESC") String dir,
+			Locale locale) {
 		
 		Response<Page<PostDTO>> response = new Response<>();
 		PageRequest pageRequest = PageRequest.of(page, this.POSTS_LIST_SIZE, Direction.valueOf(dir), ord);
@@ -219,7 +230,7 @@ public class PostController {
 		
 		if(!optLatestPosts.isPresent()) {
 			log.error("It was not possible to create the list of posts.");
-			response.addError("It was not possible to create the list of posts.");
+			response.addError(msgSrc.getMessage("error.post.findall"));
 			return ResponseEntity.badRequest().body(response);
 		}
 		
@@ -240,7 +251,7 @@ public class PostController {
 	@GetMapping(value = "/summaries")
 	public ResponseEntity<Response<Page<SummaryDTO>>> getSummaries(
 			@RequestParam(value="page", defaultValue="0") int page,
-			@RequestParam(value="category", defaultValue="all") String cat) { 
+			@RequestParam(value="category", defaultValue="all") String cat, Locale locale) {
 		log.info("Get a list of post summaries. category: {}", cat);
 		Response<Page<SummaryDTO>> response = new Response<>();
 		Optional<Page<Post>> optLatestPosts;
@@ -253,7 +264,7 @@ public class PostController {
 		
 		if(!optLatestPosts.isPresent()) {
 			log.error("It was not possible to create the list of summaries.");
-			response.addError("It was not possible to create the list of summaries.");
+			response.addError(msgSrc.getMessage("error.post.summaries"));
 			return ResponseEntity.badRequest().body(response);
 		}
 		
@@ -282,7 +293,7 @@ public class PostController {
 	 * @return
 	 */
 	@GetMapping("/top") 
-	public ResponseEntity<Response<ArrayList<PostInfo>>> getTopPostsInfoList() { 
+	public ResponseEntity<Response<ArrayList<PostInfo>>> getTopPostsInfoList(Locale locale) {
 		
 		log.info("Getting a list of post information (title + id)");
 		
@@ -292,7 +303,7 @@ public class PostController {
 		
 		if(!optLatestPosts.isPresent()) {
 			log.error("It was not possible to create the list of info list.");
-			response.addError("It was not possible to create the list of info list.");
+			response.addError(msgSrc.getMessage("error.post.infolist"));
 			return ResponseEntity.badRequest().body(response);
 		}
 		
@@ -316,14 +327,14 @@ public class PostController {
 	 * @return
 	 */
 	@DeleteMapping(value="/{id}")
-	public ResponseEntity<Response<PostDTO>> deletePost(@PathVariable("id") Long id){
+	public ResponseEntity<Response<PostDTO>> deletePost(@PathVariable("id") Long id, Locale locale){
 		log.info("Deleting post ...");
 		Response<PostDTO> response = new Response<>();
 		
 		Optional<Post> optPost = postService.deleteByPostId(id);
 		
 		if(!optPost.isPresent()) {
-			response.addError("It was not possible to find the specified post.");
+			response.addError(msgSrc.getMessage("error.post.find"));
 			return ResponseEntity.badRequest().body(response);
 		}
 		

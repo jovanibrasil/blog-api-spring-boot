@@ -66,5 +66,15 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler  {
 		response.addError(errorDetail);
 		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
 	}
-	
+
+	@ExceptionHandler(value = {Exception.class, RuntimeException.class})
+	public ResponseEntity<Object> exception(Exception ex) {
+		log.info("The server cannot process the received request. {}", ex.getMessage());
+		Response<String> response = new Response<>();
+		ErrorDetail errorDetail = new ErrorDetail.Builder()
+				.message("The server cannot process the request.")
+				.build();
+		response.addError(errorDetail);
+		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+	}
 }

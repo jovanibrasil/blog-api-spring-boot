@@ -5,6 +5,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,14 +14,12 @@ import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+@Slf4j
 @Service
 public class FileSystemStorageService {
 
-	private static final Logger log = LoggerFactory.getLogger(FileSystemStorageService.class);
-	
 	@Value("${filesystem.blog}")	
 	private String blogFilesDir;
-	
 	@Value("${filesystem.blog.images}")	
 	private String imagesDir;
 	

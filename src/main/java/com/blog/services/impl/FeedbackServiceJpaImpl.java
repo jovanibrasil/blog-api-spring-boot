@@ -15,8 +15,11 @@ import com.blog.services.FeedbackService;
 @Primary
 public class FeedbackServiceJpaImpl implements FeedbackService {
 
-	@Autowired
 	FeedbackRepository feedbackRepo;
+
+	public FeedbackServiceJpaImpl(FeedbackRepository feedbackRepo) {
+		this.feedbackRepo = feedbackRepo;
+	}
 
 	@Override
 	public Optional<List<Feedback>> findAll() {

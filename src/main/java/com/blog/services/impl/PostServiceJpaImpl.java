@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.Optional;
 
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,18 +23,19 @@ import com.blog.services.PostService;
 
 @Service
 @Primary
+@Slf4j
 public class PostServiceJpaImpl implements PostService {
-
-	private static final Logger log = LoggerFactory.getLogger(PostServiceJpaImpl.class);
 
 	@Value("${filesystem.blog.images}")
 	private String imagesDir;
 
-	@Autowired
 	private PostRepository postRepo;
-
-	@Autowired
 	private FileSystemStorageService storage;
+
+	public PostServiceJpaImpl(PostRepository postRepo, FileSystemStorageService storage) {
+		this.postRepo = postRepo;
+		this.storage = storage;
+	}
 
 	@Override
 	public Optional<Page<Post>> findPosts(Pageable page) {

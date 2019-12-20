@@ -32,10 +32,9 @@ public class SubscriptionServiceTest {
 
 	@MockBean
 	private SubscriptionRepository subscriptionRepository;
-	
 	@Autowired
 	private SubscriptionService subscriptionService;
-	
+
 	@Before
 	public void setUp() {}
 	

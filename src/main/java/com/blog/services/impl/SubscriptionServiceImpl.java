@@ -3,6 +3,7 @@ package com.blog.services.impl;
 import java.util.List;
 import java.util.Optional;
 
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,13 +15,15 @@ import com.blog.repositories.SubscriptionRepository;
 import com.blog.services.SubscriptionService;
 
 @Service
+@Slf4j
 public class SubscriptionServiceImpl implements SubscriptionService {
 
-	private static final Logger log = LoggerFactory.getLogger(SubscriptionServiceImpl.class);
-	
-	@Autowired
-	SubscriptionRepository subscriptionRepository;
-	
+	private SubscriptionRepository subscriptionRepository;
+
+	public SubscriptionServiceImpl(SubscriptionRepository subscriptionRepository) {
+		this.subscriptionRepository = subscriptionRepository;
+	}
+
 	@Override
 	public Optional<Subscription> saveSubscription(Subscription subscription) {
 		Optional<Subscription> optSubscription = subscriptionRepository.findByEmail(subscription.getEmail());
@@ -28,7 +31,7 @@ public class SubscriptionServiceImpl implements SubscriptionService {
 			return Optional.of(this.subscriptionRepository.save(subscription));
 		}
 		log.info("The email {} was already subscribed.", subscription.getEmail());
-		throw new InvalidInformationException("Email já foi registrado.");
+		throw new InvalidInformationException("Email already registered.");
 	}
 
 	@Override

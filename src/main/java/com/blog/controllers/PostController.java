@@ -8,6 +8,7 @@ import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 
 import com.blog.exceptions.CustomMessageSource;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.tomcat.jni.Local;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -42,10 +43,9 @@ import com.blog.services.PostService;
 @CrossOrigin(origins = "*")
 @RestController
 @RequestMapping("/posts")
+@Slf4j
 public class PostController {
 
-	private static final Logger log = LoggerFactory.getLogger(PostController.class);
-	
 	private PostService postService;
 	private CustomMessageSource msgSrc;
 	

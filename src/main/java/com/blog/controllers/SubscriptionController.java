@@ -6,6 +6,7 @@ import javax.validation.Valid;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,12 +25,14 @@ import com.blog.services.SubscriptionService;
 @CrossOrigin(origins = "*")
 @RestController
 @RequestMapping("/subscriptions")
+@Slf4j
 public class SubscriptionController {
-	
-	@Autowired
+
 	private SubscriptionService subscriptionService;
 
-	private static final Logger log = LoggerFactory.getLogger(SubscriptionController.class);
+	public SubscriptionController(SubscriptionService subscriptionService) {
+		this.subscriptionService = subscriptionService;
+	}
 
 	@GetMapping
 	public ResponseEntity<Response<?>> findAllSubscriptions(){

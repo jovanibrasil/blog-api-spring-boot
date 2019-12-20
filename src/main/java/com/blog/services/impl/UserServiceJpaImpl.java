@@ -20,10 +20,13 @@ import com.blog.services.UserService;
 @Service
 @Primary
 public class UserServiceJpaImpl implements UserService {
-    
-	@Autowired
+
 	private UserRepository userRepository;
-	
+
+	public UserServiceJpaImpl(UserRepository userRepository) {
+		this.userRepository = userRepository;
+	}
+
 	@Override
 	public List<User> findAll() {
 		return this.userRepository.findAll();

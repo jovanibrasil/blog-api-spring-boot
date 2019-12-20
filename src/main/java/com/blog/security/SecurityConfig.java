@@ -14,11 +14,14 @@ import org.springframework.security.web.authentication.www.BasicAuthenticationFi
 @EnableWebSecurity
 @Configuration
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
-	
 
-	@Autowired
 	private JwtAuthenticationEntryPoint unauthorizedHandler;
-			
+
+	public SecurityConfig(JwtAuthenticationEntryPoint unauthorizedHandler) {
+		super();
+		this.unauthorizedHandler = unauthorizedHandler;
+	}
+
 	/*
 	 * Filter used when the application intercepts a requests.
 	 */

@@ -3,32 +3,6 @@ networks:
   net:
     driver: bridge
 services:
-  blog-api:
-    image: blog-api 
-    container_name: blog-api
-    ports:
-      - 8081:8080
-    networks:
-      - net
-    depends_on:
-      - search-api
-      - auth-api
-      - mysql-database
-    environment:
-      - "SPRING_PROFILES_ACTIVE=dev"
-      - CATALINA_OPTS=-Xmx206M -Xms128M -XX:MaxPermSize=50M
-    volumes:
-      - type: bind
-        source: /var/www/blog
-        target: /apps/blog
-    deploy:
-      resources:
-        limits:
-          #cpus: '0.001'
-          memory: 384M
-        #reservations:
-        #  cpus: '0.0001'
-        #  memory: 20M
   auth-api: # Authentication API (Spring)
     image: auth-api
     container_name: auth-api
@@ -59,7 +33,7 @@ services:
           memory: 256M
   search-api: 
     image: search-api
-    container_name: search-api 
+    container_name: search-api
     ports:
       - 4567:4567
     networks:

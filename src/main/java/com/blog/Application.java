@@ -3,8 +3,12 @@ package com.blog;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Profile;
+
+import javax.servlet.Filter;
 
 /*
  * @SpringBootApplication habilita configurações padrão para a aplicação
@@ -28,5 +32,7 @@ public class Application extends SpringBootServletInitializer {
 			// ...
 		};
 	}
+
+
 
 }

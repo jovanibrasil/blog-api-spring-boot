@@ -1,5 +1,5 @@
 ifndef PROFILE
-override PROFILE = dev
+override PROFILE = stage
 endif
 
 run-tests:
@@ -12,7 +12,7 @@ clean: stop
 
 build-maven:
 	rm libs/ -rf
-	mvn clean package -Pdev
+	mvn clean package -Pstage
 	mvn dependency:copy-dependencies
 	FILE_NAME=blog-api\#\#$(shell find target/*.war -type f | grep -Eo '[0-9]+)
 
@@ -22,10 +22,10 @@ build-docker: clean
 	
 build: clean
 	rm libs/ -rf
-	mvn clean package -Pdev
+	mvn clean package -Pstage
 	mvn dependency:copy-dependencies
 	FILE_NAME=blog-api\#\#$(shell find target/*.war -type f | grep -Eo '[0-9]+)
-	docker build --build-arg ENVIRONMENT=dev --build-arg FILE_NAME -t blog-api .
+	docker build --build-arg ENVIRONMENT=stage --build-arg FILE_NAME -t blog-api .
 	chmod -R ugo+rw target/
 
 run: clean
@@ -42,10 +42,14 @@ logs:
 	docker logs blog-api
 
 compose-down:
-	docker-compose down -v 
+	#docker network disconnect -f blog-api_net blog-api
+	docker-compose down -v --remove-orphans
 
-compose-up: compose-down
-	docker-compose --compatibility up --no-recreate -d
+compose-up-dev: compose-down
+	docker-compose -f docker-compose.yml --compatibility up -d --no-recreate
+
+compose-up-stage: compose-down
+	docker-compose -f docker-compose.yml -f docker-compose.stage.yml --compatibility up -d --no-recreate
 
 deploy-production:
 	/bin/sh scripts/deploy-docker-tomcat.sh VAULT_TOKEN=${VAULT_TOKEN} SPRING_PROFILES_ACTIVE=${PROFILE}

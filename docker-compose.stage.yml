@@ -1,0 +1,27 @@
+version: '3.2'
+networks:
+  net:
+    driver: bridge
+services:
+  blog-api:
+    image: blog-api 
+    container_name: blog-api
+    ports:
+      - 8081:8080
+    networks:
+      - net
+    depends_on:
+      - search-api
+      - auth-api
+      - mysql-database
+    environment:
+      - "SPRING_PROFILES_ACTIVE=stage"
+      - CATALINA_OPTS=-Xmx206M -Xms128M -XX:MaxPermSize=50M
+    volumes:
+      - type: bind
+        source: /var/www/blog
+        target: /apps/blog
+    deploy:
+      resources:
+        limits:
+          memory: 384M

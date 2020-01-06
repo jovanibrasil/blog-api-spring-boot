@@ -21,23 +21,23 @@ public class FileSystemStorageService {
 	private String imagesDir;
 	
 	public void deletePostDirectory(Long postId) {
-		Path directoryPath = Paths.get(this.blogFilesDir, imagesDir, String.valueOf(postId));
+		Path directoryPath = Paths.get(this.blogFilesDir, this.imagesDir, String.valueOf(postId));
 		this.deleteDirectory(directoryPath);
 	}
 	
-	public void deletePostImage(String fileName, Long postId) {
-		this.deleteFile(fileName, postId);
+	public void deleteImage(String fileName, Long postId) {
+		Path directoryPath = Paths.get(this.blogFilesDir, this.imagesDir, String.valueOf(postId));
+		this.deleteFile(directoryPath, fileName);
 	}
 	
 	public void saveImage(MultipartFile file, Long postId) {
-		this.save(this.imagesDir, file, postId);
+		Path directoryPath = Paths.get(this.blogFilesDir, this.imagesDir, String.valueOf(postId));
+		this.saveFile(directoryPath, file);
 	}
 	
-	private void save(String dir, MultipartFile file, Long postId) {
+	public void saveFile(Path directoryPath, MultipartFile file) {
 		
 		log.info("Saving image. Name: {} Original name: {} ", file.getName(), file.getOriginalFilename());
-		
-		Path directoryPath = Paths.get(this.blogFilesDir, dir, String.valueOf(postId));
 		Path filePath = directoryPath.resolve(file.getOriginalFilename());
 		
 		try {
@@ -45,27 +45,26 @@ public class FileSystemStorageService {
 			file.transferTo(filePath.toFile());
 			log.info("Image {} saved at {}", file.getName(), directoryPath.toString());
 		} catch (Exception e) {
-			throw new RuntimeException("...");
+			throw new RuntimeException("It was not possible to save the file." + e.getMessage());
 		}
 		
 	}
-	
-	private void deleteFile(String fileName, Long postId) {
-		Path directoryPath = Paths.get(this.blogFilesDir, imagesDir, String.valueOf(postId));
+
+	public void deleteFile(Path directoryPath, String fileName) {
 		Path filePath = directoryPath.resolve(fileName);
 		try {
 			Files.deleteIfExists(filePath);
 			log.info("Image {} deleted from {}", fileName, directoryPath.toString());
 		} catch (Exception e) {
-			throw new RuntimeException("...");
+			throw new RuntimeException("It was not possible to delete the file." + e.getMessage());
 		}
 	}
-		
-	private void deleteDirectory(Path path) {
+
+	public void deleteDirectory(Path path) {
 		try {
 			FileUtils.deleteDirectory(new File(path.toUri()));
 		} catch (Exception e) {
-			throw new RuntimeException("...");
+			throw new RuntimeException("It was not possible to delete the directory." + e.getMessage());
 		}
 	}
 

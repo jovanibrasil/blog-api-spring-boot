@@ -1,12 +1,9 @@
 package com.blog.services.impl;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
-
+import com.blog.exceptions.InvalidInformationException;
+import com.blog.models.Subscription;
+import com.blog.repositories.SubscriptionRepository;
+import com.blog.services.SubscriptionService;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -19,10 +16,12 @@ import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import com.blog.exceptions.InvalidInformationException;
-import com.blog.models.Subscription;
-import com.blog.repositories.SubscriptionRepository;
-import com.blog.services.SubscriptionService;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Optional;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest

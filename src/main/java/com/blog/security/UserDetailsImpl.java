@@ -1,13 +1,12 @@
 package com.blog.security;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-
+import com.blog.enums.ProfileTypeEnum;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import com.blog.enums.ProfileTypeEnum;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
 
 public class UserDetailsImpl implements UserDetails {
 

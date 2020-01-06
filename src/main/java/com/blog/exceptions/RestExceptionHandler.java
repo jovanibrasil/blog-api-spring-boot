@@ -1,7 +1,7 @@
 package com.blog.exceptions;
 
-import javax.validation.ValidationException;
-
+import com.blog.response.ErrorDetail;
+import com.blog.response.Response;
 import com.blog.response.ValidationError;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,9 +14,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
-import com.blog.response.ErrorDetail;
-import com.blog.response.Response;
-
+import javax.validation.ValidationException;
 import java.util.List;
 import java.util.stream.Collectors;
 

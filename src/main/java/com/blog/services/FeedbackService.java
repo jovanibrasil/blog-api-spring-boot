@@ -1,10 +1,9 @@
 package com.blog.services;
 
+import com.blog.models.Feedback;
+
 import java.util.List;
 import java.util.Optional;
-
-import com.blog.models.Feedback;
-import com.blog.models.Post;
 
 public interface FeedbackService {
 	

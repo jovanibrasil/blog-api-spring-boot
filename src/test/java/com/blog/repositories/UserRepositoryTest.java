@@ -1,13 +1,7 @@
 package com.blog.repositories;
 
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-
+import com.blog.enums.ProfileTypeEnum;
+import com.blog.models.User;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -17,8 +11,12 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import com.blog.enums.ProfileTypeEnum;
-import com.blog.models.User;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest

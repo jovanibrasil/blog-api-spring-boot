@@ -1,23 +1,16 @@
 package com.blog.integrations;
 
-import com.blog.config.BlogDataSourceProperties;
 import com.blog.config.BlogServiceProperties;
+import com.blog.exceptions.MicroServiceIntegrationException;
+import com.blog.security.TempUser;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.core.ParameterizedTypeReference;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
-
-import com.blog.exceptions.MicroServiceIntegrationException;
-import com.blog.security.TempUser;
 
 @Component
 @EnableConfigurationProperties(BlogServiceProperties.class)

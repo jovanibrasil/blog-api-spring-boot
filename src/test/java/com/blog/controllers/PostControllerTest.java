@@ -1,14 +1,13 @@
 package com.blog.controllers;
 
-import static org.hamcrest.CoreMatchers.equalTo;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-
-import java.time.LocalDateTime;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.Optional;
-
+import com.blog.dtos.DtoUtils;
+import com.blog.enums.ProfileTypeEnum;
+import com.blog.integrations.AuthClient;
+import com.blog.models.Post;
+import com.blog.models.User;
+import com.blog.security.TempUser;
+import com.blog.services.PostService;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.junit.Before;
 import org.junit.Test;
@@ -32,14 +31,13 @@ import org.springframework.test.web.servlet.request.MockMultipartHttpServletRequ
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.request.RequestPostProcessor;
 
-import com.blog.dtos.DtoUtils;
-import com.blog.enums.ProfileTypeEnum;
-import com.blog.integrations.AuthClient;
-import com.blog.models.Post;
-import com.blog.models.User;
-import com.blog.security.TempUser;
-import com.blog.services.PostService;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import java.time.LocalDateTime;
+import java.util.Arrays;
+import java.util.Optional;
+
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest

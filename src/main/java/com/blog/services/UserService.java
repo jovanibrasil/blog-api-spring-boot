@@ -1,9 +1,9 @@
 package com.blog.services;
 
+import com.blog.models.User;
+
 import java.util.List;
 import java.util.Optional;
-
-import com.blog.models.User;
 
 public interface UserService {
 	List<User> findAll();

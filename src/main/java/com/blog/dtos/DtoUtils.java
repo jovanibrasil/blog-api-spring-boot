@@ -1,10 +1,9 @@
 package com.blog.dtos;
 
-import org.apache.commons.codec.binary.Base64;
-import org.springframework.security.core.context.SecurityContextHolder;
-
 import com.blog.models.Post;
 import com.blog.models.User;
+import org.apache.commons.codec.binary.Base64;
+import org.springframework.security.core.context.SecurityContextHolder;
 
 public class DtoUtils {
 

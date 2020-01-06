@@ -1,13 +1,10 @@
 package com.blog.services.impl;
 
-import java.time.LocalDateTime;
-import java.util.Date;
-import java.util.Optional;
-
+import com.blog.models.Post;
+import com.blog.models.User;
+import com.blog.repositories.PostRepository;
+import com.blog.services.PostService;
 import lombok.extern.slf4j.Slf4j;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Primary;
 import org.springframework.data.domain.Page;
@@ -16,10 +13,8 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.blog.models.Post;
-import com.blog.models.User;
-import com.blog.repositories.PostRepository;
-import com.blog.services.PostService;
+import java.time.LocalDateTime;
+import java.util.Optional;
 
 @Service
 @Primary

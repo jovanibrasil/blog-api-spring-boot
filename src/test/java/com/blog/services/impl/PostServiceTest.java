@@ -1,17 +1,10 @@
 package com.blog.services.impl;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
-
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
-
+import com.blog.enums.ProfileTypeEnum;
+import com.blog.models.Post;
+import com.blog.models.User;
+import com.blog.repositories.PostRepository;
+import com.blog.services.PostService;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -31,12 +24,13 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.blog.enums.ProfileTypeEnum;
-import com.blog.models.Post;
-import com.blog.models.User;
-import com.blog.repositories.FileSystemStorageTest;
-import com.blog.repositories.PostRepository;
-import com.blog.services.PostService;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Optional;
+
+import static org.junit.Assert.*;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest

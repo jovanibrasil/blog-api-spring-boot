@@ -1,12 +1,11 @@
 package com.blog.services;
 
-import java.util.Optional;
-
+import com.blog.models.Post;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.blog.models.Post;
+import java.util.Optional;
 
 public interface PostService {
 	

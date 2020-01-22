@@ -7,7 +7,7 @@ import org.springframework.context.annotation.Profile;
 
 @Getter @Setter
 @Profile("prod")
-@ConfigurationProperties("blog-cred")
+@ConfigurationProperties("blog-db-cred")
 public class BlogDataSourceProperties {
 
 	private String username;

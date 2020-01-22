@@ -36,7 +36,8 @@ public class SwaggerConfig {
 	 */
 	private ApiInfo apiInfo() {
 		return new ApiInfoBuilder().title("Blog API")
-				.description("Documentação da API de blog.").version("1.0")
+				.description("Documentação de uma API para blogs. Este projeto está em desenvolvimento," +
+						" qualquer problema ou dúvida entre em contato.").version("1.0")
 				.contact(new Contact("Jovani Brasil", "jovanibrasil.com", "jovanibrasil@gmail.com"))
 				.build();
 	}

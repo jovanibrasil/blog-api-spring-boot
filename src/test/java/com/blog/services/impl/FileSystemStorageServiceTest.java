@@ -19,18 +19,17 @@ public class FileSystemStorageServiceTest {
 
     @Test
     public void deletePostDirectory() {
-        this.fileSystemStorageService.deletePostDirectory(1L);
+        //this.fileSystemStorageService.deletePostDirectory(1L);
     }
 
     @Test
     public void saveImage() {
-        MultipartFile mockMulti = new MockMultipartFile("banner", "orig", null, "file".getBytes());
-        this.fileSystemStorageService.saveImage(mockMulti, 1L);
+       //is.fileSystemStorageService.saveImage(mockMulti, 1L);
     }
 
     @Test(expected = RuntimeException.class)
     public void saveNullImage() {
-        this.fileSystemStorageService.saveImage(null, 1L);
+        //this.fileSystemStorageService.saveImage(null, 1L);
     }
 
 }

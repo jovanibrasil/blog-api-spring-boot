@@ -27,7 +27,7 @@ public class DataSourceConfig {
 	public DataSource getDataResource() {
 		DriverManagerDataSource dataSource = new DriverManagerDataSource();
 		
-		log.info("Generatig datasource ...");
+		log.info("Generating datasource ...");
 		
 		dataSource.setUrl(configuration.getUrl()); //BLOG_MYSQL_URL
 		dataSource.setUsername(configuration.getUsername()); //BLOG_MYSQL_USERNAME

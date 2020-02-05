@@ -1,4 +1,4 @@
-package com.blog.integrations;
+package com.blog.models;
 
 import java.util.ArrayList;
 import java.util.List;

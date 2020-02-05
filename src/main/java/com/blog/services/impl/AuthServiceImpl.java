@@ -1,8 +1,11 @@
-package com.blog.integrations;
+package com.blog.services.impl;
 
 import com.blog.config.BlogServiceProperties;
 import com.blog.exceptions.MicroServiceIntegrationException;
+import com.blog.models.Response;
 import com.blog.security.TempUser;
+import com.blog.services.AuthService;
+import lombok.RequiredArgsConstructor;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Value;
@@ -14,7 +17,8 @@ import org.springframework.web.client.RestTemplate;
 
 @Component
 @EnableConfigurationProperties(BlogServiceProperties.class)
-public class AuthClient {
+@RequiredArgsConstructor
+public class AuthServiceImpl implements AuthService {
 
 	@Value("${urls.auth.check-token}")
 	private String checkTokenUrl;
@@ -22,19 +26,16 @@ public class AuthClient {
 	@Value("${urls.auth.get-token}")
 	private String getTokenUrl;
 
-	private BlogServiceProperties blogServiceProperties;
+	private final BlogServiceProperties blogServiceProperties;
+	private final RestTemplate restTemplate;
 
-	public AuthClient(BlogServiceProperties blogServiceProperties){
-		this.blogServiceProperties = blogServiceProperties;
-	}
-
+	@Override
 	public TempUser checkToken(String token) {
 		try {
-			RestTemplate restTemplate = new RestTemplate();
 			HttpHeaders headers = new HttpHeaders();
 			headers.set("Authorization", token);
 			HttpEntity<String> entity = new HttpEntity<>("parameters", headers);
-			ResponseEntity<Response<TempUser>> responseEntity = restTemplate.exchange(checkTokenUrl, HttpMethod.GET, entity, 
+			ResponseEntity<Response<TempUser>> responseEntity = restTemplate.exchange(checkTokenUrl, HttpMethod.GET, entity,
 					new ParameterizedTypeReference<Response<TempUser>>() {} );
 			
 			return responseEntity.getBody().getData();
@@ -42,7 +43,8 @@ public class AuthClient {
 			throw new MicroServiceIntegrationException("It was not posssible to validate the user.", e);
 		}
 	}
-	
+
+	@Override
 	public String getServiceToken() {
 		try {
 			// create request body
@@ -56,7 +58,6 @@ public class AuthClient {
 			HttpEntity<String> entity = new HttpEntity<String>(request.toString(), headers);
 			
 			// send request and parse result
-			RestTemplate restTemplate = new RestTemplate();
 			ResponseEntity<String> loginResponse = restTemplate
 			  .exchange(getTokenUrl, HttpMethod.POST, entity, String.class);
 			JSONObject responseBody = (new JSONObject(loginResponse.getBody()));
@@ -66,7 +67,7 @@ public class AuthClient {
 				return responseData.getString("token");
 			} else if (loginResponse.getStatusCode() == HttpStatus.UNAUTHORIZED) {
 				// bad credentials
-				// TODO return errors?
+				// TODO return error
 			}
 			return "";
 			

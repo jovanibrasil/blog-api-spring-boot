@@ -1,6 +1,6 @@
 package com.blog.security;
 
-import com.blog.integrations.AuthClient;
+import com.blog.services.impl.AuthServiceImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,7 +29,7 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
 	private static final String AUTH_HEADER = "Authorization";
 	
 	@Autowired
-	private AuthClient authClient;
+	private AuthServiceImpl authClient;
 	
 	@Override
 	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)

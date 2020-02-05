@@ -1,7 +1,7 @@
 package com.blog.controllers;
 
 import com.blog.enums.ProfileTypeEnum;
-import com.blog.integrations.AuthClient;
+import com.blog.services.impl.AuthServiceImpl;
 import com.blog.models.User;
 import com.blog.security.TempUser;
 import com.blog.services.UserService;
@@ -39,7 +39,7 @@ public class UserControllerTest {
 	private UserService userService;
 	
 	@MockBean
-	private AuthClient authClient;
+	private AuthServiceImpl authClient;
 	
 	private User user;
 	

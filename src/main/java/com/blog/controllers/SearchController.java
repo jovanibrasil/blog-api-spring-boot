@@ -1,7 +1,7 @@
 package com.blog.controllers;
 
 import com.blog.dtos.SummaryDTO;
-import com.blog.integrations.SearchClient;
+import com.blog.services.impl.SearchServiceImpl;
 import com.blog.response.Response;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -17,7 +17,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class SearchController {
 
-	private final SearchClient searchClient;
+	private final SearchServiceImpl searchClient;
 
 	@GetMapping
 	public ResponseEntity<Response<List<SummaryDTO>>> getSearchSummaries(@RequestParam("filter") String query){

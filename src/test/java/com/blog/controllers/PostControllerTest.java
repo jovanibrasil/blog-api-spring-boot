@@ -1,9 +1,8 @@
 package com.blog.controllers;
 
-import com.blog.dtos.DtoUtils;
 import com.blog.dtos.PostDTO;
 import com.blog.enums.ProfileTypeEnum;
-import com.blog.integrations.AuthClient;
+import com.blog.services.impl.AuthServiceImpl;
 import com.blog.mappers.PostMapper;
 import com.blog.mappers.PostMapperImpl;
 import com.blog.models.Post;
@@ -55,7 +54,7 @@ public class PostControllerTest {
 	private PostService postService;
 	
 	@MockBean
-	private AuthClient authClient;
+	private AuthServiceImpl authClient;
 
 	@MockBean
 	private PostMapper postMapper;

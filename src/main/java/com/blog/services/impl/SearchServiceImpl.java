@@ -1,7 +1,9 @@
-package com.blog.integrations;
+package com.blog.services.impl;
 
 import com.blog.dtos.SummaryDTO;
 import com.blog.exceptions.MicroServiceIntegrationException;
+import com.blog.services.SearchService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
@@ -12,15 +14,17 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Component
-public class SearchClient {
+@RequiredArgsConstructor
+public class SearchServiceImpl implements SearchService {
 
 	@Value("${urls.search}")
 	private String uri;
-	
+	private final RestTemplate restTemplate;
+
+	@Override
 	public List<SummaryDTO> searchSummaries(String query) {
 		try {
 			List<SummaryDTO> summaries = new ArrayList<>();
-			RestTemplate restTemplate = new RestTemplate();
 			
 			URI searchURI = URI.create(String.format(uri + "?term=%s", query));
 			

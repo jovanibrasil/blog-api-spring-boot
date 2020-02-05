@@ -22,6 +22,7 @@ import java.util.Optional;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
+import static org.mockito.ArgumentMatchers.any;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -44,9 +45,9 @@ public class SubscriptionServiceTest {
 	public void testSaveValidSubscription() {
 		Subscription subscription = new Subscription("test@gmail.com");
 		BDDMockito.given(subscriptionRepository.findByEmail("test@gmail.com")).willReturn(Optional.empty());
-		BDDMockito.given(subscriptionRepository.save(subscription)).willReturn(subscription);
+		BDDMockito.given(subscriptionRepository.save(any())).willReturn(subscription);
 		Optional<Subscription> optSubscription = this.subscriptionService
-				.saveSubscription(subscription);
+				.saveSubscription("test@gmail.com");
 		assertTrue(optSubscription.isPresent());
 	}
 	
@@ -54,7 +55,7 @@ public class SubscriptionServiceTest {
 	public void testSaveSubscriptionEmailAlreadyExist() {
 		BDDMockito.given(subscriptionRepository.findByEmail("test@gmail.com"))
 			.willReturn(Optional.of(new Subscription("test@gmail.com")));
-		this.subscriptionService.saveSubscription(new Subscription("test@gmail.com"));
+		this.subscriptionService.saveSubscription("test@gmail.com");
 	}
 	
 	@Test

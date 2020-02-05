@@ -1,13 +1,16 @@
 package com.blog.controllers;
 
-import com.blog.dtos.DtoUtils;
 import com.blog.dtos.PostDTO;
-import com.blog.dtos.PostInfo;
+import com.blog.dtos.PostInfoDTO;
 import com.blog.dtos.SummaryDTO;
 import com.blog.exceptions.CustomMessageSource;
+import com.blog.mappers.PostInfoMapper;
+import com.blog.mappers.PostMapper;
+import com.blog.mappers.SummaryMapper;
 import com.blog.models.Post;
 import com.blog.response.Response;
 import com.blog.services.PostService;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
@@ -27,20 +30,19 @@ import java.util.Optional;
 @RestController
 @RequestMapping("/posts")
 @Slf4j
+@RequiredArgsConstructor
 public class PostController {
 
-	private PostService postService;
-	private CustomMessageSource msgSrc;
+	private final PostService postService;
+	private final CustomMessageSource msgSrc;
+	private final PostInfoMapper postInfoMapper;
+	private final PostMapper postMapper;
+	private final SummaryMapper summaryMapper;
 	
 	@Value("${blog.posts.page-size}")
 	private int POSTS_LIST_SIZE;
 	@Value("${blog.posts.top-list.page-size}")
 	private int TOP_POSTS_LIST_SIZE;
-
-	public PostController(PostService postService, CustomMessageSource msgSrc) {
-		this.postService = postService;
-		this.msgSrc = msgSrc;
-	}
 
 	/**
 	 * Returns a post given a post id.
@@ -61,7 +63,7 @@ public class PostController {
 		}
 		
 		Post post = optPost.get(); 
-		response.setData(DtoUtils.postToPostDTO(post));
+		response.setData(postMapper.postToPostDto(post));
 		
 		return ResponseEntity.ok(response);
 	}
@@ -102,16 +104,16 @@ public class PostController {
 		
 		Response<PostDTO> response = new Response<>();
 
-		Post post = DtoUtils.postDTOtoPost(postDTO);
+		Post post = postMapper.postDtoToPost(postDTO);
 		log.info("Creating new post");
 		Optional<Post> optPost = postService.create(post, postImages);
-		
+
 		if(!optPost.isPresent()) {
 			log.info("It was not possible to create the specified post.");
 			response.addError(msgSrc.getMessage("error.post.create"));
 			return ResponseEntity.badRequest().body(response);
 		}
-		
+
 		postDTO.setCreationDate(optPost.get().getCreationDate());
 		postDTO.setLastUpdateDate(optPost.get().getLastUpdateDate());
 		postDTO.setId(optPost.get().getPostId());
@@ -132,7 +134,7 @@ public class PostController {
 		log.info("Updating post ...");
 		Response<PostDTO> response = new Response<>();
 
-		Post post = DtoUtils.postDTOtoPost(postDTO);
+		Post post = postMapper.postDtoToPost(postDTO);
 		Optional<Post> optPost = postService.update(post, postImages);
 		
 		if(!optPost.isPresent()) {
@@ -174,7 +176,7 @@ public class PostController {
 		ArrayList<PostDTO> posts = new ArrayList<>();
 		
 		optLatestPosts.get().forEach(post -> {
-			posts.add(DtoUtils.postToPostDTO(post));
+			posts.add(postMapper.postToPostDto(post));
 		});
 		
 		response.setData(posts);
@@ -202,7 +204,8 @@ public class PostController {
 			return ResponseEntity.badRequest().body(response);
 		}
 		
-		Page<PostDTO> posts = optLatestPosts.get().map(post -> DtoUtils.postToPostDTO(post));
+		Page<PostDTO> posts = optLatestPosts.get()
+				.map(postMapper::postToPostDto);
 		response.setData(posts);
 		return ResponseEntity.ok(response);
 		
@@ -237,18 +240,7 @@ public class PostController {
 		}
 		
 		Page<SummaryDTO> summaries = optLatestPosts.get()
-				.map(post ->
-					SummaryDTO.builder()
-							.id(post.getPostId())
-							.title(post.getTitle())
-							.creationDate(post.getCreationDate())
-							.lastUpdateDate(post.getLastUpdateDate())
-							.summary(post.getSummary())
-							.userName(post.getAuthor().getUserName())
-							.tags(post.getTags())
-							.bannerUrl(post.getBannerUrl())
-							.build()
-				);
+				.map(summaryMapper::postToSummaryDto);
 			
 		response.setData(summaries);
 		return ResponseEntity.ok(response);
@@ -261,11 +253,11 @@ public class PostController {
 	 * @return
 	 */
 	@GetMapping("/top") 
-	public ResponseEntity<Response<ArrayList<PostInfo>>> getTopPostsInfoList() {
+	public ResponseEntity<Response<Page<PostInfoDTO>>> getTopPostsInfoList() {
 		
 		log.info("Getting a list of post information (title + id)");
 		
-		Response<ArrayList<PostInfo>> response = new Response<>();
+		Response<Page<PostInfoDTO>> response = new Response<>();
 		PageRequest page = PageRequest.of(0, this.TOP_POSTS_LIST_SIZE, Sort.by(Direction.DESC, "lastUpdateDate"));
 		Optional<Page<Post>> optLatestPosts = postService.findPosts(page);
 		
@@ -274,15 +266,11 @@ public class PostController {
 			response.addError(msgSrc.getMessage("error.post.infolist"));
 			return ResponseEntity.badRequest().body(response);
 		}
-		
-		ArrayList<PostInfo> postInfoList = new ArrayList<>();
-		
-		optLatestPosts.get().forEach(post -> {
-			PostInfo summaryDTO = new PostInfo(post.getPostId(), post.getTitle());
-			postInfoList.add(summaryDTO);
-		});
-		
-		response.setData(postInfoList);
+
+		Page<PostInfoDTO> postInfoDTOList = optLatestPosts.get()
+				.map(postInfoMapper::postToPostInfoDto);
+
+		response.setData(postInfoDTOList);
 		return ResponseEntity.ok(response);
 		
 	}
@@ -307,7 +295,7 @@ public class PostController {
 		}
 		
 		Post post = optPost.get(); 
-		response.setData(DtoUtils.postToPostDTO(post));
+		response.setData(postMapper.postToPostDto(post));
 		
 		return ResponseEntity.ok(response);
 	}

@@ -21,7 +21,8 @@ public class SubscriptionServiceImpl implements SubscriptionService {
 	}
 
 	@Override
-	public Optional<Subscription> saveSubscription(Subscription subscription) {
+	public Optional<Subscription> saveSubscription(String email) {
+		Subscription subscription = new Subscription(email);
 		Optional<Subscription> optSubscription = subscriptionRepository.findByEmail(subscription.getEmail());
 		if(!optSubscription.isPresent()) {
 			return Optional.of(this.subscriptionRepository.save(subscription));

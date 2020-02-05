@@ -39,8 +39,7 @@ public class SubscriptionController {
 		@Email(message = "{error.user.email.format}") String email){
 		log.info("Subscribing {} ...", email);
 		Response<?> response = new Response<>();
-		Subscription subscription = new Subscription(email);
-		this.subscriptionService.saveSubscription(subscription);
+		this.subscriptionService.saveSubscription(email);
 		return ResponseEntity.ok(response);	
 	}
 	

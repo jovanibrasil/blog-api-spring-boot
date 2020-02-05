@@ -2,31 +2,30 @@ package com.blog.controllers;
 
 import com.blog.dtos.FeedbackDTO;
 import com.blog.exceptions.CustomMessageSource;
+import com.blog.mappers.FeedbackMapper;
 import com.blog.models.Feedback;
 import com.blog.response.Response;
 import com.blog.services.FeedbackService;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
+@RequiredArgsConstructor
 @CrossOrigin(origins = "*")
 @RestController
-@RequestMapping("/feedbacks")
+@RequestMapping("/feedback")
 @Slf4j
 public class FeedbackController {
 
-	private FeedbackService feedbackService;
-	private CustomMessageSource msgSrc;
-
-	public FeedbackController(FeedbackService feedbackService, CustomMessageSource msgSrc) {
-		this.feedbackService = feedbackService;
-		this.msgSrc = msgSrc;
-	}
+	private final FeedbackService feedbackService;
+	private final CustomMessageSource msgSrc;
+	private final FeedbackMapper feedbackMapper;
 
 	/**
 	 * Saves an user feedback.
@@ -41,9 +40,7 @@ public class FeedbackController {
 		Response<String> response = new Response<>();
 		
 		log.info("Saving feedback ...");
-		Feedback feedback = new Feedback(feedbackDTO.getUserName(),
-				feedbackDTO.getEmail(), feedbackDTO.getContent());
-		
+		Feedback feedback = feedbackMapper.feedbackDtoToFeedback(feedbackDTO);
 		Optional<Feedback> optFeedback = this.feedbackService.create(feedback);
 		
 		if(!optFeedback.isPresent()) {
@@ -52,7 +49,7 @@ public class FeedbackController {
 			return ResponseEntity.badRequest().body(response);
 		}
 		
-		response.setData("Feedback enviado com sucesso.");
+		response.setData("Feedback has been successfully sent.");
 		return ResponseEntity.ok(response);
 		
 	}
@@ -63,31 +60,24 @@ public class FeedbackController {
 	 * @return
 	 */
 	@GetMapping 
-	public ResponseEntity<Response<ArrayList<FeedbackDTO>>> getFeedbacks() {
+	public ResponseEntity<Response<List<FeedbackDTO>>> getFeedback() {
 		
-		Response<ArrayList<FeedbackDTO>> response = new Response<>();
-		log.info("Retrieving a list of feedbacks ...");
+		Response<List<FeedbackDTO>> response = new Response<>();
+		log.info("Retrieving a list of feedback ...");
 		Optional<List<Feedback>> optLatestFeedbacks = this.feedbackService.findFeedbacks(2L);
 		
 		if(!optLatestFeedbacks.isPresent()) {
-			log.error("It was not possible to create the list of feedbacks.");
+			log.error("It was not possible to create the list of feedback.");
 			response.addError(msgSrc.getMessage("error.feedback.findall"));
 			return ResponseEntity.badRequest().body(response);
 		}
 		
-		ArrayList<FeedbackDTO> feedbacks = new ArrayList<>();
+		List<FeedbackDTO> feedback = optLatestFeedbacks.get()
+				.stream()
+				.map(feedbackMapper::feedbackToFeedbackDto)
+				.collect(Collectors.toList());
 		
-		optLatestFeedbacks.get().forEach(feedback -> {
-			System.out.println(feedback);
-			FeedbackDTO feedbackDTO = FeedbackDTO.builder()
-					.userName(feedback.getUserName())
-					.email(feedback.getEmail())
-				    .content(feedback.getContent())
-					.build();
-			feedbacks.add(feedbackDTO);
-		});
-		
-		response.setData(feedbacks);
+		response.setData(feedback);
 		return ResponseEntity.ok(response);
 		
 	}

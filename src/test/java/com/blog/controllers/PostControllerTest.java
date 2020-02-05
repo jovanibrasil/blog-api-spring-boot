@@ -1,8 +1,11 @@
 package com.blog.controllers;
 
 import com.blog.dtos.DtoUtils;
+import com.blog.dtos.PostDTO;
 import com.blog.enums.ProfileTypeEnum;
 import com.blog.integrations.AuthClient;
+import com.blog.mappers.PostMapper;
+import com.blog.mappers.PostMapperImpl;
 import com.blog.models.Post;
 import com.blog.models.User;
 import com.blog.security.TempUser;
@@ -53,10 +56,15 @@ public class PostControllerTest {
 	
 	@MockBean
 	private AuthClient authClient;
+
+	@MockBean
+	private PostMapper postMapper;
 	
-	Post post0;
-	Post post1;
-	
+	private Post post0;
+	private Post post1;
+	private PostDTO post0Dto;
+	private PostDTO post1Dto;
+
 	@Before
 	public void setUp() {
 		
@@ -88,10 +96,19 @@ public class PostControllerTest {
 		post1.setCreationDate(LocalDateTime.now());
 		post1.setTags(Arrays.asList("Scala"));
 		post1.setAuthor(user);
-		
+
+		PostMapper pm = new PostMapperImpl();
+		post0Dto = pm.postToPostDto(post0);
+		post1Dto = pm.postToPostDto(post1);
+
 		BDDMockito.given(this.authClient.checkToken(Mockito.anyString()))
 			.willReturn(new TempUser("jovanibrasil", ProfileTypeEnum.ROLE_ADMIN));
-		
+
+		BDDMockito.given(this.postMapper.postToPostDto(post0)).willReturn(post0Dto);
+		BDDMockito.given(this.postMapper.postToPostDto(post1)).willReturn(post1Dto);
+		BDDMockito.given(this.postMapper.postDtoToPost(post0Dto)).willReturn(post0);
+		BDDMockito.given(this.postMapper.postDtoToPost(post1Dto)).willReturn(post1);
+
 	}
 		
 	/*
@@ -221,9 +238,10 @@ public class PostControllerTest {
 		
 		MockMultipartFile file = new MockMultipartFile("banner", "orig", null, "file".getBytes());
 		MockMultipartFile jsonFile = new MockMultipartFile("post", "", "application/json",
-				asJsonString(DtoUtils.postToPostDTO(post0)).getBytes());
+				asJsonString(post0Dto).getBytes());
 		
-		BDDMockito.given(this.postService.create(Mockito.any(), Mockito.any())).willReturn(Optional.of(post0));
+		BDDMockito.given(this.postService.create(Mockito.any(), Mockito.any()))
+				.willReturn(Optional.of(post0));
 		mvc.perform(MockMvcRequestBuilders.multipart("/posts")
 				.file(file)
 				.file(jsonFile)
@@ -240,10 +258,11 @@ public class PostControllerTest {
 		
 		String newTitle = "Simple test title";
 		post0.setTitle(newTitle);
+		post0Dto.setTitle(newTitle);
 
 		MockMultipartFile file = new MockMultipartFile("banner", "orig", null, "file".getBytes());
 		MockMultipartFile jsonFile = new MockMultipartFile("post", "", "application/json",
-				asJsonString(DtoUtils.postToPostDTO(post0)).getBytes());
+				asJsonString(post0Dto).getBytes());
 		
 		BDDMockito.given(this.postService.update(Mockito.any(), Mockito.any()))
 			.willReturn(Optional.of(post0));

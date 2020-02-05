@@ -2,9 +2,11 @@ package com.blog.controllers;
 
 import com.blog.dtos.UserDTO;
 import com.blog.exceptions.CustomMessageSource;
+import com.blog.mappers.UserMapper;
 import com.blog.models.User;
 import com.blog.response.Response;
 import com.blog.services.UserService;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -15,16 +17,12 @@ import java.util.Optional;
 @CrossOrigin(origins = "*")
 @RestController
 @RequestMapping("/users")
-@Slf4j
+@RequiredArgsConstructor @Slf4j
 public class UserController {
 
-	private UserService userService;
-	private CustomMessageSource msgSrc;
-
-	public UserController(UserService userService, CustomMessageSource msgSrc) {
-		this.userService = userService;
-		this.msgSrc = msgSrc;
-	}
+	private final UserService userService;
+	private final CustomMessageSource msgSrc;
+	private final UserMapper userMapper;
 
 	/**
 	 * Retrieve a UserDTO by a given user name.
@@ -45,7 +43,7 @@ public class UserController {
 			return ResponseEntity.badRequest().body(response);
 		}
 		
-		response.setData(this.userToUserDTO(optUser.get()));
+		response.setData(userMapper.userToUserDto(optUser.get()));
 		return ResponseEntity.ok(response);
 	}
 	
@@ -79,7 +77,7 @@ public class UserController {
 			return ResponseEntity.badRequest().body(response);
 		}
 
-		User user = this.userDTOtoUser(userDTO);
+		User user = userMapper.userDtoToUser(userDTO);
 		optUser = this.userService.save(user);
 		if(!optUser.isPresent()) {
 			log.error("It was not possible to create the specified user.");
@@ -87,46 +85,9 @@ public class UserController {
 			return ResponseEntity.badRequest().body(response);
 		}
 		log.info("Creating user {}", user.getUserName());
-		userDTO = this.userToUserDTO(user);
+		userDTO = userMapper.userToUserDto(user);
 		response.setData(userDTO);
 		return ResponseEntity.ok(response);
 	}
-	
-	/**
-	 * Convert an User object to an UserDTO object.  
-	 * 
-	 * @param user that you wish to have converted. 
-	 * @return an UserDTO object.
-	 */
-	private UserDTO userToUserDTO(User user) {
-		UserDTO userDTO = new UserDTO();
-		userDTO.setUserName(user.getUserName());
-		userDTO.setFullUserName(user.getFullUserName());
-		userDTO.setEmail(user.getEmail());
-		userDTO.setGithubUserName(user.getGithubUserName());
-		userDTO.setGooglescholarLink(user.getGoogleScholarLink());
-		userDTO.setLinkedinUserName(user.getLinkedinUserName());
-		userDTO.setPhone(user.getPhoneNumber());
-		return userDTO;
-	}
-	
-	/**
-	 * Convert an UserDTO object to an User object.
-	 * 
-	 * @param userDTO is the object that you wish to have converted.
-	 * @return an User object.
-	 */
-	private User userDTOtoUser(UserDTO userDTO) {
-		User user = new User();
-		user.setUserName(userDTO.getUserName());
-		user.setEmail(userDTO.getEmail());
-		user.setFullUserName(userDTO.getFullUserName());
-		user.setGithubUserName(userDTO.getGithubUserName());
-		user.setGoogleScholarLink(userDTO.getGooglescholarLink());
-		user.setLinkedinUserName(userDTO.getLinkedinUserName());
-		user.setPhoneNumber(userDTO.getPhone());
-		return user;
-	}
-	
-	
+
 }

@@ -3,6 +3,7 @@ package com.blog.services.impl;
 import com.blog.models.Feedback;
 import com.blog.repositories.FeedbackRepository;
 import com.blog.services.FeedbackService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
 
@@ -11,13 +12,10 @@ import java.util.Optional;
 
 @Service
 @Primary
-public class FeedbackServiceJpaImpl implements FeedbackService {
+@RequiredArgsConstructor
+public class FeedbackServiceImpl implements FeedbackService {
 
-	FeedbackRepository feedbackRepo;
-
-	public FeedbackServiceJpaImpl(FeedbackRepository feedbackRepo) {
-		this.feedbackRepo = feedbackRepo;
-	}
+	private final FeedbackRepository feedbackRepo;
 
 	@Override
 	public Optional<List<Feedback>> findAll() {

@@ -4,6 +4,7 @@ import com.blog.exceptions.InvalidInformationException;
 import com.blog.models.Subscription;
 import com.blog.repositories.SubscriptionRepository;
 import com.blog.services.SubscriptionService;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
@@ -12,13 +13,10 @@ import java.util.Optional;
 
 @Service
 @Slf4j
+@RequiredArgsConstructor
 public class SubscriptionServiceImpl implements SubscriptionService {
 
-	private SubscriptionRepository subscriptionRepository;
-
-	public SubscriptionServiceImpl(SubscriptionRepository subscriptionRepository) {
-		this.subscriptionRepository = subscriptionRepository;
-	}
+	private final SubscriptionRepository subscriptionRepository;
 
 	@Override
 	public Optional<Subscription> saveSubscription(String email) {

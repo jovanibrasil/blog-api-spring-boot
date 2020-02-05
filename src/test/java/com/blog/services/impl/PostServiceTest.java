@@ -42,7 +42,7 @@ public class PostServiceTest {
 	private PostRepository postRepository;
 	
 	@MockBean
-	private FileSystemStorageService storage;
+	private FileSystemStorageServiceImpl storage;
 	
 	@Autowired
 	private PostService postService;

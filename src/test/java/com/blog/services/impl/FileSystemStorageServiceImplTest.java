@@ -12,10 +12,10 @@ import org.springframework.test.context.junit4.SpringRunner;
 @RunWith(SpringRunner.class)
 @SpringBootTest
 @ActiveProfiles("test")
-public class FileSystemStorageServiceTest {
+public class FileSystemStorageServiceImplTest {
 
     @Autowired
-    private FileSystemStorageService fileSystemStorageService;
+    private FileSystemStorageServiceImpl fileSystemStorageService;
 
     @Test
     public void deletePostDirectory() {

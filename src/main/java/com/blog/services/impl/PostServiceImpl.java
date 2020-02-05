@@ -4,6 +4,7 @@ import com.blog.models.Post;
 import com.blog.models.User;
 import com.blog.repositories.PostRepository;
 import com.blog.services.PostService;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Primary;
@@ -19,18 +20,14 @@ import java.util.Optional;
 @Service
 @Primary
 @Slf4j
-public class PostServiceJpaImpl implements PostService {
+@RequiredArgsConstructor
+public class PostServiceImpl implements PostService {
 
 	@Value("${filesystem.blog.images}")
 	private String imagesDir;
 
-	private PostRepository postRepo;
-	private FileSystemStorageService storage;
-
-	public PostServiceJpaImpl(PostRepository postRepo, FileSystemStorageService storage) {
-		this.postRepo = postRepo;
-		this.storage = storage;
-	}
+	private final PostRepository postRepo;
+	private final FileSystemStorageServiceImpl storage;
 
 	@Override
 	public Optional<Page<Post>> findPosts(Pageable page) {
@@ -83,7 +80,7 @@ public class PostServiceJpaImpl implements PostService {
 	}
 	
 	/**
-	 * Create a post without information. The created post
+	 * Creates a post without information. The created post
 	 * contains only id and update/creation dates. 
 	 * 
 	 */
@@ -109,15 +106,13 @@ public class PostServiceJpaImpl implements PostService {
 			post.setSummary(receivedPost.getSummary());
 			post.setLastUpdateDate(LocalDateTime.now());
 			post.setTags(receivedPost.getTags());
-			if(post!= null) { 
-				if(postImages.length == 0) {
-					post.setBannerUrl("/images/image-not-found.png");
-				}else {
-					post.setBannerUrl("/images/" + post.getPostId() + "/" + postImages[0].getOriginalFilename());
-					this.savePostImageFiles(postImages, post.getPostId()); 
-				}
-				post = this.postRepo.save(post);
+			if(postImages.length == 0) {
+				post.setBannerUrl("/images/image-not-found.png");
+			}else {
+				post.setBannerUrl("/images/" + post.getPostId() + "/" + postImages[0].getOriginalFilename());
+				this.savePostImageFiles(postImages, post.getPostId());
 			}
+			post = this.postRepo.save(post);
 			return Optional.of(post);
 		} else {
 			return Optional.empty();

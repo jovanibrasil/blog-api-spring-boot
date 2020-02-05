@@ -3,6 +3,7 @@ package com.blog.controllers;
 import com.blog.models.Subscription;
 import com.blog.response.Response;
 import com.blog.services.SubscriptionService;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -16,13 +17,10 @@ import java.util.List;
 @RestController
 @RequestMapping("/subscriptions")
 @Slf4j
+@RequiredArgsConstructor
 public class SubscriptionController {
 
-	private SubscriptionService subscriptionService;
-
-	public SubscriptionController(SubscriptionService subscriptionService) {
-		this.subscriptionService = subscriptionService;
-	}
+	private final SubscriptionService subscriptionService;
 
 	@GetMapping
 	public ResponseEntity<Response<?>> findAllSubscriptions(){

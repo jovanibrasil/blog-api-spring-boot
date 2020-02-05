@@ -4,6 +4,7 @@ import com.blog.enums.ProfileTypeEnum;
 import com.blog.models.User;
 import com.blog.repositories.UserRepository;
 import com.blog.services.UserService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
 
@@ -12,13 +13,10 @@ import java.util.Optional;
 
 @Service
 @Primary
-public class UserServiceJpaImpl implements UserService {
+@RequiredArgsConstructor
+public class UserServiceImpl implements UserService {
 
-	private UserRepository userRepository;
-
-	public UserServiceJpaImpl(UserRepository userRepository) {
-		this.userRepository = userRepository;
-	}
+	private final UserRepository userRepository;
 
 	@Override
 	public List<User> findAll() {

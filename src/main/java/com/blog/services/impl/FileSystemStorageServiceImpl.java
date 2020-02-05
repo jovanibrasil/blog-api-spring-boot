@@ -1,5 +1,7 @@
 package com.blog.services.impl;
 
+import com.blog.services.FileSystemStorageService;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.FileUtils;
 import org.springframework.beans.factory.annotation.Value;
@@ -13,28 +15,33 @@ import java.nio.file.Paths;
 
 @Slf4j
 @Service
-public class FileSystemStorageService {
+@RequiredArgsConstructor
+public class FileSystemStorageServiceImpl implements FileSystemStorageService {
 
 	@Value("${filesystem.blog}")	
 	private String blogFilesDir;
 	@Value("${filesystem.blog.images}")	
 	private String imagesDir;
-	
+
+	@Override
 	public void deletePostDirectory(Long postId) {
 		Path directoryPath = Paths.get(this.blogFilesDir, this.imagesDir, String.valueOf(postId));
 		this.deleteDirectory(directoryPath);
 	}
-	
+
+	@Override
 	public void deleteImage(String fileName, Long postId) {
 		Path directoryPath = Paths.get(this.blogFilesDir, this.imagesDir, String.valueOf(postId));
 		this.deleteFile(directoryPath, fileName);
 	}
-	
+
+	@Override
 	public void saveImage(MultipartFile file, Long postId) {
 		Path directoryPath = Paths.get(this.blogFilesDir, this.imagesDir, String.valueOf(postId));
 		this.saveFile(directoryPath, file);
 	}
-	
+
+	@Override
 	public void saveFile(Path directoryPath, MultipartFile file) {
 		
 		log.info("Saving image. Name: {} Original name: {} ", file.getName(), file.getOriginalFilename());
@@ -50,6 +57,7 @@ public class FileSystemStorageService {
 		
 	}
 
+	@Override
 	public void deleteFile(Path directoryPath, String fileName) {
 		Path filePath = directoryPath.resolve(fileName);
 		try {
@@ -60,6 +68,7 @@ public class FileSystemStorageService {
 		}
 	}
 
+	@Override
 	public void deleteDirectory(Path path) {
 		try {
 			FileUtils.deleteDirectory(new File(path.toUri()));

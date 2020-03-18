@@ -12,6 +12,6 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
 	@Transactional(readOnly=true)
 	@Query("SELECT u FROM User u WHERE u.userName=:userName")
-	User findUserByName(@Param("userName") String userName);
+	User findByName(@Param("userName") String userName);
 	
 }

@@ -31,17 +31,17 @@ public class PostServiceImpl implements PostService {
 
 	@Override
 	public Optional<Page<Post>> findPosts(Pageable page) {
-		return Optional.of(this.postRepo.findPosts(page));
+		return Optional.of(this.postRepo.findAll(page));
 	}
 
 	@Override
 	public Optional<Page<Post>> findPostsByCategory(String category, Pageable page) {
-		return Optional.of(this.postRepo.findPostsByCategory(category, page));
+		return Optional.of(this.postRepo.findByCategory(category, page));
 	}
 
 	@Override
 	public Optional<Page<Post>> findPostsByUserName(String userName, Pageable page) {
-		return Optional.of(this.postRepo.findPostsByUserName(userName, page));
+		return Optional.of(this.postRepo.findByUserName(userName, page));
 	}
 
 	@Override

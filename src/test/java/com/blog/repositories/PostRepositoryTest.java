@@ -78,35 +78,35 @@ public class PostRepositoryTest {
 	@Test
 	public void testFindPostsByUserId() {
 		PageRequest page = PageRequest.of(0, 5, Sort.by("lastUpdateDate"));
-		Page<Post> posts = this.postRepository.findPostsByUserName("jovanibrasil", page);
+		Page<Post> posts = this.postRepository.findByUserName("jovanibrasil", page);
 		assertEquals("jovanibrasil", posts.getContent().get(0).getAuthor().getUserName());
 	}
 	
 	@Test
 	public void testFindPostsByInvalidUserName() {
 		PageRequest page = PageRequest.of(0, 5, Sort.by("lastUpdateDate"));
-		Page<Post> posts = this.postRepository.findPostsByUserName("jovanibrasil2", page);
+		Page<Post> posts = this.postRepository.findByUserName("jovanibrasil2", page);
 		assertEquals(0, posts.getNumberOfElements());
 	}
 	
 	@Test
 	public void testFindPostsByTagName1() {
 		PageRequest page = PageRequest.of(0, 5, Sort.by("lastUpdateDate"));
-		Page<Post> posts = this.postRepository.findPostsByCategory("Tag", page);
+		Page<Post> posts = this.postRepository.findByCategory("Tag", page);
 		assertEquals(2, posts.getNumberOfElements());
 	}
 	
 	@Test
 	public void testFindPostsByTagName2() {
 		PageRequest page = PageRequest.of(0, 5, Sort.by("lastUpdateDate"));
-		Page<Post> posts = this.postRepository.findPostsByCategory("Test", page);
+		Page<Post> posts = this.postRepository.findByCategory("Test", page);
 		assertEquals(1, posts.getNumberOfElements());
 	}
 	
 	@Test
 	public void testFindPosts() {
 		PageRequest page = PageRequest.of(0, 5, Sort.by("lastUpdateDate"));
-		Page<Post> posts = this.postRepository.findPosts(page);
+		Page<Post> posts = this.postRepository.findAll(page);
 		assertEquals(2, posts.getNumberOfElements());
 	}
 	

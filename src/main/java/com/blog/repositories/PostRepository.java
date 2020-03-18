@@ -14,12 +14,12 @@ import org.springframework.transaction.annotation.Transactional;
 public interface PostRepository extends JpaRepository<Post, Long> {
 	
 	@Query(value="SELECT p FROM Post p")
-	Page<Post> findPosts(Pageable pagable);
+	Page<Post> findAll(Pageable pagable);
 	
 	@Query(value="SELECT p FROM Post p WHERE p.author.userName = ?1")
-	Page<Post> findPostsByUserName(String userName, Pageable pagable);
+	Page<Post> findByUserName(String userName, Pageable pagable);
 	
 	@Query(value="SELECT p FROM Post p WHERE :tag MEMBER OF p.tags")
-	Page<Post> findPostsByCategory(@Param("tag") String tag, Pageable pagable); 
+	Page<Post> findByCategory(@Param("tag") String tag, Pageable pagable); 
 	
 }

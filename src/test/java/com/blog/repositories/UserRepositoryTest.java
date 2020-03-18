@@ -46,13 +46,13 @@ public class UserRepositoryTest {
 	
 	@Test
 	public void testFindUserByName() {
-		User user = this.userRepository.findUserByName("jovanibrasil");
+		User user = this.userRepository.findByName("jovanibrasil");
 		assertNotNull(user);
 	}
 	
 	@Test
 	public void testFindUserByNameInvalidUserName() {
-		User user = this.userRepository.findUserByName("jovani");
+		User user = this.userRepository.findByName("jovani");
 		assertNull(user);
 	}
 }

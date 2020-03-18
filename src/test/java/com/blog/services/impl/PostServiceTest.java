@@ -74,10 +74,10 @@ public class PostServiceTest {
 		Page<Post> page = new PageImpl<Post>(Arrays.asList(post));
 		
 		BDDMockito.given(this.postRepository.save(Mockito.any(Post.class))).willReturn(post);
-		BDDMockito.given(this.postRepository.findPosts(Mockito.any(PageRequest.class))).willReturn(page);
+		BDDMockito.given(this.postRepository.findAll(Mockito.any(PageRequest.class))).willReturn(page);
 	
 		BDDMockito.given(this.postRepository.findById(Mockito.anyLong())).willReturn(Optional.of(post));
-		BDDMockito.given(this.postRepository.findPostsByUserName(Mockito.anyString(), Mockito.any()))
+		BDDMockito.given(this.postRepository.findByUserName(Mockito.anyString(), Mockito.any()))
 			.willReturn(page);
 		
 		Mockito.doNothing()
@@ -125,7 +125,7 @@ public class PostServiceTest {
 	public void testFindPostsByCategoryValidCategory() {
 		PageRequest page = PageRequest.of(0, 5, Sort.by("lastUpdateDate"));
 		
-		BDDMockito.given(this.postRepository.findPostsByCategory("Tag", page))
+		BDDMockito.given(this.postRepository.findByCategory("Tag", page))
 		.willReturn(new PageImpl<Post>(Arrays.asList(post)));
 		
 		Optional<Page<Post>> optPost = this.postService.findPostsByCategory("Tag", page);
@@ -136,7 +136,7 @@ public class PostServiceTest {
 	public void testFindPostsByCategoryInvalidCategory() {
 		PageRequest page = PageRequest.of(0, 5, Sort.by("lastUpdateDate"));
 		
-		BDDMockito.given(this.postRepository.findPostsByCategory("Java", page))
+		BDDMockito.given(this.postRepository.findByCategory("Java", page))
 		.willReturn(new PageImpl<Post>(new ArrayList<Post>()));
 		
 		Optional<Page<Post>> optPost = this.postService.findPostsByCategory("Java", page);

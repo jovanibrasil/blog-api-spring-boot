@@ -25,7 +25,7 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public Optional<User> findByUserName(String userName) {
-		return Optional.ofNullable(this.userRepository.findUserByName(userName));
+		return Optional.ofNullable(this.userRepository.findByName(userName));
 	}
 
 	@Override

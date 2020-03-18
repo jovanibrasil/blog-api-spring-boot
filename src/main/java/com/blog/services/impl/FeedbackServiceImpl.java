@@ -24,12 +24,12 @@ public class FeedbackServiceImpl implements FeedbackService {
 
 	@Override
 	public Optional<List<Feedback>> findFeedbacks(Long n) {
-		return Optional.of(this.feedbackRepo.findFeedbacks(n));
+		return Optional.of(this.feedbackRepo.findAll(n));
 	}
 
 	@Override
 	public Optional<List<Feedback>> findFeedbacksByUser(String userName, Long n) {
-		return Optional.of(this.feedbackRepo.findFeedbacksByUserId(userName, n));
+		return Optional.of(this.feedbackRepo.findByUserId(userName, n));
 	}
 
 	@Override

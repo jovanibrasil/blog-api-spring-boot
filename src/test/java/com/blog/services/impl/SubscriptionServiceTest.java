@@ -1,9 +1,13 @@
 package com.blog.services.impl;
 
-import com.blog.exceptions.InvalidInformationException;
-import com.blog.models.Subscription;
-import com.blog.repositories.SubscriptionRepository;
-import com.blog.services.SubscriptionService;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.ArgumentMatchers.any;
+
+import java.util.Arrays;
+import java.util.Optional;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -12,17 +16,18 @@ import org.mockito.BDDMockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-import static org.mockito.ArgumentMatchers.any;
+import com.blog.exceptions.InvalidInformationException;
+import com.blog.models.Subscription;
+import com.blog.repositories.SubscriptionRepository;
+import com.blog.services.SubscriptionService;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -30,10 +35,13 @@ import static org.mockito.ArgumentMatchers.any;
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 public class SubscriptionServiceTest {
 
-	@MockBean
-	private SubscriptionRepository subscriptionRepository;
 	@Autowired
 	private SubscriptionService subscriptionService;
+	
+	@MockBean
+	private SubscriptionRepository subscriptionRepository;
+	
+	private Pageable page = PageRequest.of(0, 1);
 
 	@Before
 	public void setUp() {}
@@ -46,30 +54,33 @@ public class SubscriptionServiceTest {
 		Subscription subscription = new Subscription("test@gmail.com");
 		BDDMockito.given(subscriptionRepository.findByEmail("test@gmail.com")).willReturn(Optional.empty());
 		BDDMockito.given(subscriptionRepository.save(any())).willReturn(subscription);
-		Optional<Subscription> optSubscription = this.subscriptionService
+		subscription = subscriptionService
 				.saveSubscription("test@gmail.com");
-		assertTrue(optSubscription.isPresent());
+		assertNotNull(subscription);
 	}
 	
 	@Test(expected = InvalidInformationException.class)
 	public void testSaveSubscriptionEmailAlreadyExist() {
 		BDDMockito.given(subscriptionRepository.findByEmail("test@gmail.com"))
 			.willReturn(Optional.of(new Subscription("test@gmail.com")));
-		this.subscriptionService.saveSubscription("test@gmail.com");
+		subscriptionService.saveSubscription("test@gmail.com");
 	}
 	
 	@Test
 	public void testFindSubscriptions() {
-		BDDMockito.given(this.subscriptionRepository.findAll())
-			.willReturn(Arrays.asList(new Subscription("test0@gmail.com"), new Subscription("test1@gmail.com")));
-		List<Subscription> subscriptions = this.subscriptionService.findAllSubscriptions();
-		assertEquals(2, subscriptions.size());
+		BDDMockito.given(subscriptionRepository.findAll(any(Pageable.class)))
+			.willReturn(new PageImpl<Subscription>(
+					Arrays.asList(new Subscription("test0@gmail.com"), 
+							new Subscription("test1@gmail.com"))));
+		Page<Subscription> subscriptions = subscriptionService.findAllSubscriptions(page);
+		assertEquals(2, subscriptions.getContent().size());
 	}
 	
 	@Test
 	public void testFindSubscriptionsEmptyList() {
-		BDDMockito.given(this.subscriptionRepository.findAll()).willReturn(Arrays.asList());
-		List<Subscription> subscriptions = this.subscriptionService.findAllSubscriptions();
+		BDDMockito.given(subscriptionRepository.findAll(any(Pageable.class)))
+			.willReturn(new PageImpl<>(Arrays.asList()));
+		Page<Subscription> subscriptions = subscriptionService.findAllSubscriptions(page);
 		assertTrue(subscriptions.isEmpty());
 	}
 	

@@ -2,17 +2,17 @@ package com.blog.services;
 
 import com.blog.models.Feedback;
 
-import java.util.List;
-import java.util.Optional;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 public interface FeedbackService {
 	
-	Optional<List<Feedback>> findAll();
-	Optional<List<Feedback>> findFeedbacks(Long n);
-	Optional<List<Feedback>> findFeedbacksByUser(String userName, Long n);
-	Optional<Feedback> findById(Long id);
-	Optional<Feedback> create(Feedback feedback);
-	Optional<Feedback> edit(Feedback feedback);
-	Optional<Feedback> deleteById(Long id);
+	Page<Feedback> findAll(Pageable page);
+	Page<Feedback> findFeedbacks(Pageable page);
+	Page<Feedback> findFeedbacksByUser(String userName, Pageable page);
+	Feedback findById(Long id);
+	Feedback create(Feedback feedback);
+	Feedback edit(Feedback feedback);
+	Feedback deleteById(Long id);
 	
 }

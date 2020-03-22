@@ -55,7 +55,7 @@ public class AuthServiceImpl implements AuthService {
 			// set headers
 			HttpHeaders headers = new HttpHeaders();
 			headers.setContentType(MediaType.APPLICATION_JSON);
-			HttpEntity<String> entity = new HttpEntity<String>(request.toString(), headers);
+			HttpEntity<String> entity = new HttpEntity<>(request.toString(), headers);
 			
 			// send request and parse result
 			ResponseEntity<String> loginResponse = restTemplate

@@ -1,20 +1,28 @@
 package com.blog.controllers;
 
+import java.net.URI;
+
+import javax.validation.Valid;
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.util.UriComponentsBuilder;
+
 import com.blog.dtos.FeedbackDTO;
-import com.blog.exceptions.CustomMessageSource;
 import com.blog.mappers.FeedbackMapper;
 import com.blog.models.Feedback;
 import com.blog.response.Response;
 import com.blog.services.FeedbackService;
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-
-import javax.validation.Valid;
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @CrossOrigin(origins = "*")
@@ -24,7 +32,6 @@ import java.util.stream.Collectors;
 public class FeedbackController {
 
 	private final FeedbackService feedbackService;
-	private final CustomMessageSource msgSrc;
 	private final FeedbackMapper feedbackMapper;
 
 	/**
@@ -34,52 +41,40 @@ public class FeedbackController {
 	 * @return
 	 */
 	@PostMapping
-	public ResponseEntity<Response<String>> saveFeedback(
-			@Valid @RequestBody FeedbackDTO feedbackDTO){
-		
-		Response<String> response = new Response<>();
-		
+	public ResponseEntity<?> saveFeedback(@Valid @RequestBody FeedbackDTO feedbackDTO, UriComponentsBuilder uriBuilder){
 		log.info("Saving feedback ...");
 		Feedback feedback = feedbackMapper.feedbackDtoToFeedback(feedbackDTO);
-		Optional<Feedback> optFeedback = this.feedbackService.create(feedback);
-		
-		if(!optFeedback.isPresent()) {
-			log.error("It was not possible to create the feedback.");
-			response.setData(msgSrc.getMessage("error.feedback.creation"));
-			return ResponseEntity.badRequest().body(response);
-		}
-		
-		response.setData("Feedback has been successfully sent.");
-		return ResponseEntity.ok(response);
-		
+		feedback = feedbackService.create(feedback);
+		URI uri = uriBuilder.path("/feedback/{id}")
+				.buildAndExpand(feedback.getId())
+				.toUri();
+		return ResponseEntity.created(uri).build();
 	}
 	
 	/**
-	 * Retrieves a list of feedbacks.
+	 * Retrieves a specific feedback.
+	 * 
+	 * @return
+	 */
+	@GetMapping("/{id}")
+	public ResponseEntity<Response<FeedbackDTO>> getFeedbackById(Long id) {
+		log.info("Retrieving a feedback ...");
+		Feedback feedback = feedbackService.findById(id);
+		return ResponseEntity.ok(new Response<FeedbackDTO>(feedbackMapper.feedbackToFeedbackDto(feedback)));	
+	}
+	
+	/**
+	 * Retrieves a list of feedback.
 	 * 
 	 * @return
 	 */
 	@GetMapping 
-	public ResponseEntity<Response<List<FeedbackDTO>>> getFeedback() {
+	public ResponseEntity<Response<Page<FeedbackDTO>>> getFeedback(Pageable pageable) {
 		
-		Response<List<FeedbackDTO>> response = new Response<>();
 		log.info("Retrieving a list of feedback ...");
-		Optional<List<Feedback>> optLatestFeedbacks = this.feedbackService.findFeedbacks(2L);
-		
-		if(!optLatestFeedbacks.isPresent()) {
-			log.error("It was not possible to create the list of feedback.");
-			response.addError(msgSrc.getMessage("error.feedback.findall"));
-			return ResponseEntity.badRequest().body(response);
-		}
-		
-		List<FeedbackDTO> feedback = optLatestFeedbacks.get()
-				.stream()
-				.map(feedbackMapper::feedbackToFeedbackDto)
-				.collect(Collectors.toList());
-		
-		response.setData(feedback);
-		return ResponseEntity.ok(response);
-		
+		Page<Feedback> feedbacks = feedbackService.findFeedbacks(pageable);
+		Page<FeedbackDTO> feedback = feedbacks.map(feedbackMapper::feedbackToFeedbackDto);
+		return ResponseEntity.ok(new Response<Page<FeedbackDTO>>(feedback));	
 	}
 	
 }

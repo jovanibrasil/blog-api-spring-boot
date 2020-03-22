@@ -14,9 +14,10 @@ import org.springframework.test.context.junit4.SpringRunner;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -41,18 +42,18 @@ public class UserRepositoryTest {
 	
 	@After
 	public void tearDown() {
-		this.userRepository.deleteAll();
+		userRepository.deleteAll();
 	}
 	
 	@Test
 	public void testFindUserByName() {
-		User user = this.userRepository.findByName("jovanibrasil").get();
+		User user = userRepository.findByName("jovanibrasil").get();
 		assertNotNull(user);
 	}
 	
 	@Test
 	public void testFindUserByNameInvalidUserName() {
-		User user = this.userRepository.findByName("jovani").get();
-		assertNull(user);
+		Optional<User> optUser = userRepository.findByName("jovani");
+		assertFalse(optUser.isPresent());
 	}
 }

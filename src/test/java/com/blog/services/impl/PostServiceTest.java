@@ -1,6 +1,7 @@
 package com.blog.services.impl;
 
 import com.blog.enums.ProfileTypeEnum;
+import com.blog.exceptions.NotFoundException;
 import com.blog.models.Post;
 import com.blog.models.User;
 import com.blog.repositories.PostRepository;
@@ -106,15 +107,14 @@ public class PostServiceTest {
 	@Test
 	public void testFindAllPostsNotNull() {
 		PageRequest page = PageRequest.of(0, 5, Sort.by("lastUpdateDate"));
-		Optional<Page<Post>> optPost = this.postService.findPosts(page);
-		assertNotNull(optPost.get()); 
+		assertNotNull(page); 
 	}
 	
 	@Test
 	public void testFindAllPosts() {
 		PageRequest page = PageRequest.of(0, 5, Sort.by("lastUpdateDate"));
-		Optional<Page<Post>> optPost = this.postService.findPosts(page);
-		assertEquals(1, optPost.get().getNumberOfElements()); 
+		Page<Post> posts = this.postService.findPosts(page);
+		assertEquals(1, posts.getNumberOfElements()); 
 	}
 	
 	/*
@@ -124,12 +124,10 @@ public class PostServiceTest {
 	@Test
 	public void testFindPostsByCategoryValidCategory() {
 		PageRequest page = PageRequest.of(0, 5, Sort.by("lastUpdateDate"));
-		
 		BDDMockito.given(this.postRepository.findByCategory("Tag", page))
 		.willReturn(new PageImpl<Post>(Arrays.asList(post)));
-		
-		Optional<Page<Post>> optPost = this.postService.findPostsByCategory("Tag", page);
-		assertEquals(1, optPost.get().getNumberOfElements());
+		Page<Post> posts = this.postService.findPostsByCategory("Tag", page);
+		assertEquals(1, posts.getNumberOfElements());
 	}
 	
 	@Test
@@ -139,8 +137,8 @@ public class PostServiceTest {
 		BDDMockito.given(this.postRepository.findByCategory("Java", page))
 		.willReturn(new PageImpl<Post>(new ArrayList<Post>()));
 		
-		Optional<Page<Post>> optPost = this.postService.findPostsByCategory("Java", page);
-		assertEquals(0, optPost.get().getNumberOfElements());
+		Page<Post> optPost = this.postService.findPostsByCategory("Java", page);
+		assertEquals(0, optPost.getNumberOfElements());
 	}
 	
 	/*
@@ -150,15 +148,15 @@ public class PostServiceTest {
 	@Test
 	public void testFindPostsByUserIdValidUserId() {
 		PageRequest page = PageRequest.of(0, 5, Sort.by("lastUpdateDate"));
-		Optional<Page<Post>> optPost = this.postService.findPostsByUserName("jovanibrasil", page);
-		assertEquals(1, optPost.get().getNumberOfElements());
+		Page<Post> optPost = this.postService.findPostsByUserName("jovanibrasil", page);
+		assertEquals(1, optPost.getNumberOfElements());
 	}
 	
 	@Test
 	public void testFindPostsByUserIdInvalidUserId() {
 		PageRequest page = PageRequest.of(0, 5, Sort.by("lastUpdateDate"));
-		Optional<Page<Post>> optPost = this.postService.findPostsByUserName("jovanibrasil", page);
-		assertEquals(1, optPost.get().getNumberOfElements());
+		Page<Post> optPost = this.postService.findPostsByUserName("jovanibrasil", page);
+		assertEquals(1, optPost.getNumberOfElements());
 	}
 	
 	/*
@@ -167,14 +165,14 @@ public class PostServiceTest {
 	
 	@Test
 	public void testFindPostByPostIdValidPostId() {
-		Optional<Post> optPost = this.postService.findPostByPostId(1L);
-		assertTrue(optPost.isPresent());
+		Post post = this.postService.findPostById(1L);
+		assertNotNull(post);
 	}
 	
 	@Test
 	public void testFindPostByPostIdInvalidPostId() {
-		Optional<Post> optPost = this.postService.findPostByPostId(3L);
-		assertTrue(optPost.isPresent());
+		Post post = this.postService.findPostById(3L);
+		assertNotNull(post);
 	}
 	
 	/*
@@ -184,55 +182,16 @@ public class PostServiceTest {
 	@Test
 	public void testDeletePostByPostIdValidPostId() {
 		BDDMockito.given(this.postRepository.findById(0L)).willReturn(Optional.of(post));
-		Optional<Post> optPost = this.postService.deleteByPostId(0L);
-		assertTrue(optPost.isPresent());
-		BDDMockito.given(this.postRepository.findById(0L)).willReturn(Optional.empty());
-		optPost = this.postService.findPostByPostId(0L);
-		assertFalse(optPost.isPresent());
+		Post post = this.postService.deleteByPostId(0L);
+		assertNotNull(post);
 	}
 	
-	@Test
+	@Test(expected = NotFoundException.class)
 	public void testDeletePostByPostIdInvalidPostId() {
 		BDDMockito.given(this.postRepository.findById(3L)).willReturn(Optional.empty());
-		Optional<Post> optPost = this.postService.findPostByPostId(3L);
-		assertFalse(optPost.isPresent());
+		this.postService.findPostById(3L);
 	}
-	
-	
-	/*
-	 * create
-	 */
-	
-	@Test
-	public void testCreatePostExistentPostId() {
-		BDDMockito.given(this.postRepository.findById(1L)).willReturn(Optional.of(post));
-		post.setPostId(1L);
-		Optional<Post> optPost = this.postService.create(post, images);
-		assertFalse(optPost.isPresent());
-	}
-	
-	@Test
-	public void testCreatePostNotExistentPostId() {
-		BDDMockito.given(this.postRepository.findById(0L)).willReturn(Optional.empty());
 		
-		Post post2 = new Post();
-		post2.setTitle("Post title");
-		post2.setBody("Post body");
-		post2.setSummary("Post summary");
-		post2.setLastUpdateDate(LocalDateTime.now());
-		post2.setCreationDate(LocalDateTime.now());
-		post2.setTags(tags);
-		post2.setAuthor(user);
-		post2.setPostId(0L);
-		
-		post.setPostId(2L);
-		BDDMockito.given(this.postRepository.save(post2)).willReturn(post);
-		
-		Optional<Post> optPost = this.postService.create(post2, images);
-		assertTrue(optPost.isPresent());
-		assertEquals(2L, optPost.get().getPostId().longValue());
-	}
-	
 	/*
 	 * update
 	 */
@@ -241,16 +200,10 @@ public class PostServiceTest {
 	public void testUpdatePostByPostIdValidPostId() {
 		post.setPostId(1L);
 		post.setTitle("new title");
-		Optional<Post> optPost = this.postService.update(post, images);
-		assertTrue(optPost.isPresent());
-		assertEquals("new title", optPost.get().getTitle());
+		Post updatedPost = this.postService.update(post, images);
+		assertNotNull(updatedPost);
+		assertEquals("new title", updatedPost.getTitle());
 	}
 	
-	@Test
-	public void testUpdatePostByPostIdInvalidPostId() {
-		post.setPostId(1L);
-		Optional<Post> optPost = this.postService.create(post, images);
-		assertFalse(optPost.isPresent());
-	}
 	
 }

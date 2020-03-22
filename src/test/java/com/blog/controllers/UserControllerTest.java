@@ -1,6 +1,7 @@
 package com.blog.controllers;
 
 import com.blog.enums.ProfileTypeEnum;
+import com.blog.exceptions.NotFoundException;
 import com.blog.services.impl.AuthServiceImpl;
 import com.blog.models.User;
 import com.blog.security.TempUser;
@@ -19,8 +20,6 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-
-import java.util.Optional;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -58,17 +57,19 @@ public class UserControllerTest {
 	
 	@Test
 	public void testFindUserByNameWithInvalidUserName() throws Exception {
-		BDDMockito.given(this.userService.findByUserName(Mockito.anyString())).willReturn(Optional.empty());
+		BDDMockito.given(this.userService.findByUserName(Mockito.anyString()))
+			.willThrow(new NotFoundException("error.user.find"));
 		mvc.perform(MockMvcRequestBuilders.get("/users/sajdoi")
 			.header("Authorization", "x.x.x.x")
 			.accept(MediaType.APPLICATION_JSON))
-			.andExpect(status().isBadRequest())
+			.andExpect(status().isNotFound())
 			.andExpect(jsonPath("$.errors[0].message").value("It was not possible to find the specified user."));
 	}
 	
 	@Test
 	public void testFindUserByNameWithValidUserName() throws Exception {
-		BDDMockito.given(this.userService.findByUserName("jovanibrasil")).willReturn(Optional.of(user));
+		BDDMockito.given(this.userService.findByUserName("jovanibrasil"))
+			.willReturn(user);
 		mvc.perform(MockMvcRequestBuilders.get("/users/jovanibrasil")
 			.header("Authorization", "x.x.x.x")
 			.accept(MediaType.APPLICATION_JSON))

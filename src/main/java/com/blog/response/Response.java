@@ -24,6 +24,11 @@ public class Response<T> {
 		this.errors = errors;
 	}
 	
+	public Response(T data) {
+		this.data = data;
+		this.errors = new ArrayList<>();
+	}
+
 	public T getData() {
 		return data;
 	}

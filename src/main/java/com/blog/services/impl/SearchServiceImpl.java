@@ -11,6 +11,7 @@ import org.springframework.web.client.RestTemplate;
 
 import java.net.URI;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 @Component
@@ -26,13 +27,11 @@ public class SearchServiceImpl implements SearchService {
 		try {
 			List<SummaryDTO> summaries = new ArrayList<>();
 			
-			URI searchURI = URI.create(String.format(uri + "?term=%s", query));
+			URI searchURI = URI.create(String.format("%s?term=%s", uri, query));
 			
 			ResponseEntity<SummaryDTO[]> responseEntity = restTemplate
 					.getForEntity(searchURI, SummaryDTO[].class);
-			for (SummaryDTO object : responseEntity.getBody()) {
-				summaries.add(object);
-			}
+			Collections.addAll(summaries, responseEntity.getBody());
 			return summaries;
 		} catch (Exception e) {
 			throw new MicroServiceIntegrationException("It was not possible to complete the search.", e);

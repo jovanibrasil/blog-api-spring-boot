@@ -2,7 +2,6 @@ package com.blog.models;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
@@ -12,7 +11,6 @@ import java.util.List;
 
 @Getter
 @Setter
-@NoArgsConstructor
 @Entity
 @Table(name="posts")
 public class Post {
@@ -53,15 +51,20 @@ public class Post {
 	@Column(nullable = false)
 	private String bannerUrl;
 
-	public Post(User author) {
+	public Post() {
 		this.postId = 0L;
-		this.title = "";
-		this.summary = "";
-		this.body = "";
-		this.author = author;
+		this.title = "Title";
+		this.summary = "Summary";
+		this.body = "Body";
+		this.author = null;
 		this.lastUpdateDate = LocalDateTime.now();
 		this.creationDate = LocalDateTime.now();
-		this.tags = new ArrayList<String>(); 
+		this.tags = new ArrayList<>(); 
+	}
+	
+	public Post(User author) {
+		this();
+		this.author = author;
 	}
 	
 	public Post(Long id, String title, String summary, List<String> tags, String body, User author) {

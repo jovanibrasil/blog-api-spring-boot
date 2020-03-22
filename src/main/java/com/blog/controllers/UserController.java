@@ -1,27 +1,37 @@
 package com.blog.controllers;
 
+import java.net.URI;
+
+import javax.validation.Valid;
+
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.util.UriComponentsBuilder;
+
 import com.blog.dtos.UserDTO;
-import com.blog.exceptions.CustomMessageSource;
 import com.blog.mappers.UserMapper;
 import com.blog.models.User;
 import com.blog.response.Response;
 import com.blog.services.UserService;
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-
-import javax.validation.Valid;
-import java.util.Optional;
 
 @CrossOrigin(origins = "*")
 @RestController
 @RequestMapping("/users")
-@RequiredArgsConstructor @Slf4j
+@RequiredArgsConstructor 
+@Slf4j
 public class UserController {
 
 	private final UserService userService;
-	private final CustomMessageSource msgSrc;
 	private final UserMapper userMapper;
 
 	/**
@@ -33,18 +43,9 @@ public class UserController {
 	 */
 	@GetMapping("/{userName}")
 	public ResponseEntity<Response<UserDTO>> getUser(@PathVariable("userName") String userName){
-		
-		Response<UserDTO> response = new Response<>();
-		Optional<User> optUser = this.userService.findByUserName(userName);
-		
-		if(!optUser.isPresent()) {
-			log.error("It was not possible to find the specified user.");
-			response.addError(msgSrc.getMessage("error.user.find"));
-			return ResponseEntity.badRequest().body(response);
-		}
-		
-		response.setData(userMapper.userToUserDto(optUser.get()));
-		return ResponseEntity.ok(response);
+		User user = userService.findByUserName(userName);
+		UserDTO userDto = userMapper.userToUserDto(user);
+		return ResponseEntity.ok(new Response<UserDTO>(userDto));
 	}
 	
 	/**
@@ -52,10 +53,9 @@ public class UserController {
 	 * 
 	 */
 	@DeleteMapping("/{userName}")
-	public ResponseEntity<Response<String>> deleteUser(@PathVariable("userName") String userName){
-		Response<String> response = new Response<String>();
-		this.userService.deleteByUserName(userName);
- 		return ResponseEntity.ok(response);
+	public ResponseEntity<?> deleteUser(@PathVariable("userName") String userName){
+		userService.deleteByUserName(userName);
+ 		return ResponseEntity.noContent().build();
 	}
 	
 	/**
@@ -67,27 +67,17 @@ public class UserController {
 	 * with empty data and error messages on failure.  
 	 */
 	@PostMapping
-	public ResponseEntity<Response<UserDTO>> saveUser(@Valid @RequestBody UserDTO userDTO){
-		Response<UserDTO> response = new Response<UserDTO>();
-
-		Optional<User> optUser = userService.findByUserName(userDTO.getUserName());
-		if(optUser.isPresent()){
-			log.error("It was not possible to create the specified user. Username already exists.");
-			response.addError(msgSrc.getMessage("error.user.name.unique"));
-			return ResponseEntity.badRequest().body(response);
-		}
-
+	public ResponseEntity<Response<UserDTO>> saveUser(@Valid @RequestBody UserDTO userDTO, UriComponentsBuilder uriBuilder){
 		User user = userMapper.userDtoToUser(userDTO);
-		optUser = this.userService.save(user);
-		if(!optUser.isPresent()) {
-			log.error("It was not possible to create the specified user.");
-			response.addError(msgSrc.getMessage("error.user.create"));
-			return ResponseEntity.badRequest().body(response);
-		}
 		log.info("Creating user {}", user.getUserName());
+		user = userService.save(user);
 		userDTO = userMapper.userToUserDto(user);
-		response.setData(userDTO);
-		return ResponseEntity.ok(response);
+		URI uri = uriBuilder.path("/users/{userName}")
+				.buildAndExpand(userDTO.getUserName())
+				.toUri();
+		return ResponseEntity
+				.created(uri)
+				.body(new Response<UserDTO>(userDTO));
 	}
 
 }

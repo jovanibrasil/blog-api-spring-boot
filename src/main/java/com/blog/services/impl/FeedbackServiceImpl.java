@@ -1,13 +1,15 @@
 package com.blog.services.impl;
 
+import com.blog.exceptions.NotFoundException;
 import com.blog.models.Feedback;
 import com.blog.repositories.FeedbackRepository;
 import com.blog.services.FeedbackService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Primary;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -18,43 +20,44 @@ public class FeedbackServiceImpl implements FeedbackService {
 	private final FeedbackRepository feedbackRepo;
 
 	@Override
-	public Optional<List<Feedback>> findAll() {
-		return Optional.of(this.feedbackRepo.findAll());
+	public Page<Feedback> findAll(Pageable page) {
+		return feedbackRepo.findAll(page);
 	}
 
 	@Override
-	public Optional<List<Feedback>> findFeedbacks(Long n) {
-		return Optional.of(this.feedbackRepo.findAll(n));
+	public Page<Feedback> findFeedbacks(Pageable page) {
+		return feedbackRepo.findAll(page);
 	}
 
 	@Override
-	public Optional<List<Feedback>> findFeedbacksByUser(String userName, Long n) {
-		return Optional.of(this.feedbackRepo.findByUserId(userName, n));
+	public Page<Feedback> findFeedbacksByUser(String userName, Pageable page) {
+		return feedbackRepo.findByUserId(userName, page);
 	}
 
 	@Override
-	public Optional<Feedback> findById(Long id) {
-		return this.feedbackRepo.findById(id);
-	}
-
-	@Override
-	public Optional<Feedback> create(Feedback feedback) {
-		return Optional.of(this.feedbackRepo.save(feedback));
-	}
-
-	@Override
-	public Optional<Feedback> edit(Feedback feedback) {
-		return Optional.of(this.feedbackRepo.save(feedback));
-	}
-
-	@Override
-	public Optional<Feedback> deleteById(Long id) {
-		Optional<Feedback> optFeedback = this.findById(id);
-		if(optFeedback.isPresent()) {
-			this.deleteById(id);
-			return optFeedback;
+	public Feedback findById(Long id) {
+		Optional<Feedback> optFeedback = feedbackRepo.findById(id);
+		if(!optFeedback.isPresent()) {
+			throw new NotFoundException("Feedback not found");
 		}
-		return Optional.empty();
+		return optFeedback.get();
+	}
+
+	@Override
+	public Feedback create(Feedback feedback) {
+		return feedbackRepo.save(feedback);
+	}
+
+	@Override
+	public Feedback edit(Feedback feedback) {
+		return feedbackRepo.save(feedback);
+	}
+
+	@Override
+	public Feedback deleteById(Long id) {
+		Feedback optFeedback = findById(id);
+		this.feedbackRepo.delete(optFeedback);
+		return optFeedback;
 	}
 	
 }

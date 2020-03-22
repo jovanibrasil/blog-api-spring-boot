@@ -22,14 +22,8 @@ public class SearchController {
 	@GetMapping
 	public ResponseEntity<Response<List<SummaryDTO>>> getSearchSummaries(@RequestParam("filter") String query){
 		log.info("Searching by {}", query);
-		Response<List<SummaryDTO>> response = new Response<>();
-		
 		List<SummaryDTO> summaries = searchClient.searchSummaries(query);
-		
-		response.setData(summaries);
-		return ResponseEntity.ok(response);
-		
+		return ResponseEntity.ok(new Response<List<SummaryDTO>>(summaries));		
 	}
-	
 	
 }

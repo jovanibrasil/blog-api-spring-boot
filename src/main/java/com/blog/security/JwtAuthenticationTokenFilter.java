@@ -47,7 +47,6 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
 							userDetails, null, userDetails.getAuthorities());
 					auth.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
 					SecurityContextHolder.getContext().setAuthentication(auth);	
-					
 				}else {
 					log.info("User not found. The token is invalid.");
 					response.sendError(401);

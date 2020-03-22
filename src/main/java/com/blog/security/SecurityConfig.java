@@ -7,26 +7,26 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+
+import com.blog.services.impl.JwtAuthenticationProvider;
 
 //@EnableGlobalMethodSecurity(prePostEnabled=true)
 @EnableWebSecurity
 @Configuration
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
-
-	private JwtAuthenticationEntryPoint unauthorizedHandler;
-
-	public SecurityConfig(JwtAuthenticationEntryPoint unauthorizedHandler) {
-		super();
-		this.unauthorizedHandler = unauthorizedHandler;
+	
+	private final JwtAuthenticationProvider jwtAuthenticationProvider;
+	
+	public SecurityConfig(JwtAuthenticationProvider jwtAuthenticationProvider) {
+		this.jwtAuthenticationProvider = jwtAuthenticationProvider;
 	}
-
-	/*
+	
+	/**
 	 * Filter used when the application intercepts a requests.
 	 */
-	@Bean
-	public JwtAuthenticationTokenFilter authenticationTokenFilterBean() throws Exception {
-		return new JwtAuthenticationTokenFilter();
+	public JwtAuthenticationFilter authenticationTokenFilterBean() {
+		return new JwtAuthenticationFilter(jwtAuthenticationProvider);
 	}
 	
 	/**
@@ -35,14 +35,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
 				
-		http
-			.csrf().disable() // disable CSRF (cross-site request forgery) 
-			.cors()
-			.and()
-			.exceptionHandling().authenticationEntryPoint(unauthorizedHandler) // set authentication error
-			.and().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS) // set session police stateless
-			.and()
-			.authorizeRequests()
+		http.authorizeRequests()
 			.antMatchers("/search", "/subscriptions", "/posts/top", "/posts/summaries", 
 					"/posts/*", "/feedbacks", "/posts/byuser/*").permitAll()
 			.antMatchers(HttpMethod.DELETE, "/posts/*").hasRole("ADMIN")
@@ -50,29 +43,15 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 			.antMatchers(HttpMethod.PUT, "/posts").hasRole("ADMIN")
 			.antMatchers(HttpMethod.GET, "/subscriptions").hasRole("ADMIN")
 			.antMatchers(HttpMethod.GET, "/feedbacks").hasRole("ADMIN")
-			.antMatchers("/users").hasRole("SERVICE"); 
-		
-			//http.addFilterBefore(new LoginFilter("/users/login", authenticationManager()), UsernamePasswordAuthenticationFilter.class);
-			http.addFilterBefore(authenticationTokenFilterBean(), 
-					BasicAuthenticationFilter.class); // set filter
-					        
-			http.headers().cacheControl();
+			.antMatchers("/users").hasRole("SERVICE")
+			.and()
+			.csrf().disable() // disable CSRF (cross-site request forgery) 
+			.httpBasic().disable()		
+			.formLogin().disable()
+			.addFilterAfter(authenticationTokenFilterBean(), UsernamePasswordAuthenticationFilter.class) // set token verification filter
+			.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS); // set session police stateless
 		
 	}
 	
-//	@Override
-//    @Bean
-//    public AuthenticationManager authenticationManagerBean() throws Exception {
-//        return super.authenticationManagerBean();
-//    }
-	
-	/**
-	 * The password encoder is used to hash the passwords.  in this case a BCryptPasswordEncoder.
-	 */
-//	@Bean
-//	public BCryptPasswordEncoder passwordEncoder() {
-//		return new BCryptPasswordEncoder();
-//	}
-
 }
 

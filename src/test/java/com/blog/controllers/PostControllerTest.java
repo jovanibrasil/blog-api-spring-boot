@@ -3,7 +3,7 @@ package com.blog.controllers;
 import com.blog.dtos.PostDTO;
 import com.blog.enums.ProfileTypeEnum;
 import com.blog.exceptions.NotFoundException;
-import com.blog.services.impl.AuthServiceImpl;
+import com.blog.services.impl.JwtAuthenticationProvider;
 import com.blog.mappers.PostMapper;
 import com.blog.mappers.PostMapperImpl;
 import com.blog.models.Post;
@@ -54,7 +54,7 @@ public class PostControllerTest {
 	private PostService postService;
 	
 	@MockBean
-	private AuthServiceImpl authClient;
+	private JwtAuthenticationProvider authClient;
 
 	@MockBean
 	private PostMapper postMapper;

@@ -18,7 +18,7 @@ import org.springframework.web.client.RestTemplate;
 @Component
 @EnableConfigurationProperties(BlogServiceProperties.class)
 @RequiredArgsConstructor
-public class AuthServiceImpl implements AuthService {
+public class JwtAuthenticationProvider implements AuthService {
 
 	@Value("${urls.auth.check-token}")
 	private String checkTokenUrl;

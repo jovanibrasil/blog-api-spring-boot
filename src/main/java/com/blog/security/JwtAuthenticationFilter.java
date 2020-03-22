@@ -1,6 +1,6 @@
 package com.blog.security;
 
-import com.blog.services.impl.AuthServiceImpl;
+import com.blog.services.impl.JwtAuthenticationProvider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,13 +23,16 @@ import java.io.IOException;
  * @author Jovani Brasil
  *
  */
-public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
+public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
-	private static final Logger log = LoggerFactory.getLogger(JwtAuthenticationTokenFilter.class);
+	private static final Logger log = LoggerFactory.getLogger(JwtAuthenticationFilter.class);
 	private static final String AUTH_HEADER = "Authorization";
 	
-	@Autowired
-	private AuthServiceImpl authClient;
+	private final JwtAuthenticationProvider authProvider;
+	
+	public JwtAuthenticationFilter(JwtAuthenticationProvider authProvider) {
+		this.authProvider = authProvider;
+	}
 	
 	@Override
 	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
@@ -40,7 +43,7 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
 			try {
 				log.info("Verifying received token ...");
 				// Verify token with the authentication service
-				TempUser tempUser = authClient.checkToken(token);
+				TempUser tempUser = authProvider.checkToken(token);
 				if(tempUser != null) {
 					UserDetails userDetails = new UserDetailsImpl(tempUser.getName(), tempUser.getRole()); 
 					UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(
@@ -52,7 +55,7 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
 					response.sendError(401);
 				}	
 			} catch (Exception e) {
-				log.error("User not found. Error: " + e.getMessage());
+				log.error("User not found. Error: {}", e.getMessage());
 				response.sendError(401);
 			}
 		}

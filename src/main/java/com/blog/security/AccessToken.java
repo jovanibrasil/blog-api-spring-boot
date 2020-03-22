@@ -1,6 +1,6 @@
 package com.blog.security;
 
-import com.blog.services.impl.AuthServiceImpl;
+import com.blog.services.impl.JwtAuthenticationProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 
 public class AccessToken {
@@ -8,7 +8,7 @@ public class AccessToken {
 	private static String token = null;
 
 	@Autowired
-	private AuthServiceImpl authClient;
+	private JwtAuthenticationProvider authClient;
 	
 	private AccessToken() {
 		token = authClient.getServiceToken();

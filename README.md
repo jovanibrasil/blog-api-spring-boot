@@ -1,4 +1,5 @@
-[![Build Status](http://jovanibrasil.com:8085/buildStatus/icon?job=blog-api)](http://13.58.51.172:8085/job/blog-api/)
+[![Build Status](https://travis-ci.org/jovanibrasil/blog-api.svg?branch=develop)](https://travis-ci.org/jovanibrasil/blog-api)
+![Codecov branch](https://img.shields.io/codecov/c/github/jovanibrasil/blog-api/develop)
 
 # API para um blog pessoal
 

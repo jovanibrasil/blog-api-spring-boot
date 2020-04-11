@@ -76,7 +76,7 @@ public class SubscriptionControllerTest {
 			.willReturn(subscription);
 		mvc.perform(MockMvcRequestBuilders.post("/subscriptions/test0@gmail.com")
 				.contentType(MediaType.APPLICATION_JSON))			
-				.andExpect(status().isOk())
+				.andExpect(status().isCreated())
 				.andExpect(jsonPath("$.errors").isEmpty());
 	}
 	

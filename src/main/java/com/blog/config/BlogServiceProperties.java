@@ -8,7 +8,7 @@ import org.springframework.context.annotation.Profile;
 
 @Getter @Setter @NoArgsConstructor
 @Profile("prod")
-@ConfigurationProperties("blog-service-cred")
+@ConfigurationProperties("blog-api")
 public class BlogServiceProperties {
 
     private String username;

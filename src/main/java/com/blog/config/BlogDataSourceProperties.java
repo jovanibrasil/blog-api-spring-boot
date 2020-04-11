@@ -6,8 +6,8 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Profile;
 
 @Getter @Setter
-@Profile("prod")
-@ConfigurationProperties("blog-db-cred")
+@Profile({ "dev", "prod" })
+@ConfigurationProperties("blog-db")
 public class BlogDataSourceProperties {
 
 	private String username;

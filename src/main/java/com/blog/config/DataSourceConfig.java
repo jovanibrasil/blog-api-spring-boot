@@ -10,7 +10,7 @@ import org.springframework.jdbc.datasource.DriverManagerDataSource;
 
 import javax.sql.DataSource;
 
-@Profile("prod")
+@Profile({ "dev", "prod" })
 @Configuration
 @EnableConfigurationProperties(BlogDataSourceProperties.class)
 public class DataSourceConfig {

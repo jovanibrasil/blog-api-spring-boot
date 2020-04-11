@@ -1,11 +1,13 @@
 package com.blog.controllers;
 
 import com.blog.dtos.PostDTO;
+import com.blog.dtos.SummaryDTO;
 import com.blog.enums.ProfileTypeEnum;
 import com.blog.exceptions.NotFoundException;
 import com.blog.services.impl.JwtAuthenticationProvider;
 import com.blog.mappers.PostMapper;
 import com.blog.mappers.PostMapperImpl;
+import com.blog.mappers.SummaryMapper;
 import com.blog.models.Post;
 import com.blog.models.User;
 import com.blog.security.TempUser;
@@ -16,6 +18,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.BDDMockito;
+import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -37,7 +40,9 @@ import org.springframework.test.web.servlet.request.RequestPostProcessor;
 import java.time.LocalDateTime;
 import java.util.Arrays;
 
+import static org.mockito.ArgumentMatchers.any;
 import static org.hamcrest.CoreMatchers.equalTo;
+import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -58,6 +63,9 @@ public class PostControllerTest {
 
 	@MockBean
 	private PostMapper postMapper;
+	
+	@MockBean
+	private SummaryMapper sumamyMapper;
 	
 	private Post post0;
 	private Post post1;
@@ -178,10 +186,11 @@ public class PostControllerTest {
 	 */
 	@Test
 	public void testGetSummaryListJavaTag() throws Exception {
-		BDDMockito.given(this.postService.findPostsByCategory("Java", PageRequest.of(0, 1,
-				Sort.by(Sort.Direction.DESC ,"creationDate"))))
+		BDDMockito.given(this.postService.findPostsByCategory(any(), any()))
 				.willReturn(new PageImpl<Post>(Arrays.asList(post0)));
 
+		when(sumamyMapper.postToSummaryDto(post0)).thenReturn(new SummaryDTO());
+		
 		mvc.perform(MockMvcRequestBuilders.get("/posts/summaries?category=Java"))
 				.andExpect(status().isOk())
 				.andExpect(jsonPath("$.errors").isEmpty());
@@ -189,9 +198,10 @@ public class PostControllerTest {
 	
 	@Test
 	public void testGetSummaryListScalaTag() throws Exception {
-		BDDMockito.given(this.postService.findPostsByCategory("Scala", PageRequest.of(0, 1,
-				Sort.by(Sort.Direction.DESC, "creationDate")))).willReturn(
-				new PageImpl<Post>(Arrays.asList(post1)));
+		when(postService.findPostsByCategory(any(), any()))
+			.thenReturn(new PageImpl<Post>(Arrays.asList(post1)));
+		
+		when(sumamyMapper.postToSummaryDto(post1)).thenReturn(new SummaryDTO());
 		
 		mvc.perform(MockMvcRequestBuilders.get("/posts/summaries?category=Scala"))
 				.andExpect(status().isOk())
@@ -207,6 +217,8 @@ public class PostControllerTest {
 		BDDMockito.given(this.postService.findPosts(PageRequest.of(0, 10,
 				Sort.by(Sort.Direction.DESC, "lastUpdateDate")))).willReturn(
 				new PageImpl<Post>(Arrays.asList(post0)));
+		
+		when(sumamyMapper.postToSummaryDto(post1)).thenReturn(new SummaryDTO());
 		
 		mvc.perform(MockMvcRequestBuilders.get("/posts/top"))
 				.andExpect(status().isOk())
@@ -272,8 +284,7 @@ public class PostControllerTest {
 		BDDMockito.given(this.postService.deleteByPostId(0L)).willReturn(post0);
 		mvc.perform(MockMvcRequestBuilders.delete("/posts/0")
 				.header("Authorization", "x.x.x.x"))
-				.andExpect(status().isOk())
-				.andExpect(jsonPath("$.errors").isEmpty());
+				.andExpect(status().isNoContent());
 	}
 	
 	@Test

@@ -53,3 +53,13 @@ compose-up-stage: compose-down
 
 deploy-production:
 	/bin/sh scripts/deploy-docker-tomcat.sh VAULT_TOKEN=${VAULT_TOKEN} SPRING_PROFILES_ACTIVE=${PROFILE}
+	
+
+heroku-maven-deploy:
+	mvn clean heroku:deploy-war -Pprod -Dmaven.test.skip=true
+	chmod -R ugo+rw target/
+heroku-logs:
+	heroku logs --app=jb-blog-api
+	
+	
+	

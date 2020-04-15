@@ -2,7 +2,6 @@ package com.blog.services.impl;
 
 import com.blog.config.BlogServiceProperties;
 import com.blog.exceptions.MicroServiceIntegrationException;
-import com.blog.models.Response;
 import com.blog.security.TempUser;
 import com.blog.services.AuthService;
 import lombok.RequiredArgsConstructor;
@@ -35,10 +34,10 @@ public class JwtAuthenticationProvider implements AuthService {
 			HttpHeaders headers = new HttpHeaders();
 			headers.set("Authorization", token);
 			HttpEntity<String> entity = new HttpEntity<>("parameters", headers);
-			ResponseEntity<Response<TempUser>> responseEntity = restTemplate.exchange(checkTokenUrl, HttpMethod.GET, entity,
-					new ParameterizedTypeReference<Response<TempUser>>() {} );
+			ResponseEntity<TempUser> responseEntity = restTemplate.exchange(checkTokenUrl, HttpMethod.GET, entity,
+					new ParameterizedTypeReference<TempUser>() {} );
 			
-			return responseEntity.getBody().getData();
+			return responseEntity.getBody();
 		} catch (Exception e) {
 			throw new MicroServiceIntegrationException("It was not posssible to validate the user.", e);
 		}

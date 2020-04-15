@@ -52,10 +52,8 @@ public class SubscriptionControllerTest {
 		mvc.perform(MockMvcRequestBuilders.get("/subscriptions?page=0&size=1")
 				.accept(MediaType.APPLICATION_JSON))
 			.andExpect(status().isOk())
-			.andExpect(jsonPath("$.errors").isEmpty())
-			.andExpect(jsonPath("$.data").isNotEmpty())
-			.andExpect(jsonPath("$.data.content[0].id", equalTo(1)))
-			.andExpect(jsonPath("$.data.content[0].email", equalTo("test0@gmail.com")));
+			.andExpect(jsonPath("$.content[0].id", equalTo(1)))
+			.andExpect(jsonPath("$.content[0].email", equalTo("test0@gmail.com")));
 	}
 	
 	@Test
@@ -64,9 +62,7 @@ public class SubscriptionControllerTest {
 			.willReturn(new PageImpl<>(Arrays.asList()));
 		mvc.perform(MockMvcRequestBuilders.get("/subscriptions")
 				.accept(MediaType.APPLICATION_JSON))
-			.andExpect(status().isOk())
-			.andExpect(jsonPath("$.errors").isEmpty())
-			.andExpect(jsonPath("$.data").isEmpty());
+			.andExpect(status().isOk());
 	}
 	
 	@Test
@@ -76,8 +72,7 @@ public class SubscriptionControllerTest {
 			.willReturn(subscription);
 		mvc.perform(MockMvcRequestBuilders.post("/subscriptions/test0@gmail.com")
 				.contentType(MediaType.APPLICATION_JSON))			
-				.andExpect(status().isCreated())
-				.andExpect(jsonPath("$.errors").isEmpty());
+				.andExpect(status().isCreated());
 	}
 	
 //	@Test

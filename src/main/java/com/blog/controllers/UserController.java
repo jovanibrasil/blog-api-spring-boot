@@ -18,7 +18,6 @@ import org.springframework.web.util.UriComponentsBuilder;
 import com.blog.dtos.UserDTO;
 import com.blog.mappers.UserMapper;
 import com.blog.models.User;
-import com.blog.response.Response;
 import com.blog.services.UserService;
 
 import lombok.RequiredArgsConstructor;
@@ -42,10 +41,10 @@ public class UserController {
 	 * of error messages on failure.  
 	 */
 	@GetMapping("/{userName}")
-	public ResponseEntity<Response<UserDTO>> getUser(@PathVariable("userName") String userName){
+	public ResponseEntity<UserDTO> getUser(@PathVariable("userName") String userName){
 		User user = userService.findByUserName(userName);
 		UserDTO userDto = userMapper.userToUserDto(user);
-		return ResponseEntity.ok(new Response<UserDTO>(userDto));
+		return ResponseEntity.ok(userDto);
 	}
 	
 	/**
@@ -67,7 +66,7 @@ public class UserController {
 	 * with empty data and error messages on failure.  
 	 */
 	@PostMapping
-	public ResponseEntity<Response<UserDTO>> saveUser(@Valid @RequestBody UserDTO userDTO, UriComponentsBuilder uriBuilder){
+	public ResponseEntity<UserDTO> saveUser(@Valid @RequestBody UserDTO userDTO, UriComponentsBuilder uriBuilder){
 		User user = userMapper.userDtoToUser(userDTO);
 		log.info("Creating user {}", user.getUserName());
 		user = userService.save(user);
@@ -77,7 +76,7 @@ public class UserController {
 				.toUri();
 		return ResponseEntity
 				.created(uri)
-				.body(new Response<UserDTO>(userDTO));
+				.body(userDTO);
 	}
 
 }

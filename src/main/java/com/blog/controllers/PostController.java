@@ -33,7 +33,6 @@ import com.blog.mappers.PostInfoMapper;
 import com.blog.mappers.PostMapper;
 import com.blog.mappers.SummaryMapper;
 import com.blog.models.Post;
-import com.blog.response.Response;
 import com.blog.services.PostService;
 
 import lombok.RequiredArgsConstructor;
@@ -61,13 +60,13 @@ public class PostController {
 	 *
 	 */
 	@GetMapping
-	public ResponseEntity<Response<Page<PostDTO>>> getPosts(
+	public ResponseEntity<Page<PostDTO>> getPosts(
 			@PageableDefault(page = 0, direction = Direction.DESC, sort = "lastUpdateDate") Pageable pageable){
 		
 		Page<PostDTO> posts = postService.findPosts(verifyReceivedPageable(pageable))
 				.map(postMapper::postToPostDto);
 		
-		return ResponseEntity.ok(new Response<Page<PostDTO>>(posts));
+		return ResponseEntity.ok(posts);
 		
 	}
 	
@@ -78,10 +77,10 @@ public class PostController {
 	 * 
 	 */
 	@GetMapping("/{id}")
-	public ResponseEntity<Response<PostDTO>> getPost(@NotNull @PathVariable("id") Long id) {
+	public ResponseEntity<PostDTO> getPost(@NotNull @PathVariable("id") Long id) {
 		Post post = postService.findPostById(id);
 		PostDTO postDto = postMapper.postToPostDto(post);
-		return ResponseEntity.ok(new Response<PostDTO>(postDto));
+		return ResponseEntity.ok(postDto);
 	}
 	
 	/**
@@ -91,13 +90,13 @@ public class PostController {
 	 * 
 	 */
 	@GetMapping("/byuser/{username}") 
-	public ResponseEntity<Response<Page<PostDTO>>> getPostsByUser(@PathVariable("username") String userId, 
+	public ResponseEntity<Page<PostDTO>> getPostsByUser(@PathVariable("username") String userId, 
 			@PageableDefault(page = 0, direction = Direction.DESC, sort = "lastUpdateDate") Pageable pageable){
 		
 		Page<PostDTO> posts = postService.findPostsByUserName(userId, verifyReceivedPageable(pageable))
 				.map(postMapper::postToPostDto);
 		
-		return ResponseEntity.ok(new Response<Page<PostDTO>>(posts));
+		return ResponseEntity.ok(posts);
 	}
 	
 	/**
@@ -109,7 +108,7 @@ public class PostController {
 	 * @return
 	 */
 	@GetMapping(value = "/summaries")
-	public ResponseEntity<Response<Page<SummaryDTO>>> getSummaries(
+	public ResponseEntity<Page<SummaryDTO>> getSummaries(
 			@PageableDefault(page = 0, size = 4, direction = Direction.DESC, sort = "creationDate")
 			@RequestParam(value="category", defaultValue="all") String cat,
 			Pageable pageable) {
@@ -123,7 +122,7 @@ public class PostController {
 		
 		Page<SummaryDTO> summaries = latestPosts.map(summaryMapper::postToSummaryDto);
 			
-		return ResponseEntity.ok(new Response<Page<SummaryDTO>>(summaries));
+		return ResponseEntity.ok(summaries);
 	}
 	
 	/**
@@ -133,14 +132,14 @@ public class PostController {
 	 * @return
 	 */
 	@GetMapping("/top") 
-	public ResponseEntity<Response<Page<PostInfoDTO>>> getTopPostsInfoList() {
+	public ResponseEntity<Page<PostInfoDTO>> getTopPostsInfoList() {
 		
 		log.info("Getting a list of post information (title + id)");
 		PageRequest page = PageRequest.of(0, this.topPostsListSize, Sort.by(Direction.DESC, "lastUpdateDate"));
 		Page<PostInfoDTO> postInfoDTOList = postService.findPosts(page)
 				.map(postInfoMapper::postToPostInfoDto);
 		
-		return ResponseEntity.ok(new Response<Page<PostInfoDTO>>(postInfoDTOList));
+		return ResponseEntity.ok(postInfoDTOList);
 		
 	}
 	
@@ -155,14 +154,14 @@ public class PostController {
 	 * 
 	 */
 	@PostMapping
-	public ResponseEntity<Response<PostDTO>> createPost(UriComponentsBuilder uriBuilder) {
+	public ResponseEntity<PostDTO> createPost(UriComponentsBuilder uriBuilder) {
 		log.info("Creating new empty post ...");
 		Post post = postService.create();
 		PostDTO postDTO = postMapper.postToPostDto(post);
 		URI uri = uriBuilder.path("/posts/{id}")
 				.buildAndExpand(postDTO.getId())
 				.toUri();
-		return ResponseEntity.created(uri).body(new Response<PostDTO>(postDTO));
+		return ResponseEntity.created(uri).body(postDTO);
 	}
 	
 	/**
@@ -170,7 +169,7 @@ public class PostController {
 	 * 
 	 */
 	@PutMapping(consumes = { "multipart/form-data" })
-	public ResponseEntity<Response<PostDTO>> updatePost(
+	public ResponseEntity<PostDTO> updatePost(
 			@RequestPart(name = "post") @Valid @NotNull PostDTO postDTO,
 			@RequestPart MultipartFile[] postImages) {
 		
@@ -182,7 +181,7 @@ public class PostController {
 		postDTO.setLastUpdateDate(post.getLastUpdateDate());
 		postDTO.setCreationDate(post.getCreationDate());
 		
-		return ResponseEntity.ok(new Response<PostDTO>(postDTO));
+		return ResponseEntity.ok(postDTO);
 	}
 	
 	/**

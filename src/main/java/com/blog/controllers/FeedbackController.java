@@ -18,7 +18,6 @@ import org.springframework.web.util.UriComponentsBuilder;
 import com.blog.dtos.FeedbackDTO;
 import com.blog.mappers.FeedbackMapper;
 import com.blog.models.Feedback;
-import com.blog.response.Response;
 import com.blog.services.FeedbackService;
 
 import lombok.RequiredArgsConstructor;
@@ -57,10 +56,10 @@ public class FeedbackController {
 	 * @return
 	 */
 	@GetMapping("/{id}")
-	public ResponseEntity<Response<FeedbackDTO>> getFeedbackById(Long id) {
+	public ResponseEntity<FeedbackDTO> getFeedbackById(Long id) {
 		log.info("Retrieving a feedback ...");
 		Feedback feedback = feedbackService.findById(id);
-		return ResponseEntity.ok(new Response<FeedbackDTO>(feedbackMapper.feedbackToFeedbackDto(feedback)));	
+		return ResponseEntity.ok(feedbackMapper.feedbackToFeedbackDto(feedback));	
 	}
 	
 	/**
@@ -69,12 +68,12 @@ public class FeedbackController {
 	 * @return
 	 */
 	@GetMapping 
-	public ResponseEntity<Response<Page<FeedbackDTO>>> getFeedback(Pageable pageable) {
+	public ResponseEntity<Page<FeedbackDTO>> getFeedback(Pageable pageable) {
 		
 		log.info("Retrieving a list of feedback ...");
 		Page<Feedback> feedbacks = feedbackService.findFeedbacks(pageable);
 		Page<FeedbackDTO> feedback = feedbacks.map(feedbackMapper::feedbackToFeedbackDto);
-		return ResponseEntity.ok(new Response<Page<FeedbackDTO>>(feedback));	
+		return ResponseEntity.ok(feedback);	
 	}
 	
 }

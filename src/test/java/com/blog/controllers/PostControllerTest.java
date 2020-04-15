@@ -128,10 +128,9 @@ public class PostControllerTest {
 		mvc.perform(MockMvcRequestBuilders.get("/posts/1")
 				.accept(MediaType.APPLICATION_JSON))
 			.andExpect(status().isOk())
-			.andExpect(jsonPath("$.errors").isEmpty())
-			.andExpect(jsonPath("$.data.title", equalTo("Post title")))
-			.andExpect(jsonPath("$.data.body", equalTo("Post body")))
-			.andExpect(jsonPath("$.data.summary", equalTo("Post summary")));
+			.andExpect(jsonPath("$.title", equalTo("Post title")))
+			.andExpect(jsonPath("$.body", equalTo("Post body")))
+			.andExpect(jsonPath("$.summary", equalTo("Post summary")));
 	}
 	
 	@Test
@@ -140,7 +139,7 @@ public class PostControllerTest {
 			.willThrow(new NotFoundException("error.post.find"));
 		mvc.perform(MockMvcRequestBuilders.get("/posts/10"))
 			.andExpect(status().isNotFound())
-			.andExpect(jsonPath("$.errors[0].message").value("It was not possible to find the specified post."));
+			.andExpect(jsonPath("$.message").value("It was not possible to find the specified post."));
 	}
 	
 	/*
@@ -157,8 +156,7 @@ public class PostControllerTest {
 		
 		mvc.perform(MockMvcRequestBuilders.get("/posts?page=0"))
 				.andExpect(status().isOk())
-				.andExpect(jsonPath("$.errors").isEmpty())
-				.andExpect(jsonPath("$.data").isNotEmpty());
+				.andExpect(jsonPath("$").isNotEmpty());
 	}
 	
 	@Test
@@ -170,15 +168,14 @@ public class PostControllerTest {
 			.willReturn(new PageImpl<Post>(Arrays.asList(post1)));
 		mvc.perform(MockMvcRequestBuilders.get("/posts").param("page", "1"))
 				.andExpect(status().isOk())
-				.andExpect(jsonPath("$.errors").isEmpty())
-				.andExpect(jsonPath("$.data").isNotEmpty());
+				.andExpect(jsonPath("$").isNotEmpty());
 	}
 	
 	@Test
 	public void testGetPostsPage2() throws Exception {
 		mvc.perform(MockMvcRequestBuilders.get("/posts").param("page", "2"))
 				.andExpect(status().isBadRequest())
-				.andExpect(jsonPath("$.errors").isNotEmpty());
+				.andExpect(jsonPath("$").isNotEmpty());
 	}
 	
 	/*
@@ -193,7 +190,7 @@ public class PostControllerTest {
 		
 		mvc.perform(MockMvcRequestBuilders.get("/posts/summaries?category=Java"))
 				.andExpect(status().isOk())
-				.andExpect(jsonPath("$.errors").isEmpty());
+				.andExpect(jsonPath("$").isNotEmpty());
 	}
 	
 	@Test
@@ -205,7 +202,7 @@ public class PostControllerTest {
 		
 		mvc.perform(MockMvcRequestBuilders.get("/posts/summaries?category=Scala"))
 				.andExpect(status().isOk())
-				.andExpect(jsonPath("$.errors").isEmpty());
+				.andExpect(jsonPath("$").isNotEmpty());
 	}
 	
 	/*
@@ -222,7 +219,7 @@ public class PostControllerTest {
 		
 		mvc.perform(MockMvcRequestBuilders.get("/posts/top"))
 				.andExpect(status().isOk())
-				.andExpect(jsonPath("$.errors").isEmpty());
+				.andExpect(jsonPath("$").isNotEmpty());
 	}
 	
 	/*
@@ -236,7 +233,7 @@ public class PostControllerTest {
 				page);
 		mvc.perform(MockMvcRequestBuilders.get("/posts/byuser/1"))
 				.andExpect(status().isOk())
-				.andExpect(jsonPath("$.errors").isEmpty());
+				.andExpect(jsonPath("$").isNotEmpty());
 	}
 		
 	/*
@@ -271,8 +268,7 @@ public class PostControllerTest {
 				.file(jsonFile)
 				.header("Authorization", "x.x.x.x"))
 				.andExpect(status().isOk())
-				.andExpect(jsonPath("$.errors").isEmpty())
-				.andExpect(jsonPath("$.data.title", equalTo(newTitle)));
+				.andExpect(jsonPath("$.title", equalTo(newTitle)));
 	}
 	
 	/*
@@ -295,7 +291,7 @@ public class PostControllerTest {
 		mvc.perform(MockMvcRequestBuilders.delete("/posts/50")
 				.header("Authorization", "x.x.x.x"))
 				.andExpect(status().isNotFound())
-				.andExpect(jsonPath("$.errors[0].message", equalTo("It was not possible to find the specified post.")));
+				.andExpect(jsonPath("$.message", equalTo("It was not possible to find the specified post.")));
 	}
 	
 	public static String asJsonString(final Object obj) {

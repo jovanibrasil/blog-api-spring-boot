@@ -52,7 +52,8 @@ public class UserControllerTest {
 		this.user.setLinkedinUserName("jovanibrasil");
 		this.user.setPhoneNumber("51999999999");
 		this.user.setProfileType(ProfileTypeEnum.ROLE_USER);
-		BDDMockito.given(this.authClient.checkToken(Mockito.anyString())).willReturn(new TempUser("jovanibrasil", ProfileTypeEnum.ROLE_USER));
+		BDDMockito.given(this.authClient.checkToken(Mockito.anyString()))
+			.willReturn(new TempUser("jovanibrasil", ProfileTypeEnum.ROLE_USER));
 	}
 	
 	@Test
@@ -63,7 +64,7 @@ public class UserControllerTest {
 			.header("Authorization", "x.x.x.x")
 			.accept(MediaType.APPLICATION_JSON))
 			.andExpect(status().isNotFound())
-			.andExpect(jsonPath("$.errors[0].message").value("It was not possible to find the specified user."));
+			.andExpect(jsonPath("$.message").value("It was not possible to find the specified user."));
 	}
 	
 	@Test
@@ -74,9 +75,8 @@ public class UserControllerTest {
 			.header("Authorization", "x.x.x.x")
 			.accept(MediaType.APPLICATION_JSON))
 			.andExpect(status().isOk())
-			.andExpect(jsonPath("$.data.userName", equalTo("jovanibrasil")))
-			.andExpect(jsonPath("$.data.fullUserName", equalTo("Jovani Brasil")))
-			.andExpect(jsonPath("$.errors").isEmpty());
+			.andExpect(jsonPath("$.userName", equalTo("jovanibrasil")))
+			.andExpect(jsonPath("$.fullUserName", equalTo("Jovani Brasil")));
 	}
 	
 }

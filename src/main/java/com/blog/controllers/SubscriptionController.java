@@ -18,7 +18,6 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import com.blog.models.Subscription;
-import com.blog.response.Response;
 import com.blog.services.SubscriptionService;
 
 import lombok.RequiredArgsConstructor;
@@ -34,14 +33,14 @@ public class SubscriptionController {
 	private final SubscriptionService subscriptionService;
 
 	@GetMapping
-	public ResponseEntity<Response<Page<Subscription>>> findAllSubscriptions(Pageable pageable){
+	public ResponseEntity<Page<Subscription>> findAllSubscriptions(Pageable pageable){
 		log.info("Finding all subscriptions ...");
 		Page<Subscription> subscriptions = subscriptionService.findAllSubscriptions(pageable);
-		return ResponseEntity.ok(new Response<Page<Subscription>>(subscriptions));
+		return ResponseEntity.ok(subscriptions);
 	}
 	
 	@PostMapping("/{email}")
-	public ResponseEntity<Response<?>> subscribe(@PathVariable("email") 
+	public ResponseEntity<?> subscribe(@PathVariable("email") 
 		@Valid @NotBlank(message = "{error.user.email.notblank}")
 		@Email(message = "{error.user.email.format}") String email, UriComponentsBuilder uriBuilder){
 		log.info("Subscribing {} ...", email);
@@ -49,7 +48,7 @@ public class SubscriptionController {
 		URI uri = uriBuilder.path("/subscriptions/{id}")
 				.buildAndExpand(subscription.getId())
 				.toUri();
-		return ResponseEntity.created(uri).body(new Response<>());	
+		return ResponseEntity.created(uri).build();	
 	}
 	
 }

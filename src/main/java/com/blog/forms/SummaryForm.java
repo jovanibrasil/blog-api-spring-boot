@@ -1,4 +1,4 @@
-package com.blog.dtos;
+package com.blog.forms;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.*;
@@ -9,7 +9,7 @@ import java.util.List;
 @Getter @Setter
 @NoArgsConstructor @AllArgsConstructor
 @Builder
-public class SummaryDTO {
+public class SummaryForm {
 
 	private Long id;
 	private String title;

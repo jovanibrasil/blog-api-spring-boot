@@ -7,7 +7,6 @@ import javax.validation.Valid;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -16,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import com.blog.dtos.FeedbackDTO;
+import com.blog.forms.FeedbackForm;
 import com.blog.mappers.FeedbackMapper;
 import com.blog.models.Feedback;
 import com.blog.services.FeedbackService;
@@ -24,7 +24,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 @RequiredArgsConstructor
-@CrossOrigin(origins = "*")
 @RestController
 @RequestMapping("/feedback")
 @Slf4j
@@ -40,9 +39,9 @@ public class FeedbackController {
 	 * @return
 	 */
 	@PostMapping
-	public ResponseEntity<?> saveFeedback(@Valid @RequestBody FeedbackDTO feedbackDTO, UriComponentsBuilder uriBuilder){
+	public ResponseEntity<?> saveFeedback(@Valid @RequestBody FeedbackForm feedbackForm, UriComponentsBuilder uriBuilder){
 		log.info("Saving feedback ...");
-		Feedback feedback = feedbackMapper.feedbackDtoToFeedback(feedbackDTO);
+		Feedback feedback = feedbackMapper.feedbackFormToFeedback(feedbackForm);
 		feedback = feedbackService.create(feedback);
 		URI uri = uriBuilder.path("/feedback/{id}")
 				.buildAndExpand(feedback.getId())

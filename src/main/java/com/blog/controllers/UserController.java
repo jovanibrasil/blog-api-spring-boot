@@ -5,7 +5,6 @@ import java.net.URI;
 import javax.validation.Valid;
 
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -16,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import com.blog.dtos.UserDTO;
+import com.blog.forms.UserForm;
 import com.blog.mappers.UserMapper;
 import com.blog.models.User;
 import com.blog.services.UserService;
@@ -23,7 +23,6 @@ import com.blog.services.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
-@CrossOrigin(origins = "*")
 @RestController
 @RequestMapping("/users")
 @RequiredArgsConstructor 
@@ -66,17 +65,17 @@ public class UserController {
 	 * with empty data and error messages on failure.  
 	 */
 	@PostMapping
-	public ResponseEntity<UserDTO> saveUser(@Valid @RequestBody UserDTO userDTO, UriComponentsBuilder uriBuilder){
-		User user = userMapper.userDtoToUser(userDTO);
+	public ResponseEntity<UserDTO> saveUser(@Valid @RequestBody UserForm userForm, UriComponentsBuilder uriBuilder){
+		User user = userMapper.userFormToUser(userForm);
 		log.info("Creating user {}", user.getUserName());
 		user = userService.save(user);
-		userDTO = userMapper.userToUserDto(user);
+		UserDTO userDto = userMapper.userToUserDto(user);
 		URI uri = uriBuilder.path("/users/{userName}")
-				.buildAndExpand(userDTO.getUserName())
+				.buildAndExpand(userDto.getUserName())
 				.toUri();
 		return ResponseEntity
 				.created(uri)
-				.body(userDTO);
+				.body(userDto);
 	}
 
 }

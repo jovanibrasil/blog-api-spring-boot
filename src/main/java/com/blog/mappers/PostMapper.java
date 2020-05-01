@@ -1,20 +1,24 @@
 package com.blog.mappers;
 
-import com.blog.dtos.PostDTO;
-import com.blog.models.Post;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Mappings;
 
+import com.blog.dtos.PostDTO;
+import com.blog.forms.PostForm;
+import com.blog.models.Post;
+
 @Mapper
 public interface PostMapper {
 
-    @Mapping(source = "id", target = "postId")
-    Post postDtoToPost(PostDTO postDTO);
+    Post postFormToPost(PostForm postForm);
+    
     @Mappings({
-            @Mapping(source = "postId", target = "id"),
-            @Mapping(source = "author.userName", target = "userName")
+            @Mapping(source = "author.userName", target = "userName"),
+            @Mapping(source = "banner.id", target = "bannerId")
     })
     PostDTO postToPostDto(Post post);
-
+    
+    Post postDtoToPost(PostDTO postDto);
+    
 }

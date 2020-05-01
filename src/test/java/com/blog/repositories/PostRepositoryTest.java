@@ -54,7 +54,6 @@ public class PostRepositoryTest {
 		post.setCreationDate(LocalDateTime.now());
 		post.setTags(tags);
 		post.setAuthor(user);
-		post.setBannerUrl("");
 		this.postRepository.save(post);
 		tags.add("Test");
 		Post post2 = new Post();
@@ -65,7 +64,6 @@ public class PostRepositoryTest {
 		post2.setCreationDate(LocalDateTime.now());
 		post2.setTags(tags);
 		post2.setAuthor(user);
-		post2.setBannerUrl("");
 		this.postRepository.save(post2);
 	}
 	
@@ -132,10 +130,9 @@ public class PostRepositoryTest {
 		post.setCreationDate(LocalDateTime.now());
 		post.setTags(tags);
 		post.setAuthor(user);
-		post.setBannerUrl("");
 		post = this.postRepository.save(post);
 		
-		assertEquals(3L, post.getPostId().longValue());
+		assertEquals(3L, post.getId().longValue());
 	}
 	
 }

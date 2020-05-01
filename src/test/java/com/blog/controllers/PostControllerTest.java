@@ -1,24 +1,18 @@
 package com.blog.controllers;
 
-import com.blog.dtos.PostDTO;
-import com.blog.dtos.SummaryDTO;
-import com.blog.enums.ProfileTypeEnum;
-import com.blog.exceptions.NotFoundException;
-import com.blog.services.impl.JwtAuthenticationProvider;
-import com.blog.mappers.PostMapper;
-import com.blog.mappers.PostMapperImpl;
-import com.blog.mappers.SummaryMapper;
-import com.blog.models.Post;
-import com.blog.models.User;
-import com.blog.security.TempUser;
-import com.blog.services.PostService;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
+import java.time.LocalDateTime;
+import java.util.Arrays;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.BDDMockito;
-import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -37,14 +31,20 @@ import org.springframework.test.web.servlet.request.MockMultipartHttpServletRequ
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.request.RequestPostProcessor;
 
-import java.time.LocalDateTime;
-import java.util.Arrays;
-
-import static org.mockito.ArgumentMatchers.any;
-import static org.hamcrest.CoreMatchers.equalTo;
-import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import com.blog.dtos.PostDTO;
+import com.blog.dtos.SummaryDTO;
+import com.blog.enums.ProfileTypeEnum;
+import com.blog.exceptions.NotFoundException;
+import com.blog.mappers.PostMapper;
+import com.blog.mappers.PostMapperImpl;
+import com.blog.mappers.SummaryMapper;
+import com.blog.models.Post;
+import com.blog.models.User;
+import com.blog.security.TempUser;
+import com.blog.services.PostService;
+import com.blog.services.impl.JwtAuthenticationProvider;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -85,7 +85,7 @@ public class PostControllerTest {
 		user.setProfileType(ProfileTypeEnum.ROLE_USER);
 		
 		post0 = new Post();
-		post0.setPostId(0L);
+		post0.setId(0L);
 		post0.setTitle("Post title");
 		post0.setBody("Post body");
 		post0.setSummary("Post summary");
@@ -95,7 +95,7 @@ public class PostControllerTest {
 		post0.setAuthor(user);
 		
 		post1 = new Post();
-		post1.setPostId(0L);
+		post1.setId(0L);
 		post1.setTitle("Post2 title");
 		post1.setBody("Post2 body");
 		post1.setSummary("Post2 summary");
@@ -250,7 +250,7 @@ public class PostControllerTest {
 		MockMultipartFile jsonFile = new MockMultipartFile("post", "", "application/json",
 				asJsonString(post0Dto).getBytes());
 		
-		BDDMockito.given(this.postService.update(Mockito.any(), Mockito.any()))
+		BDDMockito.given(this.postService.update(Mockito.any()))
 			.willReturn(post0);
 		
 		MockMultipartHttpServletRequestBuilder builder = 

@@ -13,7 +13,6 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -29,16 +28,17 @@ import org.springframework.web.util.UriComponentsBuilder;
 import com.blog.dtos.PostDTO;
 import com.blog.dtos.PostInfoDTO;
 import com.blog.dtos.SummaryDTO;
+import com.blog.forms.PostForm;
 import com.blog.mappers.PostInfoMapper;
 import com.blog.mappers.PostMapper;
 import com.blog.mappers.SummaryMapper;
+import com.blog.models.Image;
 import com.blog.models.Post;
 import com.blog.services.PostService;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
-@CrossOrigin(origins = "*")
 @RestController
 @RequestMapping("/posts")
 @Slf4j
@@ -109,9 +109,8 @@ public class PostController {
 	 */
 	@GetMapping(value = "/summaries")
 	public ResponseEntity<Page<SummaryDTO>> getSummaries(
-			@PageableDefault(page = 0, size = 4, direction = Direction.DESC, sort = "creationDate")
-			@RequestParam(value="category", defaultValue="all") String cat,
-			Pageable pageable) {
+			@PageableDefault(page = 0, size = 6, direction = Direction.DESC, sort = "creationDate") Pageable pageable,
+			@RequestParam(value="category", defaultValue="all") String cat) {
 			
 		log.info("Get a list of post summaries. category");
 		
@@ -148,40 +147,45 @@ public class PostController {
 		return PageRequest.of(pageable.getPageNumber(), 
 				pageSize, pageable.getSort());
 	}
-	
+		
 	/**
-	 * Creates a new empty post. 
+	 * Creates a new post.
 	 * 
 	 */
-	@PostMapping
-	public ResponseEntity<PostDTO> createPost(UriComponentsBuilder uriBuilder) {
-		log.info("Creating new empty post ...");
-		Post post = postService.create();
-		PostDTO postDTO = postMapper.postToPostDto(post);
+	@PostMapping(consumes = { "multipart/form-data" })
+	public ResponseEntity<PostDTO> createPost(
+			@RequestPart(name = "post") @Valid @NotNull PostForm postForm, 
+			@RequestPart(name = "banner") @NotNull MultipartFile banner,
+			UriComponentsBuilder uriBuilder) {
+		
+		log.info("Creating post ...");
+		Post post = postMapper.postFormToPost(postForm);
+		post.setBanner(new Image(banner));
+		post = postService.create(post);
+		
 		URI uri = uriBuilder.path("/posts/{id}")
-				.buildAndExpand(postDTO.getId())
+				.buildAndExpand(post.getId())
 				.toUri();
-		return ResponseEntity.created(uri).body(postDTO);
+		return ResponseEntity.created(uri).build();
 	}
 	
 	/**
 	 * Updates a specified post.
 	 * 
 	 */
-	@PutMapping(consumes = { "multipart/form-data" })
+	@PutMapping(path = "/{postId}",  consumes = { "multipart/form-data" })
 	public ResponseEntity<PostDTO> updatePost(
-			@RequestPart(name = "post") @Valid @NotNull PostDTO postDTO,
-			@RequestPart MultipartFile[] postImages) {
+			@PathVariable Long postId,
+			@RequestPart(name = "post") @Valid @NotNull PostForm postForm,
+			@RequestPart MultipartFile banner) {
 		
 		log.info("Updating post ...");
-		Post post = postMapper.postDtoToPost(postDTO);
-		post = postService.update(post, postImages);
-		
-		postDTO.setId(post.getPostId());
-		postDTO.setLastUpdateDate(post.getLastUpdateDate());
-		postDTO.setCreationDate(post.getCreationDate());
-		
-		return ResponseEntity.ok(postDTO);
+		Post post = postMapper.postFormToPost(postForm);
+		post.setId(postId);
+		post.setBanner(new Image(banner));
+		post = postService.update(post);
+		PostDTO postDto = postMapper.postToPostDto(post);
+		return ResponseEntity.ok(postDto);
 	}
 	
 	/**

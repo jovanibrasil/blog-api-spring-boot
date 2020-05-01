@@ -1,9 +1,9 @@
 package com.blog.services;
 
-import com.blog.dtos.SummaryDTO;
-
 import java.util.List;
 
+import com.blog.forms.SummaryForm;
+
 public interface SearchService {
-    List<SummaryDTO> searchSummaries(String query);
+    List<SummaryForm> searchSummaries(String query);
 }

@@ -17,7 +17,8 @@ public class Post {
 	
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
-	private Long postId;
+	@Column(name = "post_id")
+	private Long id;
 	
 	@Column(nullable=false)
 	private String title;
@@ -32,13 +33,10 @@ public class Post {
 	private String summary;
 	
 	// Lob: data should be represented as BLOB (binary data) in the database.
-	// Any serializable data can be annotated with this notation.
 	@Lob @Column(nullable=false)
 	private String body;
 	
-	// FetchType: JPA loads all data together or on-demand.
-	// In this case, author will be loaded together.
-	@ManyToOne(fetch=FetchType.EAGER)// Many posts to one user.
+	@ManyToOne(fetch=FetchType.EAGER)// Many posts are related to one user.
 	@JoinColumn(referencedColumnName="userName", name="user_name")
 	@JsonBackReference
 	private User author;
@@ -47,12 +45,13 @@ public class Post {
 	@ElementCollection(targetClass=String.class, fetch = FetchType.EAGER)
 	@CollectionTable(name="post_tags", joinColumns = @JoinColumn(name = "post_id"))
 	private List<String> tags;
-	
-	@Column(nullable = false)
-	private String bannerUrl;
+
+	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
+	@JoinColumn(name = "image_id")
+	private Image banner;
 
 	public Post() {
-		this.postId = 0L;
+		this.id = 0L;
 		this.title = "Title";
 		this.summary = "Summary";
 		this.body = "Body";
@@ -68,7 +67,7 @@ public class Post {
 	}
 	
 	public Post(Long id, String title, String summary, List<String> tags, String body, User author) {
-		this.postId = id;
+		this.id = id;
 		this.title = title;
 		this.summary = summary;
 		this.body = body;

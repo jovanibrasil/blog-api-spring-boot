@@ -198,9 +198,9 @@ public class PostServiceTest {
 	
 	@Test
 	public void testUpdatePostByPostIdValidPostId() {
-		post.setPostId(1L);
+		post.setId(1L);
 		post.setTitle("new title");
-		Post updatedPost = this.postService.update(post, images);
+		Post updatedPost = this.postService.update(post);
 		assertNotNull(updatedPost);
 		assertEquals("new title", updatedPost.getTitle());
 	}

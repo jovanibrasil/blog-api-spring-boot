@@ -1,7 +1,7 @@
 package com.blog.services.impl;
 
-import com.blog.dtos.SummaryDTO;
 import com.blog.exceptions.MicroServiceIntegrationException;
+import com.blog.forms.SummaryForm;
 import com.blog.services.SearchService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -23,14 +23,14 @@ public class SearchServiceImpl implements SearchService {
 	private final RestTemplate restTemplate;
 
 	@Override
-	public List<SummaryDTO> searchSummaries(String query) {
+	public List<SummaryForm> searchSummaries(String query) {
 		try {
-			List<SummaryDTO> summaries = new ArrayList<>();
+			List<SummaryForm> summaries = new ArrayList<>();
 			
 			URI searchURI = URI.create(String.format("%s?term=%s", uri, query));
 			
-			ResponseEntity<SummaryDTO[]> responseEntity = restTemplate
-					.getForEntity(searchURI, SummaryDTO[].class);
+			ResponseEntity<SummaryForm[]> responseEntity = restTemplate
+					.getForEntity(searchURI, SummaryForm[].class);
 			Collections.addAll(summaries, responseEntity.getBody());
 			return summaries;
 		} catch (Exception e) {

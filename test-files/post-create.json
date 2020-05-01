@@ -1,0 +1,10 @@
+{
+	"title": "Título do post",
+    "summary": "Sumário do post",
+    "body": "Corpo do post!",
+    "tags" : [
+            "java"
+    ],
+    "creationDate" : "2020-04-26 02:00:00",
+    "lastUpdateDate" : "2020-04-26 02:00:00"
+}

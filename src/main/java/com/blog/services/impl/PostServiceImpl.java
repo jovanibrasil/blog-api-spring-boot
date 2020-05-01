@@ -1,9 +1,11 @@
 package com.blog.services.impl;
 
 import com.blog.exceptions.NotFoundException;
+import com.blog.models.Image;
 import com.blog.models.Post;
 import com.blog.models.User;
 import com.blog.repositories.PostRepository;
+import com.blog.services.ImageService;
 import com.blog.services.PostService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -11,16 +13,17 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Primary;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.security.core.context.SecurityContextHolder;
+//import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
 import java.util.Optional;
 
+import javax.transaction.Transactional;
+
+@Slf4j
 @Service
 @Primary
-@Slf4j
 @RequiredArgsConstructor
 public class PostServiceImpl implements PostService {
 
@@ -28,7 +31,7 @@ public class PostServiceImpl implements PostService {
 	private String imagesDir;
 
 	private final PostRepository postRepository;
-	private final FileSystemStorageServiceImpl storage;
+	private final ImageService imageService;
 
 	@Override
 	public Page<Post> findPosts(Pageable page) {
@@ -55,52 +58,47 @@ public class PostServiceImpl implements PostService {
 		throw new NotFoundException("error.post.find");
 	}
 
-	private void savePostImageFiles(MultipartFile[] postImages, Long postId) {
-		// save post images
-		for (MultipartFile image : postImages) {
-			this.storage.saveImage(image, postId);
-		}
-	}
-	
-	/**
-	 * Creates a post without information. The created post
-	 * contains only id and update/creation dates. 
-	 * 
-	 */
+	@Transactional
 	@Override
-	public Post create() {
-		String userName = SecurityContextHolder.getContext().getAuthentication().getName();
-		User user = new User(userName);
-		Post post = new Post(user);
-		post.setLastUpdateDate(LocalDateTime.now());
-		post.setCreationDate(LocalDateTime.now());
-		post = this.postRepository.save(post);
-		return post;
-	}
-
-	@Override
-	public Post update(Post receivedPost, MultipartFile[] postImages) {
-		Post post = this.findPostById(receivedPost.getPostId());
+	public Post update(Post receivedPost) {
+		
+		Post post = this.findPostById(receivedPost.getId());
 		post.setTitle(receivedPost.getTitle());
 		post.setBody(receivedPost.getBody());
 		post.setSummary(receivedPost.getSummary());
 		post.setLastUpdateDate(LocalDateTime.now());
 		post.setTags(receivedPost.getTags());
-		if(postImages.length == 0) {
-			post.setBannerUrl("/images/image-not-found.png");
-		}else {
-			post.setBannerUrl("/images/" + post.getPostId() + "/" + postImages[0].getOriginalFilename());
-			this.savePostImageFiles(postImages, post.getPostId());
-		}
-		post = this.postRepository.save(post);
+		post.getBanner().setContent(receivedPost.getBanner().getMultipartBanner());
 		return post;
 	}
 
+	@Transactional
 	@Override
 	public Post deleteByPostId(Long postId) {
 		Post post = this.findPostById(postId);
 		this.postRepository.deleteById(postId);
-		this.storage.deletePostDirectory(postId);
+		return post;
+	}
+	
+	/**
+	 * Creates a post with the received information.
+	 */
+	@Transactional
+	@Override
+	public Post create(Post post) {
+		log.info("Saving post banner.");
+		Image banner = imageService.saveImage(post.getBanner());
+		post.setBanner(banner);
+		log.info("Getting post related video.");
+		//String userName = SecurityContextHolder.getContext().getAuthentication().getName();
+		String userName = "jovanibrasil";
+		User user = new User(userName);
+		post.setAuthor(user);
+		log.info("Saving post.");
+		post.setLastUpdateDate(LocalDateTime.now());
+		post.setCreationDate(LocalDateTime.now());
+		post = this.postRepository.save(post);
+		
 		return post;
 	}
 

@@ -12,7 +12,6 @@ import java.util.Arrays;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.BDDMockito;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -108,13 +107,13 @@ public class PostControllerTest {
 		post0Dto = pm.postToPostDto(post0);
 		post1Dto = pm.postToPostDto(post1);
 
-		BDDMockito.given(this.authClient.checkToken(Mockito.anyString()))
-			.willReturn(new TempUser("jovanibrasil", ProfileTypeEnum.ROLE_ADMIN));
+		when(this.authClient.checkToken(Mockito.anyString()))
+			.thenReturn(new TempUser("jovanibrasil", ProfileTypeEnum.ROLE_ADMIN));
 
-		BDDMockito.given(this.postMapper.postToPostDto(post0)).willReturn(post0Dto);
-		BDDMockito.given(this.postMapper.postToPostDto(post1)).willReturn(post1Dto);
-		BDDMockito.given(this.postMapper.postDtoToPost(post0Dto)).willReturn(post0);
-		BDDMockito.given(this.postMapper.postDtoToPost(post1Dto)).willReturn(post1);
+		when(this.postMapper.postToPostDto(post0)).thenReturn(post0Dto);
+		when(this.postMapper.postToPostDto(post1)).thenReturn(post1Dto);
+		when(this.postMapper.postDtoToPost(post0Dto)).thenReturn(post0);
+		when(this.postMapper.postDtoToPost(post1Dto)).thenReturn(post1);
 
 	}
 		
@@ -124,7 +123,7 @@ public class PostControllerTest {
 	
 	@Test
 	public void testGetPostValidPostID() throws Exception {
-		BDDMockito.given(this.postService.findPostById(1L)).willReturn(post0);
+		when(this.postService.findPostById(1L)).thenReturn(post0);
 		mvc.perform(MockMvcRequestBuilders.get("/posts/1")
 				.accept(MediaType.APPLICATION_JSON))
 			.andExpect(status().isOk())
@@ -135,8 +134,8 @@ public class PostControllerTest {
 	
 	@Test
 	public void testGetPostInvalidPostId() throws Exception {
-		BDDMockito.given(this.postService.findPostById(10L))
-			.willThrow(new NotFoundException("error.post.find"));
+		when(this.postService.findPostById(10L))
+			.thenThrow(new NotFoundException("error.post.find"));
 		mvc.perform(MockMvcRequestBuilders.get("/posts/10"))
 			.andExpect(status().isNotFound())
 			.andExpect(jsonPath("$.message").value("It was not possible to find the specified post."));
@@ -148,11 +147,11 @@ public class PostControllerTest {
 	
 	@Test
 	public void testGetPostsPage0() throws Exception {
-		BDDMockito.given(this.postService.findPosts(Mockito.any())).willReturn(
+		when(this.postService.findPosts(Mockito.any())).thenReturn(
 				new PageImpl<Post>(Arrays.asList(post0)));
-		BDDMockito.given(this.postService.findPosts(PageRequest.of(0, 1,
+		when(this.postService.findPosts(PageRequest.of(0, 1,
 				Sort.by(Sort.Direction.DESC, "lastUpdateDate"))))
-			.willReturn(new PageImpl<Post>(Arrays.asList(post0)));
+			.thenReturn(new PageImpl<Post>(Arrays.asList(post0)));
 		
 		mvc.perform(MockMvcRequestBuilders.get("/posts?page=0"))
 				.andExpect(status().isOk())
@@ -161,11 +160,11 @@ public class PostControllerTest {
 	
 	@Test
 	public void testGetPostsPage1() throws Exception {
-		BDDMockito.given(this.postService.findPosts(Mockito.any())).willReturn(
+		when(this.postService.findPosts(Mockito.any())).thenReturn(
 				new PageImpl<Post>(Arrays.asList(post1)));
-		BDDMockito.given(this.postService.findPosts(PageRequest.of(1, 1,
+		when(this.postService.findPosts(PageRequest.of(1, 1,
 				Sort.by(Sort.Direction.DESC, "lastUpdateDate"))))
-			.willReturn(new PageImpl<Post>(Arrays.asList(post1)));
+			.thenReturn(new PageImpl<Post>(Arrays.asList(post1)));
 		mvc.perform(MockMvcRequestBuilders.get("/posts").param("page", "1"))
 				.andExpect(status().isOk())
 				.andExpect(jsonPath("$").isNotEmpty());
@@ -183,8 +182,8 @@ public class PostControllerTest {
 	 */
 	@Test
 	public void testGetSummaryListJavaTag() throws Exception {
-		BDDMockito.given(this.postService.findPostsByCategory(any(), any()))
-				.willReturn(new PageImpl<Post>(Arrays.asList(post0)));
+		when(this.postService.findPostsByCategory(any(), any()))
+				.thenReturn(new PageImpl<Post>(Arrays.asList(post0)));
 
 		when(sumamyMapper.postToSummaryDto(post0)).thenReturn(new SummaryDTO());
 		
@@ -211,8 +210,8 @@ public class PostControllerTest {
 
 	@Test
 	public void testGetTopPostsInfoList() throws Exception {
-		BDDMockito.given(this.postService.findPosts(PageRequest.of(0, 10,
-				Sort.by(Sort.Direction.DESC, "lastUpdateDate")))).willReturn(
+		when(this.postService.findPosts(PageRequest.of(0, 10,
+				Sort.by(Sort.Direction.DESC, "lastUpdateDate")))).thenReturn(
 				new PageImpl<Post>(Arrays.asList(post0)));
 		
 		when(sumamyMapper.postToSummaryDto(post1)).thenReturn(new SummaryDTO());
@@ -229,7 +228,7 @@ public class PostControllerTest {
 	@Test
 	public void testGetPostsByUserName() throws Exception {
 		PageImpl<Post> page = new PageImpl<Post>(Arrays.asList(post1, post0));
-		BDDMockito.given(this.postService.findPostsByUserName(Mockito.any(), Mockito.any())).willReturn(
+		when(this.postService.findPostsByUserName(Mockito.any(), Mockito.any())).thenReturn(
 				page);
 		mvc.perform(MockMvcRequestBuilders.get("/posts/byuser/1"))
 				.andExpect(status().isOk())
@@ -250,11 +249,8 @@ public class PostControllerTest {
 		MockMultipartFile jsonFile = new MockMultipartFile("post", "", "application/json",
 				asJsonString(post0Dto).getBytes());
 		
-		BDDMockito.given(this.postService.update(Mockito.any()))
-			.willReturn(post0);
-		
-		MockMultipartHttpServletRequestBuilder builder = 
-				MockMvcRequestBuilders.multipart("/posts");
+		MockMultipartHttpServletRequestBuilder builder = MockMvcRequestBuilders
+				.multipart("/posts/" + post0.getId());
 		builder.with(new RequestPostProcessor() {
 			@Override
 			public MockHttpServletRequest postProcessRequest(MockHttpServletRequest request) {
@@ -263,8 +259,10 @@ public class PostControllerTest {
 			}
 		});
 		
-		mvc.perform(builder
-				.file(file)
+		when(postMapper.postFormToPost(Mockito.any())).thenReturn(post0);
+		when(this.postService.update(Mockito.any())).thenReturn(post0);
+		
+		mvc.perform(builder.file(file)
 				.file(jsonFile)
 				.header("Authorization", "x.x.x.x"))
 				.andExpect(status().isOk())
@@ -277,7 +275,7 @@ public class PostControllerTest {
 	
 	@Test
 	public void testDeletePost() throws Exception {
-		BDDMockito.given(this.postService.deleteByPostId(0L)).willReturn(post0);
+		when(this.postService.deleteByPostId(0L)).thenReturn(post0);
 		mvc.perform(MockMvcRequestBuilders.delete("/posts/0")
 				.header("Authorization", "x.x.x.x"))
 				.andExpect(status().isNoContent());
@@ -285,9 +283,9 @@ public class PostControllerTest {
 	
 	@Test
 	public void testDeletePostInvalidPostId() throws Exception {
-		BDDMockito.given(this.postService
+		when(this.postService
 				.deleteByPostId(Mockito.anyLong()))
-				.willThrow(new NotFoundException("error.post.find"));
+				.thenThrow(new NotFoundException("error.post.find"));
 		mvc.perform(MockMvcRequestBuilders.delete("/posts/50")
 				.header("Authorization", "x.x.x.x"))
 				.andExpect(status().isNotFound())

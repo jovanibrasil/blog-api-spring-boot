@@ -109,6 +109,13 @@ public class PostRepositoryTest {
 	}
 	
 	@Test
+	public void searchByEspecificTerm() {
+		PageRequest page = PageRequest.of(0, 5);
+		Page<Post> posts = this.postRepository.findByTerm("title", page);
+		assertEquals(2, posts.getNumberOfElements());
+	}
+	
+	@Test
 	public void testThirdAddedPost() {
 		
 		List<String> tags = new ArrayList<>();

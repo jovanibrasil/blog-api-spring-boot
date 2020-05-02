@@ -1,15 +1,18 @@
 package com.blog.controllers;
 
-import java.util.List;
-
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Sort.Direction;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.blog.forms.SummaryForm;
-import com.blog.services.impl.SearchServiceImpl;
+import com.blog.dtos.SummaryDTO;
+import com.blog.services.SearchService;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -20,13 +23,18 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 public class SearchController {
 
-	private final SearchServiceImpl searchClient;
+	private final SearchService searchService;
+
+	@Value("${blog.posts.page-size}")
+	private int postsListSize;
 
 	@GetMapping
-	public ResponseEntity<List<SummaryForm>> getSearchSummaries(@RequestParam("filter") String query){
+	public ResponseEntity<Page<SummaryDTO>> getSearchSummaries(
+			@RequestParam(name = "filter", required = true) String query,
+			@RequestParam(name = "page", defaultValue = "0") int pageNumber){	
 		log.info("Searching by {}", query);
-		List<SummaryForm> summaries = searchClient.searchSummaries(query);
-		return ResponseEntity.ok(summaries);		
+		PageRequest page = PageRequest.of(pageNumber, this.postsListSize, Sort.by(Direction.DESC, "creationDate"));
+		return ResponseEntity.ok(searchService.searchSummaries(query, page));		
 	}
 	
 }

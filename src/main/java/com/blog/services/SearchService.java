@@ -1,9 +1,10 @@
 package com.blog.services;
 
-import java.util.List;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
-import com.blog.forms.SummaryForm;
+import com.blog.dtos.SummaryDTO;
 
 public interface SearchService {
-    List<SummaryForm> searchSummaries(String query);
+	Page<SummaryDTO> searchSummaries(String query, Pageable pageable);
 }

@@ -9,7 +9,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
-@Transactional(readOnly=true)
+@Transactional
 @Repository
 public interface PostRepository extends JpaRepository<Post, Long> {
 	
@@ -21,5 +21,8 @@ public interface PostRepository extends JpaRepository<Post, Long> {
 	
 	@Query(value="SELECT p FROM Post p WHERE :tag MEMBER OF p.tags")
 	Page<Post> findByCategory(@Param("tag") String tag, Pageable pagable); 
+	
+	@Query(value="SELECT p FROM Post p WHERE p.title LIKE %:term% OR p.body LIKE %:term%")
+	Page<Post> findByTerm(@Param("term") String term, Pageable pageable);
 	
 }

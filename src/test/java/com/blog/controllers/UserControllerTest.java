@@ -1,10 +1,10 @@
 package com.blog.controllers;
 
+import com.blog.dtos.UserDetailsDTO;
 import com.blog.enums.ProfileTypeEnum;
 import com.blog.exceptions.NotFoundException;
-import com.blog.services.impl.JwtAuthenticationProvider;
+import com.blog.services.impl.AuthServiceJwtImpl;
 import com.blog.models.User;
-import com.blog.security.TempUser;
 import com.blog.services.UserService;
 import org.junit.Before;
 import org.junit.Test;
@@ -38,7 +38,7 @@ public class UserControllerTest {
 	private UserService userService;
 	
 	@MockBean
-	private JwtAuthenticationProvider authClient;
+	private AuthServiceJwtImpl authClient;
 	
 	private User user;
 	
@@ -53,7 +53,7 @@ public class UserControllerTest {
 		this.user.setPhoneNumber("51999999999");
 		this.user.setProfileType(ProfileTypeEnum.ROLE_USER);
 		BDDMockito.given(this.authClient.checkToken(Mockito.anyString()))
-			.willReturn(new TempUser("jovanibrasil", ProfileTypeEnum.ROLE_USER));
+			.willReturn(new UserDetailsDTO("jovanibrasil", ProfileTypeEnum.ROLE_USER));
 	}
 	
 	@Test

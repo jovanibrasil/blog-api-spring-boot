@@ -2,6 +2,7 @@ package com.blog.security;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -9,24 +10,22 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
-import com.blog.services.impl.JwtAuthenticationProvider;
-
 @EnableGlobalMethodSecurity(prePostEnabled=true)
 @EnableWebSecurity
 @Configuration
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	
-	private final JwtAuthenticationProvider jwtAuthenticationProvider;
+	private final JwtAuthenticationProvider authenticationProvider;
 	
-	public SecurityConfig(JwtAuthenticationProvider jwtAuthenticationProvider) {
-		this.jwtAuthenticationProvider = jwtAuthenticationProvider;
+	public SecurityConfig(JwtAuthenticationProvider authenticationProvider) {
+		this.authenticationProvider = authenticationProvider;
 	}
 	
 	/**
 	 * Filter used when the application intercepts a requests.
 	 */
 	public JwtAuthenticationFilter authenticationTokenFilterBean() {
-		return new JwtAuthenticationFilter(jwtAuthenticationProvider);
+		return new JwtAuthenticationFilter();
 	}
 	
 	/**
@@ -45,13 +44,21 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 			.antMatchers(HttpMethod.GET, "/feedbacks").hasRole("ADMIN")
 			.antMatchers("/users").hasRole("SERVICE")
 			.and()
-			.csrf().disable() // disable CSRF (cross-site request forgery) 
-			.httpBasic().disable()		
-			.formLogin().disable()
 			.addFilterAfter(authenticationTokenFilterBean(), UsernamePasswordAuthenticationFilter.class) // set token verification filter
-			.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS); // set session police stateless
+			.csrf().disable() // disable CSRF (cross-site request forgery) 
+			.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS); // set session police stateless (no states)
 		
 	}
 	
+	/**
+	 * Authentication configuration. Setup the custom authentication provider that works
+	 * with JWT authentication using a remote service.
+	 * 
+	 */
+	@Override
+	protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+		auth.authenticationProvider(authenticationProvider);
+	}
+			
 }
 

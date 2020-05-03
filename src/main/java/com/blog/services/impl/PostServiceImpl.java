@@ -84,16 +84,14 @@ public class PostServiceImpl implements PostService {
 	@Transactional
 	@Override
 	public Post create(Post post) {
-		log.info("Saving post banner.");
+		log.info("Saving post (body + banner)");
 		Image banner = imageService.saveImage(post.getBanner());
 		post.setBanner(banner);
 		
-		log.info("Getting post related user.");
 		String userName = SecurityContextHolder.getContext().getAuthentication().getName();
-		User user = new User(userName);
+		User user =  new User(userName);
 		post.setAuthor(user);
 		
-		log.info("Saving post.");
 		post.setLastUpdateDate(LocalDateTime.now());
 		post.setCreationDate(LocalDateTime.now());
 		post = postRepository.save(post);

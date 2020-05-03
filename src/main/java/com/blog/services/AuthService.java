@@ -1,8 +1,8 @@
 package com.blog.services;
 
-import com.blog.security.TempUser;
+import com.blog.dtos.UserDetailsDTO;
 
 public interface AuthService {
-    TempUser checkToken(String token);
+    UserDetailsDTO checkToken(String token);
     String getServiceToken();
 }

@@ -8,13 +8,14 @@ import org.springframework.lang.NonNull;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Positive;
 
 @Getter @Setter @NoArgsConstructor
 public class UserForm {
 	
-	@NonNull
+	@NonNull @Positive
 	private Long userId;
-	@Length(min=4, max=16, message="{error.user.name.size}")
+	@Length(min=4, max=12, message="{error.user.name.size}")
     @NotBlank(message="{error.user.name.notblank}")
 	private String userName;
 	@NotBlank(message="{error.user.email.notblank}")

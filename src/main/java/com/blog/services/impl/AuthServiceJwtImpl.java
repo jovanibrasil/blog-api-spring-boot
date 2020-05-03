@@ -1,8 +1,8 @@
 package com.blog.services.impl;
 
 import com.blog.config.BlogServiceProperties;
+import com.blog.dtos.UserDetailsDTO;
 import com.blog.exceptions.MicroServiceIntegrationException;
-import com.blog.security.TempUser;
 import com.blog.services.AuthService;
 import lombok.RequiredArgsConstructor;
 import org.json.JSONArray;
@@ -17,7 +17,7 @@ import org.springframework.web.client.RestTemplate;
 @Component
 @EnableConfigurationProperties(BlogServiceProperties.class)
 @RequiredArgsConstructor
-public class JwtAuthenticationProvider implements AuthService {
+public class AuthServiceJwtImpl implements AuthService {
 
 	@Value("${urls.auth.check-token}")
 	private String checkTokenUrl;
@@ -29,14 +29,13 @@ public class JwtAuthenticationProvider implements AuthService {
 	private final RestTemplate restTemplate;
 
 	@Override
-	public TempUser checkToken(String token) {
+	public UserDetailsDTO checkToken(String token) {
 		try {
 			HttpHeaders headers = new HttpHeaders();
 			headers.set("Authorization", token);
 			HttpEntity<String> entity = new HttpEntity<>("parameters", headers);
-			ResponseEntity<TempUser> responseEntity = restTemplate.exchange(checkTokenUrl, HttpMethod.GET, entity,
-					new ParameterizedTypeReference<TempUser>() {} );
-			
+			ResponseEntity<UserDetailsDTO> responseEntity = restTemplate.exchange(checkTokenUrl, HttpMethod.GET, entity,
+					new ParameterizedTypeReference<UserDetailsDTO>() {} );
 			return responseEntity.getBody();
 		} catch (Exception e) {
 			throw new MicroServiceIntegrationException("It was not posssible to validate the user.", e);

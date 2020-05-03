@@ -32,6 +32,7 @@ import org.springframework.test.web.servlet.request.RequestPostProcessor;
 
 import com.blog.dtos.PostDTO;
 import com.blog.dtos.SummaryDTO;
+import com.blog.dtos.UserDetailsDTO;
 import com.blog.enums.ProfileTypeEnum;
 import com.blog.exceptions.NotFoundException;
 import com.blog.mappers.PostMapper;
@@ -39,9 +40,8 @@ import com.blog.mappers.PostMapperImpl;
 import com.blog.mappers.SummaryMapper;
 import com.blog.models.Post;
 import com.blog.models.User;
-import com.blog.security.TempUser;
 import com.blog.services.PostService;
-import com.blog.services.impl.JwtAuthenticationProvider;
+import com.blog.services.impl.AuthServiceJwtImpl;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
@@ -58,7 +58,7 @@ public class PostControllerTest {
 	private PostService postService;
 	
 	@MockBean
-	private JwtAuthenticationProvider authClient;
+	private AuthServiceJwtImpl authClient;
 
 	@MockBean
 	private PostMapper postMapper;
@@ -108,7 +108,7 @@ public class PostControllerTest {
 		post1Dto = pm.postToPostDto(post1);
 
 		when(this.authClient.checkToken(Mockito.anyString()))
-			.thenReturn(new TempUser("jovanibrasil", ProfileTypeEnum.ROLE_ADMIN));
+			.thenReturn(new UserDetailsDTO("jovanibrasil", ProfileTypeEnum.ROLE_ADMIN));
 
 		when(this.postMapper.postToPostDto(post0)).thenReturn(post0Dto);
 		when(this.postMapper.postToPostDto(post1)).thenReturn(post1Dto);

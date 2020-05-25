@@ -1,7 +1,7 @@
 package com.blog.services.impl;
 
-import com.blog.exceptions.InvalidInformationException;
-import com.blog.models.Subscription;
+import com.blog.exception.InvalidInformationException;
+import com.blog.model.Subscription;
 import com.blog.repositories.SubscriptionRepository;
 import com.blog.services.SubscriptionService;
 import lombok.RequiredArgsConstructor;

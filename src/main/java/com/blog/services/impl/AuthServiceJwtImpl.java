@@ -1,8 +1,8 @@
 package com.blog.services.impl;
 
-import com.blog.config.BlogServiceProperties;
-import com.blog.dtos.UserDetailsDTO;
-import com.blog.exceptions.MicroServiceIntegrationException;
+import com.blog.config.security.BlogServiceProperties;
+import com.blog.exception.MicroServiceIntegrationException;
+import com.blog.model.dto.UserDetailsDTO;
 import com.blog.services.AuthService;
 import lombok.RequiredArgsConstructor;
 import org.json.JSONArray;

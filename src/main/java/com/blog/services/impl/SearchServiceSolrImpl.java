@@ -1,7 +1,7 @@
 package com.blog.services.impl;
 
-import com.blog.dtos.SummaryDTO;
-import com.blog.exceptions.MicroServiceIntegrationException;
+import com.blog.exception.MicroServiceIntegrationException;
+import com.blog.model.dto.PostSummaryDTO;
 import com.blog.services.SearchService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -26,14 +26,14 @@ public class SearchServiceSolrImpl implements SearchService {
 	private final RestTemplate restTemplate;
 
 	@Override
-	public Page<SummaryDTO> searchSummaries(String query, Pageable pageable) {
+	public Page<PostSummaryDTO> searchSummaries(String query, Pageable pageable) {
 		try {
-			List<SummaryDTO> summaries = new ArrayList<>();
+			List<PostSummaryDTO> summaries = new ArrayList<>();
 			
 			URI searchURI = URI.create(String.format("%s?term=%s", uri, query));
 			
-			ResponseEntity<SummaryDTO[]> responseEntity = restTemplate
-					.getForEntity(searchURI, SummaryDTO[].class);
+			ResponseEntity<PostSummaryDTO[]> responseEntity = restTemplate
+					.getForEntity(searchURI, PostSummaryDTO[].class);
 			Collections.addAll(summaries, responseEntity.getBody());
 			return new PageImpl<>(summaries);
 		} catch (Exception e) {

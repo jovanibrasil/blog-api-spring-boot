@@ -1,7 +1,8 @@
 package com.blog.repositories;
 
-import com.blog.enums.ProfileTypeEnum;
-import com.blog.models.User;
+import com.blog.model.User;
+import com.blog.model.enums.ProfileTypeEnum;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;

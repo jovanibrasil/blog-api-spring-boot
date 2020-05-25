@@ -1,18 +1,16 @@
 package com.blog.services;
 
-import com.blog.models.Feedback;
-
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
+import com.blog.model.dto.FeedbackDTO;
+import com.blog.model.form.FeedbackForm;
+
 public interface FeedbackService {
 	
-	Page<Feedback> findAll(Pageable page);
-	Page<Feedback> findFeedbacks(Pageable page);
-	Page<Feedback> findFeedbacksByUser(String userName, Pageable page);
-	Feedback findById(Long id);
-	Feedback create(Feedback feedback);
-	Feedback edit(Feedback feedback);
-	Feedback deleteById(Long id);
+	Page<FeedbackDTO> findFeedbacks(Pageable page);
+	Page<FeedbackDTO> findFeedbacksByUser(String userName, Pageable page);
+	FeedbackDTO findById(Long id);
+	FeedbackDTO create(FeedbackForm feedbackForm);
 	
 }

@@ -1,15 +1,13 @@
 package com.blog.controllers;
 
-import com.blog.dtos.UserDetailsDTO;
-import com.blog.enums.ProfileTypeEnum;
-import com.blog.exceptions.NotFoundException;
-import com.blog.services.impl.AuthServiceJwtImpl;
-import com.blog.models.User;
-import com.blog.services.UserService;
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.BDDMockito;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -21,9 +19,13 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
-import static org.hamcrest.CoreMatchers.equalTo;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import com.blog.ScenarioFactory;
+import com.blog.exception.NotFoundException;
+import com.blog.model.dto.UserDTO;
+import com.blog.model.dto.UserDetailsDTO;
+import com.blog.model.enums.ProfileTypeEnum;
+import com.blog.services.UserService;
+import com.blog.services.impl.AuthServiceJwtImpl;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -40,26 +42,19 @@ public class UserControllerTest {
 	@MockBean
 	private AuthServiceJwtImpl authClient;
 	
-	private User user;
+	private UserDTO userDTO;
 	
 	@Before
 	public void setUp() {
-		this.user = new User();
-		this.user.setUserName("jovanibrasil");
-		this.user.setFullUserName("Jovani Brasil");
-		this.user.setEmail("jovanibrasil@gmail.com");
-		this.user.setGithubUserName("jovanibrasil");
-		this.user.setLinkedinUserName("jovanibrasil");
-		this.user.setPhoneNumber("51999999999");
-		this.user.setProfileType(ProfileTypeEnum.ROLE_USER);
-		BDDMockito.given(this.authClient.checkToken(Mockito.anyString()))
-			.willReturn(new UserDetailsDTO("jovanibrasil", ProfileTypeEnum.ROLE_USER));
+		userDTO = ScenarioFactory.getUserDTO();
+		when(authClient.checkToken(Mockito.anyString()))
+			.thenReturn(new UserDetailsDTO("jovanibrasil", ProfileTypeEnum.ROLE_USER));
 	}
 	
 	@Test
 	public void testFindUserByNameWithInvalidUserName() throws Exception {
-		BDDMockito.given(this.userService.findByUserName(Mockito.anyString()))
-			.willThrow(new NotFoundException("error.user.find"));
+		when(userService.findByUserName(Mockito.anyString()))
+			.thenThrow(new NotFoundException("error.user.find"));
 		mvc.perform(MockMvcRequestBuilders.get("/users/sajdoi")
 			.header("Authorization", "x.x.x.x")
 			.accept(MediaType.APPLICATION_JSON))
@@ -69,8 +64,7 @@ public class UserControllerTest {
 	
 	@Test
 	public void testFindUserByNameWithValidUserName() throws Exception {
-		BDDMockito.given(this.userService.findByUserName("jovanibrasil"))
-			.willReturn(user);
+		when(userService.findByUserName("jovanibrasil")).thenReturn(userDTO);
 		mvc.perform(MockMvcRequestBuilders.get("/users/jovanibrasil")
 			.header("Authorization", "x.x.x.x")
 			.accept(MediaType.APPLICATION_JSON))

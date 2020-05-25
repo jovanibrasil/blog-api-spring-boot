@@ -24,8 +24,8 @@ import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import com.blog.exceptions.InvalidInformationException;
-import com.blog.models.Subscription;
+import com.blog.exception.InvalidInformationException;
+import com.blog.model.Subscription;
 import com.blog.repositories.SubscriptionRepository;
 import com.blog.services.SubscriptionService;
 

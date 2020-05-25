@@ -21,8 +21,7 @@
 	<packaging>war</packaging>
 
 	<properties>
-		<java.version>1.8</java.version>
-		<activeProfile>prod</activeProfile>
+		<java.version>11</java.version>
 		<mapstruct.version>1.3.0.Final</mapstruct.version>
 	</properties>
 

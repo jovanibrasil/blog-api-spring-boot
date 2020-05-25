@@ -1,6 +1,6 @@
 package com.blog.services;
 
-import com.blog.models.Image;
+import com.blog.model.Image;
 
 public interface ImageService {
 	Image saveImage(Image image);

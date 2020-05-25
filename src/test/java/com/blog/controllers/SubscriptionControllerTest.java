@@ -25,7 +25,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
-import com.blog.models.Subscription;
+import com.blog.model.Subscription;
 import com.blog.services.SubscriptionService;
 
 @RunWith(SpringRunner.class)
@@ -74,23 +74,5 @@ public class SubscriptionControllerTest {
 				.contentType(MediaType.APPLICATION_JSON))			
 				.andExpect(status().isCreated());
 	}
-	
-//	@Test
-//	public void testSubscribeNullEmail() throws Exception {
-//		mvc.perform(MockMvcRequestBuilders.post("/subscriptions/null")
-//				.contentType(MediaType.APPLICATION_JSON))			
-//				.andExpect(status().isBadRequest())
-//				.andExpect(jsonPath("$.data").isEmpty())
-//				.andExpect(jsonPath("$.errors").isNotEmpty());
-//	}
-//	
-//	@Test
-//	public void testSubscribeInvalidEmail() throws Exception {
-//		mvc.perform(MockMvcRequestBuilders.post("/subscriptions/testgmailcom")
-//				.contentType(MediaType.APPLICATION_JSON))			
-//				.andExpect(status().isBadRequest())
-//				.andExpect(jsonPath("$.data").isEmpty())
-//				.andExpect(jsonPath("$.errors").isNotEmpty());
-//	}
 	
 }

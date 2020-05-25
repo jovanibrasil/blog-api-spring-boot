@@ -1,9 +1,9 @@
 package com.blog.services;
 
-import com.blog.models.Subscription;
-
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+
+import com.blog.model.Subscription;
 
 public interface SubscriptionService {
 	Subscription saveSubscription(String email);

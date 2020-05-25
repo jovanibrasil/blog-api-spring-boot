@@ -1,12 +1,13 @@
 package com.blog.services;
 
-import com.blog.models.User;
-
 import java.util.List;
 
+import com.blog.model.dto.UserDTO;
+import com.blog.model.form.UserForm;
+
 public interface UserService {
-	List<User> findAll();
-	User save(User user);
+	List<UserDTO> findAll();
+	UserDTO save(UserForm userForm);
 	void deleteByUserName(String userName);
-	User findByUserName(String userName);
+	UserDTO findByUserName(String userName);
 }

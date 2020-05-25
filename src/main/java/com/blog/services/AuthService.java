@@ -1,6 +1,6 @@
 package com.blog.services;
 
-import com.blog.dtos.UserDetailsDTO;
+import com.blog.model.dto.UserDetailsDTO;
 
 public interface AuthService {
     UserDetailsDTO checkToken(String token);

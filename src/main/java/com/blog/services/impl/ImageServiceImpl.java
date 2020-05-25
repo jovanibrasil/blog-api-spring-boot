@@ -4,8 +4,8 @@ import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 
-import com.blog.exceptions.NotFoundException;
-import com.blog.models.Image;
+import com.blog.exception.NotFoundException;
+import com.blog.model.Image;
 import com.blog.repositories.ImageRepository;
 import com.blog.services.ImageService;
 import com.blog.utils.ImageUtils;

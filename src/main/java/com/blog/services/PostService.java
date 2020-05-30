@@ -16,10 +16,11 @@ public interface PostService {
 	Page<PostDTO> findPostsByCategory(String category, Pageable page);
 	Page<PostDTO> findPostsByUserName(String userName, Pageable page);
 	Page<PostSummaryDTO> findPostSummaryList(String cat, Pageable verifyReceivedPageable);
-	Page<PostInfoDTO> findPostInfoList(Pageable page);
+	Page<PostInfoDTO> findPostInfoList(Pageable pageable);
 	
 	void deleteByPostId(Long id);
 	PostDTO create(PostForm postForm, MultipartFile banner);
 	PostDTO update(Long postId, PostForm postForm, MultipartFile banner);
+	void incrementLikes(Long postId);
 	
 }

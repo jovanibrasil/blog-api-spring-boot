@@ -92,8 +92,7 @@ public class PostControllerTest {
 	
 	@Test
 	public void testGetPostInvalidPostId() throws Exception {
-		when(postService.findPostById(10L))
-			.thenThrow(new NotFoundException("error.post.find"));
+		when(postService.findPostById(10L)).thenThrow(new NotFoundException("error.post.find"));
 		mvc.perform(MockMvcRequestBuilders.get("/posts/10"))
 			.andExpect(status().isNotFound())
 			.andExpect(jsonPath("$.message").value("It was not possible to find the specified post."));
@@ -107,11 +106,8 @@ public class PostControllerTest {
 	public void testGetPostsPage0() throws Exception {
 		when(postService.findPosts(any())).thenReturn(
 				new PageImpl<PostDTO>(Arrays.asList(postDTO0)));
-		when(postService.findPosts(PageRequest.of(0, 1,
-				Sort.by(Sort.Direction.DESC, "lastUpdateDate"))))
-			.thenReturn(new PageImpl<PostDTO>(Arrays.asList(postDTO0)));
-		
-		mvc.perform(MockMvcRequestBuilders.get("/posts?page=0"))
+		mvc.perform(MockMvcRequestBuilders.get("/posts")
+				.param("page", "1"))
 				.andExpect(status().isOk())
 				.andExpect(jsonPath("$").isNotEmpty());
 	}
@@ -120,7 +116,8 @@ public class PostControllerTest {
 	public void testGetPostsPage1() throws Exception {
 		when(postService.findPosts(any())).thenReturn(
 				new PageImpl<PostDTO>(Arrays.asList(postDTO1)));
-		mvc.perform(MockMvcRequestBuilders.get("/posts").param("page", "1"))
+		mvc.perform(MockMvcRequestBuilders.get("/posts")
+				.param("page", "1"))
 				.andExpect(status().isOk())
 				.andExpect(jsonPath("$").isNotEmpty());
 	}
@@ -129,7 +126,8 @@ public class PostControllerTest {
 	public void testGetPostsPage2() throws Exception {
 		when(postService.findPosts(any())).thenReturn(
 				new PageImpl<PostDTO>(Arrays.asList()));
-		mvc.perform(MockMvcRequestBuilders.get("/posts").param("page", "2"))
+		mvc.perform(MockMvcRequestBuilders.get("/posts")
+				.param("page", "2"))
 				.andExpect(status().isOk())
 				.andExpect(jsonPath("$").isNotEmpty());
 	}
@@ -167,7 +165,7 @@ public class PostControllerTest {
 				Sort.by(Sort.Direction.DESC, "lastUpdateDate"))))
 			.thenReturn(new PageImpl<PostInfoDTO>(Arrays.asList(postInfoDTO)));
 
-		mvc.perform(MockMvcRequestBuilders.get("/posts/top"))
+		mvc.perform(MockMvcRequestBuilders.get("/posts/info"))
 				.andExpect(status().isOk())
 				.andExpect(jsonPath("$").isNotEmpty());
 	}
@@ -181,7 +179,7 @@ public class PostControllerTest {
 		PageImpl<PostDTO> page = new PageImpl<PostDTO>(Arrays.asList(postDTO1, postDTO0));
 		when(postService.findPostsByUserName(any(), any())).thenReturn(
 				page);
-		mvc.perform(MockMvcRequestBuilders.get("/posts/byuser/1"))
+		mvc.perform(MockMvcRequestBuilders.get("/posts?username=jovani"))
 				.andExpect(status().isOk())
 				.andExpect(jsonPath("$").isNotEmpty());
 	}

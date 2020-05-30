@@ -11,7 +11,7 @@ public class AccessToken {
 	private AuthServiceJwtImpl authClient;
 	
 	private AccessToken() {
-		token = authClient.getServiceToken();
+		AccessToken.token = authClient.getServiceToken();
 	}
 	
 	public static String getToken() {

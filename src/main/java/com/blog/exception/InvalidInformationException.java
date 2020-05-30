@@ -7,7 +7,7 @@ public class InvalidInformationException extends RuntimeException {
 
 	private static final long serialVersionUID = 7657335828184665725L;
 
-	List<String> errors;
+	private final List<String> errors;
  	
 	public InvalidInformationException(String message) {
 		super(message);

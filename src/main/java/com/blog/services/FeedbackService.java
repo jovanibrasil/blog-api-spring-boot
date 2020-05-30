@@ -8,7 +8,7 @@ import com.blog.model.form.FeedbackForm;
 
 public interface FeedbackService {
 	
-	Page<FeedbackDTO> findFeedbacks(Pageable page);
+	Page<FeedbackDTO> findFeedback(Pageable page);
 	Page<FeedbackDTO> findFeedbacksByUser(String userName, Pageable page);
 	FeedbackDTO findById(Long id);
 	FeedbackDTO create(FeedbackForm feedbackForm);

@@ -64,7 +64,8 @@ public class PostServiceImpl implements PostService {
 	 */
 	@Override
 	public Page<PostDTO> findPostsByUserName(String userName, Pageable page) {
-		return postRepository.findByUserName(userName, page).map(postMapper::postToPostDto);
+		return postRepository.findByUserName(userName, page)
+				.map(postMapper::postToPostDto);
 	}
 
 	/**
@@ -145,7 +146,8 @@ public class PostServiceImpl implements PostService {
 	 */
 	@Override
 	public Page<PostInfoDTO> findPostInfoList(Pageable pageable) {
-		return postRepository.findAll(pageable).map(postInfoMapper::postToPostInfoDto);
+		return postRepository.findAll(pageable)
+				.map(postInfoMapper::postToPostInfoDto);
 	}
 
 	/**
@@ -164,6 +166,13 @@ public class PostServiceImpl implements PostService {
 		post.setTags(receivedPost.getTags());
 		post.getBanner().setContent(receivedPost.getBanner().getMultipartBanner());
 		return postMapper.postToPostDto(post);
+	}
+
+	@Transactional
+	@Override
+	public void incrementLikes(Long postId) {
+		postRepository.findById(postId).ifPresentOrElse(post ->	post.incrementLikes(),
+			() -> { throw new NotFoundException("error.post.find"); });
 	}
 
 }

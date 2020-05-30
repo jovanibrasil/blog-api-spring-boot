@@ -28,7 +28,7 @@ public class FeedbackServiceImpl implements FeedbackService {
 	 * 
 	 */
 	@Override
-	public Page<FeedbackDTO> findFeedbacks(Pageable page) {
+	public Page<FeedbackDTO> findFeedback(Pageable page) {
 		return feedbackRepo.findAll(page)
 				.map(feedbackMapper::feedbackToFeedbackDto);
 	}

@@ -9,7 +9,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-@Getter @Setter @NoArgsConstructor
+@Getter @Setter 
+@NoArgsConstructor
 public class PostDTO {
 
 	private Long id;
@@ -24,5 +25,6 @@ public class PostDTO {
 	private LocalDateTime lastUpdateDate;
 	private String userName;
 	private Long bannerId;
+	private int likes;
 	
 }

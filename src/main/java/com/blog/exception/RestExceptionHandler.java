@@ -33,7 +33,7 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler  {
 	}
 	
 	@ExceptionHandler(NotFoundException.class)
-	public ResponseEntity<?> handleNotFoundException(NotFoundException notFoundException){
+	public ResponseEntity<ErrorDetail> handleNotFoundException(NotFoundException notFoundException){
 		log.info("NotFoundException. Sending response ...");
 		ErrorDetail errorDetail = new ErrorDetail.Builder()
 				.message(getMessage(notFoundException.getMessage()))
@@ -59,7 +59,7 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler  {
 	}
 
 	@ExceptionHandler(InvalidInformationException.class)
-	public ResponseEntity<?> handleInvalidInformationException(InvalidInformationException invalidInformationException){
+	public ResponseEntity<ErrorDetail> handleInvalidInformationException(InvalidInformationException invalidInformationException){
 		log.info("Invalid information. Sending response ...");
 		ErrorDetail errorDetail = new ErrorDetail.Builder()
 				.message(invalidInformationException.getMessage())
@@ -68,7 +68,7 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler  {
 	}
 	
 	@ExceptionHandler({ValidationException.class, UserException.class})
-	public ResponseEntity<?> handle(Exception validationException){
+	public ResponseEntity<ErrorDetail> handle(Exception validationException){
 		log.info("Validation exception. Sending response ...");
 		ErrorDetail errorDetail = new ErrorDetail.Builder()
 				.message(getMessage(validationException.getMessage()))

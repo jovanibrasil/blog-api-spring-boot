@@ -8,12 +8,9 @@ import com.blog.exception.NotFoundException;
 import com.blog.model.Image;
 import com.blog.repositories.ImageRepository;
 import com.blog.services.ImageService;
-import com.blog.utils.ImageUtils;
 
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 
-@Slf4j
 @Service
 @RequiredArgsConstructor
 public class ImageServiceImpl implements ImageService {
@@ -29,12 +26,19 @@ public class ImageServiceImpl implements ImageService {
 		return imageRepository.save(image);
 	}
 
+	/**
+	 * Retorna uma imagem pelo seu ID. A imagem retornada é um array de bytes usando 
+	 * esquema de codificação base64.
+	 * 
+	 */
 	@Override
 	public Image findImageById(Long imageId) {
 		Optional<Image> optImage = imageRepository.findById(imageId);
 		if(optImage.isPresent()) {
 			Image image = optImage.get();
 			//image.setBytes(ImageUtils.decompressBytes(image.getBytes()));
+			//byte[] decodedBytes = Base64.getMimeDecoder().decode(image.getBytes());
+			//log.info("{}", new String(image.getBytes()));
 			return image;
 		}
 		throw new NotFoundException("Imagem não econtrada");

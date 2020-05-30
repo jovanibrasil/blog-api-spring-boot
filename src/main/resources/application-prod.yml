@@ -1,0 +1,31 @@
+blog:
+  posts:
+    page-size: 6
+    top-list:
+      page-size: 10
+blog-api:
+  password: ${BLOG_API_PASSWORD}
+  username: ${BLOG_API_USERNAME}
+blog-db:
+  password: ${BLOG_DB_PASSWORD}
+  url: ${BLOG_DB_URL}
+  username: ${BLOG_DB_USERNAME}
+spring:
+  datasource:
+    driver-class-name: com.mysql.jdbc.Driver
+    testWhileIdle: true
+    validationQuery: SELECT 1
+  flyway:
+    enabled: true
+    locations: classpath:/db/base,classpath:/db/migration
+  jpa:
+    hibernate:
+      ddl-auto: none
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQL5Dialect
+urls:
+  auth:
+    check-token: http://apps-server:8080/auth-api/token/check
+    get-token: http://apps-server:8080/auth-api/token/create
+  search: http://search-api:4567/search

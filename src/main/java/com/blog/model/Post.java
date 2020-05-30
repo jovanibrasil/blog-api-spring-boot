@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
@@ -14,6 +15,7 @@ import java.util.List;
 
 @Getter @Setter
 @Builder
+@NoArgsConstructor
 @AllArgsConstructor
 @Entity
 @Table(name="posts")
@@ -28,10 +30,10 @@ public class Post {
 	private String title;
 
 	@Column(nullable=false, columnDefinition = "TIMESTAMP")
-	private LocalDateTime creationDate;
+	private LocalDateTime creationDate = LocalDateTime.now();
 
 	@Column(nullable=false, columnDefinition = "TIMESTAMP")
-	private LocalDateTime lastUpdateDate;
+	private LocalDateTime lastUpdateDate = LocalDateTime.now();
 	
 	@Column(nullable=false, length=1000)
 	private String summary;
@@ -48,53 +50,26 @@ public class Post {
 	@Column(name="tag", nullable=false)
 	@ElementCollection(targetClass=String.class, fetch = FetchType.EAGER)
 	@CollectionTable(name="post_tags", joinColumns = @JoinColumn(name = "post_id"))
-	private List<String> tags;
+	private List<String> tags = new ArrayList<>();
+	
+	@Column
+	private int likes;
 
 	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
 	@JoinColumn(name = "image_id")
 	private Image banner;
-
-	public Post() {
-		this.id = 0L;
-		this.title = "Title";
-		this.summary = "Summary";
-		this.body = "Body";
-		this.author = null;
-		this.lastUpdateDate = LocalDateTime.now();
-		this.creationDate = LocalDateTime.now();
-		this.tags = new ArrayList<>(); 
-	}
-	
-	public Post(User author) {
-		this();
-		this.author = author;
-	}
-	
-	public Post(Long id, String title, String summary, List<String> tags, String body, User author) {
-		this.id = id;
-		this.title = title;
-		this.summary = summary;
-		this.body = body;
-		this.author = author;
-		this.lastUpdateDate = LocalDateTime.now();
-		this.tags = tags; 
-	}
-	
-	public Post(String title, String summary,  List<String> tags, String body, User author) {
-		this.title = title;
-		this.summary = summary;
-		this.body = body;
-		this.author = author;
-		this.creationDate = LocalDateTime.now();
-		this.lastUpdateDate = LocalDateTime.now();
-		this.tags = tags;
-	}
 
 	public void addTag(String tag) {
 		if(this.tags == null) {
 			this.tags = new ArrayList<>();
 		}
 		this.tags.add(tag);
+	}
+
+	public void incrementLikes() {
+		if(this.likes < Integer.MAX_VALUE) {
+			this.likes++;
+		}
 	}
 
 }

@@ -1,13 +1,17 @@
 package com.blog.config;
 
+import java.util.Arrays;
+
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import com.blog.config.security.AccessToken;
 
 import springfox.documentation.builders.ApiInfoBuilder;
+import springfox.documentation.builders.ParameterBuilder;
 import springfox.documentation.builders.PathSelectors;
 import springfox.documentation.builders.RequestHandlerSelectors;
+import springfox.documentation.schema.ModelRef;
 import springfox.documentation.service.ApiInfo;
 import springfox.documentation.service.Contact;
 import springfox.documentation.spi.DocumentationType;
@@ -27,9 +31,19 @@ public class SwaggerConfig {
 	public Docket api() {
 		return new Docket(DocumentationType.SWAGGER_2)
 				.select()
-				.apis(RequestHandlerSelectors.basePackage("com.blog.controllers"))
+				.apis(RequestHandlerSelectors.basePackage("com.blog.controller"))
 				.paths(PathSelectors.any()).build()
-				.apiInfo(apiInfo());
+				.apiInfo(apiInfo())
+				.useDefaultResponseMessages(false)
+				.directModelSubstitute(Object.class, java.lang.Void.class) // for empty responses
+				.globalOperationParameters(Arrays.asList(
+						new ParameterBuilder()
+						.name("Authorization")
+						.description("Header para JWT")
+						.modelRef(new ModelRef("string"))
+						.parameterType("header")
+						.required(false)
+						.build()));
 	}
 	
 	/**

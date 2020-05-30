@@ -1,0 +1,24 @@
+blog:
+  posts:
+    page-size: 3
+    top-list:
+      page-size: 10
+spring:
+  datasource:
+    password: root
+    url: jdbc:mysql://mysql-database:3306/blogdb
+    username: root
+  flyway:
+    enabled: true
+    locations: classpath:/db/base,classpath:/db/testdata,classpath:/db/migration
+  jpa:
+    hibernate:
+      ddl-auto: none
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQL5Dialect
+urls:
+  auth:
+    check-token: http://auth-api:8080/auth-api/token/check
+    get-token: http://auth-api:8080/auth-api/token/create
+  search: http://search-api:4567/search

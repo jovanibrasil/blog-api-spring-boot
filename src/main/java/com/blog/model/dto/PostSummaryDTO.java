@@ -21,5 +21,6 @@ public class PostSummaryDTO {
 	private String userName;
 	private List<String> tags;
 	private String bannerUrl;
+	private int likes;
 
 }

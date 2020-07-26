@@ -112,7 +112,7 @@ public class PostServiceImpl implements PostService {
 		post.setBanner(bannerImage);
 		
 		String userName = SecurityContextHolder.getContext().getAuthentication().getName();
-		User user =  new User(userName);
+		User user = new User(userName);
 		post.setAuthor(user);
 		
 		post.setLastUpdateDate(LocalDateTime.now());
@@ -164,7 +164,7 @@ public class PostServiceImpl implements PostService {
 		post.setSummary(receivedPost.getSummary());
 		post.setLastUpdateDate(LocalDateTime.now());
 		post.setTags(receivedPost.getTags());
-		post.getBanner().setContent(receivedPost.getBanner().getMultipartBanner());
+		post.getBanner().setContent(banner);
 		return postMapper.postToPostDto(post);
 	}
 

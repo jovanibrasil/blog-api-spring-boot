@@ -2,7 +2,10 @@ server:
   port: 8081
 spring:
   datasource:
-    driver-class-name: com.mysql.cj.jdbc.Driver
+    plataform: postgres
+    url: ${BLOG_DB_URL:jdbc:postgresql://127.0.0.1:5432/blogdb}
+    username: ${BLOG_DB_USERNAME:postgres}
+    password: ${BLOG_DB_PASSWORD:postgres}
   flyway:
     enabled: true
     locations: classpath:/db/base,classpath:/db/testdata,classpath:/db/migration
@@ -11,18 +14,16 @@ spring:
       ddl-auto: none
     properties:
       hibernate:
-        dialect: org.hibernate.dialect.MySQL5Dialect
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        temp:
+          use_jdbc_metadata_defaults: false
 blog:
   posts:
     page-size: 6
     top-list:
       page-size: 10
-blog-db:
-  password: root
-  url: jdbc:mysql://127.0.0.1:3306/blogdb?useSSL=false
-  username: root
 urls:
   auth:
-    check-token: http://127.0.0.1:8083/api/token/check
-    get-token: http://127.0.0.1:8083/api/token/create
+    check-token: http://127.0.0.1:8083/token/check
+    get-token: http://127.0.0.1:8083/token
   search: http://127.0.0.1:4567/search

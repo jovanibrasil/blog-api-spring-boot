@@ -51,6 +51,7 @@ public class UserController {
 	@ResponseStatus(HttpStatus.NO_CONTENT)
 	@DeleteMapping("/{userName}")
 	public void deleteUser(@PathVariable("userName") String userName){
+		log.info("Deleting user {}", userName);
 		userService.deleteByUserName(userName);
 	}
 	

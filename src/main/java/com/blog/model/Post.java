@@ -38,8 +38,7 @@ public class Post {
 	@Column(nullable=false, length=1000)
 	private String summary;
 	
-	// Lob: data should be represented as BLOB (binary data) in the database.
-	@Lob @Column(nullable=false)
+	@Column(nullable=false)
 	private String body;
 	
 	@ManyToOne(fetch=FetchType.EAGER)// Many posts are related to one user.

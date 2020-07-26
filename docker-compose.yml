@@ -1,61 +1,55 @@
-version: '3.2' 
-networks:
-  net:
-    driver: bridge
+version: "3.3"
 services:
-  auth-api: # Authentication API (Spring)
-    image: auth-api
-    container_name: auth-api
-    ports:
-      - 8083:8080
-    networks:
-      - net
+  postgres:
+    image: postgres
+    container_name: postgres
+    restart: always
     environment:
-      - "SPRING_PROFILES_ACTIVE=dev"
-      - "VAULT_TOKEN=s8ynaMrJvQPVq2BEPRxgceHcG"
-      - "DATASOURCE_URL=jdbc:mysql://mysql-database:3306/usersdb"
-      - CATALINA_OPTS=-Xmx206M -Xms128M -XX:MaxPermSize=50M
-    deploy:
-      resources:
-        limits:
-          #cpus: '0.001'
-          memory: 384M
-  mysql-database:
-    image: mysql-database
-    container_name: mysql-database
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_USER=postgres
     ports:
-      - 3306:3306
-    networks:
-      - net
-    deploy:
-      resources:
-        limits:
-          memory: 256M
-  search-api: 
-    image: search-api
-    container_name: search-api
-    ports:
-      - 4567:4567
-    networks:
-      - net
-    depends_on: 
-      - solr-master
-    deploy:
-      resources:
-        limits:
-          memory: 128M
-  solr-master: 
-    image: solr-master
-    container_name: solr-master
-    ports:
-      - 8983:8983
-    networks:
-      - net
+      - 5432:5432
+    volumes:
+      - ./scripts/postgres-scripts:/docker-entrypoint-initdb.d/
+      - ./postgres-database-data:/var/lib/
+  auth-mock:
+    build:
+      context: ./json-server-mock
+      dockerfile: Dockerfile
+    command: node index.js
     environment:
-      - BLOG_MYSQL_URL=jdbc:mysql://mysql-database:3306/blogdb?useSSL=false
-      - BLOG_MYSQL_USERNAME=root
-      - BLOG_MYSQL_PASSWORD=root
-    deploy:
-      resources:
-        limits:
-          memory: 256M
+      - PORT=8083
+    ports:
+      - 8083:8083
+  # search-api: 
+  #   image: search-api
+  #   container_name: search-api
+  #   ports:
+  #     - 4567:4567
+  #   networks:
+  #     - net
+  #   depends_on: 
+  #     - solr-master
+  #   deploy:
+  #     resources:
+  #       limits:
+  #         memory: 128M
+  # solr-master: 
+  #   image: solr-master
+  #   container_name: solr-master
+  #   ports:
+  #     - 8983:8983
+  #   networks:
+  #     - net
+  #   environment:
+  #     - BLOG_MYSQL_URL=jdbc:mysql://mysql-database:3306/blogdb?useSSL=false
+  #     - BLOG_MYSQL_USERNAME=root
+  #     - BLOG_MYSQL_PASSWORD=root
+  #   deploy:
+  #     resources:
+  #       limits:
+  #         memory: 256M    
+networks:
+  default:
+    external:
+      name: net

@@ -1,1 +1,1 @@
-ALTER TABLE posts ADD COLUMN banner BLOB;
+ALTER TABLE posts ADD COLUMN banner bytea;

@@ -3,6 +3,8 @@ package com.blog.model;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
+import org.hibernate.annotations.Type;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.persistence.*;
@@ -25,6 +27,7 @@ public class Image {
 	@Column
 	private String type;
 	@Lob
+	@Type(type="org.hibernate.type.BinaryType")
 	@Column(length = 20, nullable = false)
 	private byte[] bytes;
 	

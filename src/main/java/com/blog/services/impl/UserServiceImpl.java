@@ -14,6 +14,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -27,7 +28,9 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public List<UserDTO> findAll() {
-		return userRepository.findAll().stream().map(userMapper::userToUserDto).collect(Collectors.toList());
+		return userRepository.findAll().stream()
+				.map(userMapper::userToUserDto)
+				.collect(Collectors.toList());
 	}
 
 	/**
@@ -50,7 +53,7 @@ public class UserServiceImpl implements UserService {
 	public void deleteByUserName(String userName) {
 		userRepository.findByName(userName).ifPresentOrElse(
 				userRepository::delete, 
-				() -> new NotFoundException("error.user.find"));
+				() -> { throw new NotFoundException("error.user.find"); });
 	}
 
 	/**
@@ -66,6 +69,8 @@ public class UserServiceImpl implements UserService {
 		userRepository.findByName(user.getUserName()).ifPresent(
 				savedUser -> { throw new UserException("error.user.name.unique"); } );
 		
+		user.setCreationDate(LocalDateTime.now());
+		user.setLastUpdateDate(LocalDateTime.now());
 		user.setProfileType(ProfileTypeEnum.ROLE_USER);
 		return userMapper.userToUserDto(userRepository.save(user));	
 	}

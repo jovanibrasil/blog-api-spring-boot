@@ -43,13 +43,6 @@
 			</properties>
 		</profile>
 		<profile>
-			<id>stage</id>
-			<properties>
-				<activeProfile>stage</activeProfile>
-				<maven.test.skip>true</maven.test.skip>
-			</properties>
-		</profile>
-		<profile>
 			<id>prod</id>
 			<properties>
 				<activeProfile>prod</activeProfile>
@@ -76,8 +69,8 @@
 			<artifactId>commons-codec</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>mysql</groupId>
-			<artifactId>mysql-connector-java</artifactId>
+			<groupId>org.postgresql</groupId>
+			<artifactId>postgresql</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -149,11 +142,13 @@
 			<artifactId>mapstruct</artifactId>
 			<version>${mapstruct.version}</version>
 		</dependency>
+		<!-- 
 		<dependency>
 		    <groupId>de.codecentric</groupId>
 		    <artifactId>spring-boot-admin-starter-client</artifactId>
 		    <version>2.2.3</version>
 		</dependency>
+		 -->
 	</dependencies>
 
 	<build>

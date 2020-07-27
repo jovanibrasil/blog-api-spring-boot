@@ -1,4 +1,4 @@
-#while ! nc -z mysql-database 3306;
+#while ! nc -z postgres 5432;
 #        do
 #          echo sleeping;
 #          sleep 1;

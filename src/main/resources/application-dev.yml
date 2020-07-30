@@ -6,6 +6,8 @@ spring:
     url: ${BLOG_DB_URL:jdbc:postgresql://127.0.0.1:5432/blogdb}
     username: ${BLOG_DB_USERNAME:postgres}
     password: ${BLOG_DB_PASSWORD:postgres}
+    testWhileIdle: true
+    test-on-borrow: true
   flyway:
     enabled: true
     locations: classpath:/db/base,classpath:/db/testdata,classpath:/db/migration

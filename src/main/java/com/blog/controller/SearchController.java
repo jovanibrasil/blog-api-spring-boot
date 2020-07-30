@@ -24,7 +24,7 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @RestController
-@RequestMapping("/posts/search")
+@RequestMapping("/search")
 @RequiredArgsConstructor
 public class SearchController {
 

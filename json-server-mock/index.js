@@ -1,6 +1,10 @@
 const jsonServer = require('json-server')
 const server = jsonServer.create()
 
+const cors = require('cors');
+
+server.use(cors());
+
 server.get('/token/check', (req, res) => {
 	res.jsonp({
 		"name" : "fakeuser",
@@ -10,7 +14,7 @@ server.get('/token/check', (req, res) => {
 
 server.post('/token', (req, res) => {
 	res.jsonp({
-		"token" : "dk3jSlDKkld444kDj23kdadkDDDDododsdsjasd23nladkiiiii021"
+		"token" : "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJmYWtldXNlciIsInJvbGUiOiJST0xFX0FETUlOIiwiYXBwbmFtZSI6IkJMT0dfQVBQIiwiY3JlYXRlZCI6MTU5NTg5MTM2NTExMCwiZXhwIjoxNjU5MDA1MjY5fQ.Nrj_qVI_uMPNNPsyA51_VuRBNZ5Ha8PytBMR9J1iXVk"
 	})
 })
 

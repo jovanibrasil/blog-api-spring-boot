@@ -1,6 +1,9 @@
 package com.blog.model.form;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -12,7 +15,9 @@ import javax.validation.constraints.Size;
 import java.time.LocalDateTime;
 import java.util.List;
 
-@Getter @Setter 
+@Getter @Setter
+@Builder
+@AllArgsConstructor
 @NoArgsConstructor
 public class PostForm {
 	

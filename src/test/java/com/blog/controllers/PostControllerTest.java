@@ -19,8 +19,6 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockMultipartFile;
@@ -34,7 +32,6 @@ import org.springframework.test.web.servlet.request.RequestPostProcessor;
 import com.blog.ScenarioFactory;
 import com.blog.exception.NotFoundException;
 import com.blog.model.dto.PostDTO;
-import com.blog.model.dto.PostInfoDTO;
 import com.blog.model.dto.PostSummaryDTO;
 import com.blog.model.dto.UserDetailsDTO;
 import com.blog.model.enums.ProfileTypeEnum;
@@ -62,13 +59,11 @@ public class PostControllerTest {
 	private PostDTO postDTO1;
 	private PostSummaryDTO postSummaryDTO0;
 	private PostSummaryDTO postSummaryDTO1;
-	private PostInfoDTO postInfoDTO;
 	
 	@Before
 	public void setUp() {
-		postDTO0 = ScenarioFactory.getPostDTO0();
+		postDTO0 = ScenarioFactory.getPostJavaDTO();
 		postDTO1 = ScenarioFactory.getPostDTO1();
-		postInfoDTO = ScenarioFactory.getPostInfoDTO();
 		postSummaryDTO0 = ScenarioFactory.getPostSummaryDTO0();
 		postSummaryDTO1 = ScenarioFactory.getPostSummaryDTO1();
 		when(authClient.checkToken(Mockito.anyString()))
@@ -85,9 +80,9 @@ public class PostControllerTest {
 		mvc.perform(MockMvcRequestBuilders.get("/posts/1")
 				.accept(MediaType.APPLICATION_JSON))
 			.andExpect(status().isOk())
-			.andExpect(jsonPath("$.title", equalTo("Post title")))
-			.andExpect(jsonPath("$.body", equalTo("Post body")))
-			.andExpect(jsonPath("$.summary", equalTo("Post summary")));
+			.andExpect(jsonPath("$.title", equalTo("Java Title")))
+			.andExpect(jsonPath("$.body", equalTo("Java Body")))
+			.andExpect(jsonPath("$.summary", equalTo("Java Summary")));
 	}
 	
 	@Test
@@ -151,21 +146,6 @@ public class PostControllerTest {
 			.thenReturn(new PageImpl<PostSummaryDTO>(Arrays.asList(postSummaryDTO1)));
 		
 		mvc.perform(MockMvcRequestBuilders.get("/posts/summaries?category=Scala"))
-				.andExpect(status().isOk())
-				.andExpect(jsonPath("$").isNotEmpty());
-	}
-	
-	/*
-	 * List top posts test cases
-	 */
-
-	@Test
-	public void testGetTopPostsInfoList() throws Exception {
-		when(postService.findPostInfoList(PageRequest.of(0, 10,
-				Sort.by(Sort.Direction.DESC, "lastUpdateDate"))))
-			.thenReturn(new PageImpl<PostInfoDTO>(Arrays.asList(postInfoDTO)));
-
-		mvc.perform(MockMvcRequestBuilders.get("/posts/info"))
 				.andExpect(status().isOk())
 				.andExpect(jsonPath("$").isNotEmpty());
 	}

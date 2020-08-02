@@ -2,15 +2,16 @@ package com.blog.controllers;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import java.time.LocalDateTime;
 import java.util.Arrays;
 
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.BDDMockito;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -26,7 +27,10 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import com.blog.model.Subscription;
+import com.blog.model.dto.UserDetailsDTO;
+import com.blog.model.enums.ProfileTypeEnum;
 import com.blog.services.SubscriptionService;
+import com.blog.services.impl.AuthServiceJwtImpl;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -40,17 +44,27 @@ public class SubscriptionControllerTest {
 	@MockBean
 	private SubscriptionService subscriptionService;
 	
+	@MockBean
+	private AuthServiceJwtImpl authClient;
+		
 	private Pageable page = PageRequest.of(0, 1);
+	
+	@Before
+	public void setUp() {
+		when(authClient.checkToken(Mockito.anyString()))
+			.thenReturn(new UserDetailsDTO("jovanibrasil", ProfileTypeEnum.ROLE_ADMIN));
+	}
 	
 	@Test
 	public void testFindAllSubscriptions() throws Exception {
 		Subscription subscription0 = new Subscription(1L, "test0@gmail.com", LocalDateTime.now());
 		Subscription subscription1 = new Subscription(2L, "test1@gmail.com", LocalDateTime.now());
 				
-		BDDMockito.given(subscriptionService.findAllSubscriptions(any(Pageable.class)))
-			.willReturn(new PageImpl<>(Arrays.asList(subscription0, subscription1)));
+		when(subscriptionService.findAllSubscriptions(any(Pageable.class)))
+			.thenReturn(new PageImpl<>(Arrays.asList(subscription0, subscription1)));
 		mvc.perform(MockMvcRequestBuilders.get("/subscriptions?page=0&size=1")
-				.accept(MediaType.APPLICATION_JSON))
+			.accept(MediaType.APPLICATION_JSON)
+			.header("Authorization", "x.x.x.x"))
 			.andExpect(status().isOk())
 			.andExpect(jsonPath("$.content[0].id", equalTo(1)))
 			.andExpect(jsonPath("$.content[0].email", equalTo("test0@gmail.com")));
@@ -58,21 +72,20 @@ public class SubscriptionControllerTest {
 	
 	@Test
 	public void testFindAllSubscriptionsEmptyList() throws Exception {
-		BDDMockito.given(this.subscriptionService.findAllSubscriptions(page))
-			.willReturn(new PageImpl<>(Arrays.asList()));
+		when(subscriptionService.findAllSubscriptions(page)).thenReturn(new PageImpl<>(Arrays.asList()));
 		mvc.perform(MockMvcRequestBuilders.get("/subscriptions")
-				.accept(MediaType.APPLICATION_JSON))
+			.accept(MediaType.APPLICATION_JSON)
+			.header("Authorization", "x.x.x.x"))
 			.andExpect(status().isOk());
 	}
 	
 	@Test
 	public void testSubscribe() throws Exception {
 		Subscription subscription = new Subscription(1L, "test0@gmail.com", LocalDateTime.now());
-		BDDMockito.given(this.subscriptionService.saveSubscription(Mockito.any()))
-			.willReturn(subscription);
+		when(subscriptionService.saveSubscription(Mockito.any())).thenReturn(subscription);
 		mvc.perform(MockMvcRequestBuilders.post("/subscriptions/test0@gmail.com")
-				.contentType(MediaType.APPLICATION_JSON))			
-				.andExpect(status().isCreated());
+			.contentType(MediaType.APPLICATION_JSON))			
+			.andExpect(status().isCreated());
 	}
 	
 }

@@ -234,6 +234,14 @@
 						</goals>
 					</execution>
 				</executions>
+				<configuration>
+					<excludes>
+						<exclude>com/blog/*Application*</exclude>
+						<exclude>com/blog/model/*/**</exclude>
+						<exclude>com/blog/exception/*/**</exclude>
+						<exclude>com/blog/config/*/**</exclude>
+					</excludes>
+				</configuration>
 			</plugin>
 		</plugins>
 		<resources>

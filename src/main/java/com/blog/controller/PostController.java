@@ -23,7 +23,6 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import com.blog.model.dto.PostDTO;
-import com.blog.model.dto.PostInfoDTO;
 import com.blog.model.dto.PostSummaryDTO;
 import com.blog.model.form.PostForm;
 import com.blog.services.PostService;
@@ -62,16 +61,7 @@ public class PostController {
 			@RequestParam(value="category", defaultValue="all") String cat) {
 		return postService.findPostSummaryList(cat, pageable);
 	}
-	
-	@ApiOperation(value = "Busca infos dos posts.", notes = "Infos são objetos o título e id do post.")
-	@ApiResponses({@ApiResponse(code = 200, message = "Resultado da busca.", response = PostInfoDTO.class, responseContainer = "List")})
-	@ResponseStatus(HttpStatus.OK)
-	@GetMapping("/info") 
-	public Page<PostInfoDTO> getTopPostInfoList(
-			@PageableDefault(page = 0, direction = Direction.DESC, sort = "lastUpdateDate") Pageable pageable) {
-		return postService.findPostInfoList(pageable);
-	}
-	
+		
 	@ApiOperation(value = "Busca todos os posts por um critério.")
 	@ApiResponses({
 		@ApiResponse(code = 200, message = "Resultado da busca.", response = PostDTO.class ),

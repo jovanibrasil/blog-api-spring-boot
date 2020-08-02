@@ -69,8 +69,8 @@ public class UserControllerTest {
 			.header("Authorization", "x.x.x.x")
 			.accept(MediaType.APPLICATION_JSON))
 			.andExpect(status().isOk())
-			.andExpect(jsonPath("$.userName", equalTo("jovanibrasil")))
-			.andExpect(jsonPath("$.fullUserName", equalTo("Jovani Brasil")));
+			.andExpect(jsonPath("$.userName", equalTo("username")))
+			.andExpect(jsonPath("$.fullUserName", equalTo("User Name")));
 	}
 	
 }

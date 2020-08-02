@@ -16,10 +16,8 @@ import com.blog.model.Image;
 import com.blog.model.Post;
 import com.blog.model.User;
 import com.blog.model.dto.PostDTO;
-import com.blog.model.dto.PostInfoDTO;
 import com.blog.model.dto.PostSummaryDTO;
 import com.blog.model.form.PostForm;
-import com.blog.model.mapper.PostInfoMapper;
 import com.blog.model.mapper.PostMapper;
 import com.blog.model.mapper.SummaryMapper;
 import com.blog.repositories.PostRepository;
@@ -38,7 +36,6 @@ public class PostServiceImpl implements PostService {
 	private final PostRepository postRepository;
 	private final ImageService imageService;
 
-	private final PostInfoMapper postInfoMapper;
 	private final PostMapper postMapper;
 	private final SummaryMapper summaryMapper;
 
@@ -139,19 +136,8 @@ public class PostServiceImpl implements PostService {
 	}
 
 	/**
-	 * Returns a list of PostInfo objects. A PostInfo object contains id and title of
-	 * an post. The size of the list id determined by TOP_POSTS_LIST_SIZE.
-	 * 
-	 * @return
-	 */
-	@Override
-	public Page<PostInfoDTO> findPostInfoList(Pageable pageable) {
-		return postRepository.findAll(pageable)
-				.map(postInfoMapper::postToPostInfoDto);
-	}
-
-	/**
-	 * Updates a specified post.
+	 * Updates a specified post. If a banner is received the post banner will 
+	 * be updated considering the banner id current saved.
 	 * 
 	 */
 	@Transactional
@@ -164,7 +150,13 @@ public class PostServiceImpl implements PostService {
 		post.setSummary(receivedPost.getSummary());
 		post.setLastUpdateDate(LocalDateTime.now());
 		post.setTags(receivedPost.getTags());
-		post.getBanner().setContent(banner);
+		
+		if(banner != null) {
+			Image receivedBanner = new Image(banner);
+			receivedBanner.setId(post.getBanner().getId());
+			imageService.saveImage(receivedBanner);
+		}
+		
 		return postMapper.postToPostDto(post);
 	}
 

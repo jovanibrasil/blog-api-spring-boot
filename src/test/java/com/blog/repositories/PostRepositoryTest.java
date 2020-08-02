@@ -1,10 +1,8 @@
 package com.blog.repositories;
 
-import com.blog.model.Post;
-import com.blog.model.User;
-import com.blog.model.enums.ProfileTypeEnum;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -17,11 +15,10 @@ import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-
-import static org.junit.Assert.assertEquals;
+import com.blog.ScenarioFactory;
+import com.blog.model.Image;
+import com.blog.model.Post;
+import com.blog.model.User;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -30,117 +27,92 @@ import static org.junit.Assert.assertEquals;
 public class PostRepositoryTest {
 
 	@Autowired
-	PostRepository postRepository;
+	private PostRepository postRepository;
 	
 	@Autowired
-	UserRepository userRepository;
+	private UserRepository userRepository;
+	
+	@Autowired
+	private ImageRepository imageRepository;
+	
+	private PageRequest pageSortedByLastUpdateDate = PageRequest.of(0, 5, Sort.by("lastUpdateDate"));
+	private PageRequest pageUnsorted = PageRequest.of(0, 5);
 	
 	@Before
 	public void setUp() {
-		List<String> tags = new ArrayList<>();
-		tags.add("Tag");
-		User user = new User();
-		user.setFullUserName("User Name");
-		user.setLastUpdateDate(LocalDateTime.now());
-		user.setProfileType(ProfileTypeEnum.ROLE_USER);
-		user.setUserName("jovanibrasil");
-		user.setEmail("user@gmail.com");
+		User user = ScenarioFactory.getUser();
 		userRepository.save(user);
 		
-		Post post = new Post();
-		post.setTitle("Post title");
-		post.setBody("Post body");
-		post.setSummary("Post summary");
-		post.setLastUpdateDate(LocalDateTime.now());
-		post.setCreationDate(LocalDateTime.now());
-		post.setTags(tags);
-		post.setAuthor(user);
-		this.postRepository.save(post);
-		tags.add("Test");
-		Post post2 = new Post();
-		post2.setTitle("Post2 title");
-		post2.setBody("Post2 body");
-		post2.setSummary("Post2 summary");
-		post2.setLastUpdateDate(LocalDateTime.now());
-		post2.setCreationDate(LocalDateTime.now());
-		post2.setTags(tags);
-		post2.setAuthor(user);
-		this.postRepository.save(post2);
-	}
-	
-	@After
-	public void tearDown() {
-		this.postRepository.deleteAll();
-		this.userRepository.deleteAll();
+		Image image = ScenarioFactory.getDecompressedImage();
+		imageRepository.save(image);
+		
+		Post post = ScenarioFactory.getPostJava();
+		post.setBanner(image);
+		postRepository.save(post);
+				
+		post = ScenarioFactory.getPostSpring();
+		post.setId(null);
+		post.setBanner(image);
+		postRepository.save(post);
 	}
 	
 	@Test
-	public void testFindPostsByUserId() {
-		PageRequest page = PageRequest.of(0, 5, Sort.by("lastUpdateDate"));
-		Page<Post> posts = this.postRepository.findByUserName("jovanibrasil", page);
-		assertEquals("jovanibrasil", posts.getContent().get(0).getAuthor().getUserName());
-	}
-	
-	@Test
-	public void testFindPostsByInvalidUserName() {
-		PageRequest page = PageRequest.of(0, 5, Sort.by("lastUpdateDate"));
-		Page<Post> posts = this.postRepository.findByUserName("jovanibrasil2", page);
-		assertEquals(0, posts.getNumberOfElements());
-	}
-	
-	@Test
-	public void testFindPostsByTagName1() {
-		PageRequest page = PageRequest.of(0, 5, Sort.by("lastUpdateDate"));
-		Page<Post> posts = this.postRepository.findByCategory("Tag", page);
+	public void testFindPostsByTagJava() {
+		Page<Post> posts = postRepository.findByCategory("Java", pageSortedByLastUpdateDate);
 		assertEquals(2, posts.getNumberOfElements());
 	}
 	
 	@Test
-	public void testFindPostsByTagName2() {
-		PageRequest page = PageRequest.of(0, 5, Sort.by("lastUpdateDate"));
-		Page<Post> posts = this.postRepository.findByCategory("Test", page);
+	public void testFindPostsByTagSpring() {
+		Page<Post> posts = postRepository.findByCategory("Spring", pageSortedByLastUpdateDate);
 		assertEquals(1, posts.getNumberOfElements());
 	}
 	
 	@Test
-	public void testFindPosts() {
-		PageRequest page = PageRequest.of(0, 5, Sort.by("lastUpdateDate"));
-		Page<Post> posts = this.postRepository.findAll(page);
+	public void testFindAllPosts() {
+		assertEquals(2, postRepository.findAll(pageSortedByLastUpdateDate).getNumberOfElements());
+	}
+	
+	@Test
+	public void testFindPostsByUserName() {
+		assertEquals(2, postRepository.findByUserName("username", pageSortedByLastUpdateDate).getNumberOfElements());
+	}
+	
+	@Test
+	public void testFindPostsByInvalidUserName() {
+		assertEquals(0, postRepository.findByUserName("invalidusername", pageSortedByLastUpdateDate).getNumberOfElements());
+	}
+		
+	@Test
+	public void testSearchByEspecificTerm() {
+		Page<Post> posts = postRepository.findByTerm("Title", pageUnsorted);
 		assertEquals(2, posts.getNumberOfElements());
 	}
 	
 	@Test
-	public void searchByEspecificTerm() {
-		PageRequest page = PageRequest.of(0, 5);
-		Page<Post> posts = this.postRepository.findByTerm("title", page);
-		assertEquals(2, posts.getNumberOfElements());
+	public void testDeletePost() {
+		Post post = ScenarioFactory.getPostJava();
+		Image image = ScenarioFactory.getDecompressedImage();
+		imageRepository.save(image);
+		post.setId(null);
+		post.setBanner(image);
+		postRepository.save(post);
+		postRepository.delete(post);
+		assertFalse(postRepository.findById(post.getId()).isPresent());
 	}
 	
 	@Test
-	public void testThirdAddedPost() {
-		
-		List<String> tags = new ArrayList<>();
-		tags.add("Tag");
-		User user = new User();
-		user.setFullUserName("User Name");
-		user.setLastUpdateDate(LocalDateTime.now());
-		user.setProfileType(ProfileTypeEnum.ROLE_USER);
-		user.setCreationDate(LocalDateTime.now());
-		user.setUserName("jovanibrasil");
-		user.setEmail("user@gmail.com");
-		userRepository.save(user);
-		
-		Post post = new Post();
-		post.setTitle("Post title");
-		post.setBody("Post body");
-		post.setSummary("Post summary");
-		post.setLastUpdateDate(LocalDateTime.now());
-		post.setCreationDate(LocalDateTime.now());
-		post.setTags(tags);
-		post.setAuthor(user);
-		post = this.postRepository.save(post);
-		
-		assertEquals(3L, post.getId().longValue());
+	public void testUpdatePost() {
+		Post post = ScenarioFactory.getPostJava();
+		Image image = ScenarioFactory.getDecompressedImage();
+		imageRepository.save(image);
+		post.setId(null);
+		post.setBanner(image);
+		postRepository.save(post);
+		String newBody = "New Body";
+		post.setBody(newBody);
+		postRepository.save(post);
+		assertEquals(newBody, postRepository.findById(post.getId()).get().getBody());
 	}
 	
 }

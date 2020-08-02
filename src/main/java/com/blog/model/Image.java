@@ -1,15 +1,23 @@
 package com.blog.model;
 
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import java.io.IOException;
+import java.util.Objects;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Lob;
+import javax.persistence.Table;
+import javax.persistence.Transient;
 
 import org.hibernate.annotations.Type;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.persistence.*;
-
-import java.io.IOException;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Getter
 @Setter
@@ -48,5 +56,18 @@ public class Image {
 			throw new RuntimeException(e.getMessage());
 		}
 	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if(obj == null) return false;
+		if(obj == this) return false;
+		
+		Image image = (Image) obj;
+		
+		return Objects.equals(image.getId(), id)
+				&& Objects.equals(image.getName(), name)
+				&& Objects.equals(image.getType(), type)
+				&& Objects.deepEquals(image.getBytes(), bytes);
+	}	
 
 }

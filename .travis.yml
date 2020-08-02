@@ -5,5 +5,10 @@ before_install:
   - chmod +x mvnw
 script:
   - mvn -Ptest test -B
+addons:
+  sonarcloud:
+    organization: $SONAR_ORGANIZATION
+    token:
+      secure: $SONAR_LOGIN
 after_success:
   - bash <(curl -s https://codecov.io/bash)

@@ -1,5 +1,6 @@
 package com.blog.services.impl;
 
+import com.blog.exception.ExceptionMessages;
 import com.blog.exception.NotFoundException;
 import com.blog.exception.UserException;
 import com.blog.model.User;
@@ -42,7 +43,7 @@ public class UserServiceImpl implements UserService {
 	public UserDTO findByUserName(String userName) {
 		return userRepository.findByName(userName)
 			.map(userMapper::userToUserDto)
-			.orElseThrow(() -> new NotFoundException("error.user.find"));
+			.orElseThrow(() -> new NotFoundException(ExceptionMessages.USER_NOT_FOUND));
 	}
 
 	/**
@@ -53,7 +54,7 @@ public class UserServiceImpl implements UserService {
 	public void deleteByUserName(String userName) {
 		userRepository.findByName(userName).ifPresentOrElse(
 				userRepository::delete, 
-				() -> { throw new NotFoundException("error.user.find"); });
+				() -> { throw new NotFoundException(ExceptionMessages.USER_NOT_FOUND); });
 	}
 
 	/**
@@ -67,7 +68,7 @@ public class UserServiceImpl implements UserService {
 		User user = userMapper.userFormToUser(userForm);
 		
 		userRepository.findByName(user.getUserName()).ifPresent(
-				savedUser -> { throw new UserException("error.user.name.unique"); } );
+				savedUser -> { throw new UserException(ExceptionMessages.USER_NAME_UNIQUE); } );
 		
 		user.setCreationDate(LocalDateTime.now());
 		user.setLastUpdateDate(LocalDateTime.now());

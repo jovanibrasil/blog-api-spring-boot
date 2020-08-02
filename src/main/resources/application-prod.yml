@@ -28,3 +28,7 @@ urls:
     check-token: http://apps-server:8080/auth-api/token/check
     get-token: http://apps-server:8080/auth-api/token
   search: http://search-api:4567/search
+  
+blog-api:
+  username: ${BLOG_SERVICE_USERNAME}
+  password: ${BLOG_SERVICE_PASSWORD}

@@ -1,5 +1,6 @@
 package com.blog.services.impl;
 
+import com.blog.exception.ExceptionMessages;
 import com.blog.exception.InvalidInformationException;
 import com.blog.model.Subscription;
 import com.blog.repositories.SubscriptionRepository;
@@ -28,7 +29,7 @@ public class SubscriptionServiceImpl implements SubscriptionService {
 			return this.subscriptionRepository.save(subscription);
 		}
 		log.info("The email {} was already subscribed.", subscription.getEmail());
-		throw new InvalidInformationException("Email already registered.");
+		throw new InvalidInformationException(ExceptionMessages.EMAIL_SUBS_UNIQUE);
 	}
 
 	@Override

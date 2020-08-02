@@ -4,6 +4,7 @@ import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 
+import com.blog.exception.ExceptionMessages;
 import com.blog.exception.NotFoundException;
 import com.blog.model.Image;
 import com.blog.repositories.ImageRepository;
@@ -41,7 +42,7 @@ public class ImageServiceImpl implements ImageService {
 			image.setBytes(ImageUtils.decompressBytes(image.getBytes()));
 			return image;
 		}
-		throw new NotFoundException("error.image.notfound");
+		throw new NotFoundException(ExceptionMessages.IMAGE_NOT_FOUND);
 	}
 	
 }

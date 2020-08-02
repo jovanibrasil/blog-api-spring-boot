@@ -11,6 +11,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.blog.exception.ExceptionMessages;
 import com.blog.exception.NotFoundException;
 import com.blog.model.Image;
 import com.blog.model.Post;
@@ -75,7 +76,7 @@ public class PostServiceImpl implements PostService {
 	public PostDTO findPostById(Long id) {
 		return postRepository.findById(id)
 				.map(postMapper::postToPostDto)
-				.orElseThrow(() -> new NotFoundException("error.post.find"));
+				.orElseThrow(() -> new NotFoundException(ExceptionMessages.POST_NOT_FOUND));
 	}
 
 	/**
@@ -90,7 +91,7 @@ public class PostServiceImpl implements PostService {
 	public void deleteByPostId(Long postId) {
 		postRepository.findById(postId).ifPresentOrElse(
 				postRepository::delete,
-				() -> { throw new NotFoundException("error.post.find"); }
+				() -> { throw new NotFoundException(ExceptionMessages.POST_NOT_FOUND); }
 		);
 	}
 	
@@ -144,7 +145,8 @@ public class PostServiceImpl implements PostService {
 	@Override
 	public PostDTO update(Long postId, PostForm postForm, MultipartFile banner) {
 		Post receivedPost = postMapper.postFormToPost(postForm);
-		Post post = postRepository.findById(postId).orElseThrow(() -> new NotFoundException("error.post.find"));
+		Post post = postRepository.findById(postId)
+				.orElseThrow(() -> new NotFoundException(ExceptionMessages.POST_NOT_FOUND));
 		post.setTitle(receivedPost.getTitle());
 		post.setBody(receivedPost.getBody());
 		post.setSummary(receivedPost.getSummary());
@@ -163,8 +165,8 @@ public class PostServiceImpl implements PostService {
 	@Transactional
 	@Override
 	public void incrementLikes(Long postId) {
-		postRepository.findById(postId).ifPresentOrElse(post ->	post.incrementLikes(),
-			() -> { throw new NotFoundException("error.post.find"); });
+		postRepository.findById(postId).ifPresentOrElse(Post::incrementLikes, () -> 
+			{ throw new NotFoundException(ExceptionMessages.POST_NOT_FOUND); });
 	}
 
 }

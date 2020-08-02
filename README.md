@@ -1,5 +1,6 @@
 [![Build Status](https://travis-ci.org/jovanibrasil/blog-api.svg?branch=develop)](https://travis-ci.org/jovanibrasil/blog-api)
 ![Codecov branch](https://img.shields.io/codecov/c/github/jovanibrasil/blog-api/develop)
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=com.blog%3Ablog-api&metric=alert_status)](https://sonarcloud.io/dashboard?id=com.blog%3Ablog-api)
 
 # API para um blog pessoal
 

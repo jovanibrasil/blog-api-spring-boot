@@ -1,21 +1,25 @@
 package com.blog.services.impl;
 
-import com.blog.config.security.BlogServiceProperties;
-import com.blog.exception.MicroServiceIntegrationException;
-import com.blog.model.dto.UserDetailsDTO;
-import com.blog.services.AuthService;
-import lombok.RequiredArgsConstructor;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.core.ParameterizedTypeReference;
-import org.springframework.http.*;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
+import com.blog.exception.MicroServiceIntegrationException;
+import com.blog.model.dto.UserDetailsDTO;
+import com.blog.services.AuthService;
+
+import lombok.RequiredArgsConstructor;
+
 @Component
-@EnableConfigurationProperties(BlogServiceProperties.class)
 @RequiredArgsConstructor
 public class AuthServiceJwtImpl implements AuthService {
 
@@ -24,8 +28,13 @@ public class AuthServiceJwtImpl implements AuthService {
 	
 	@Value("${urls.auth.get-token}")
 	private String getTokenUrl;
-
-	private final BlogServiceProperties blogServiceProperties;
+	
+	@Value("${blog-api.username}")
+	private String userName;
+	
+	@Value("${blog-api.password}")
+	private String password;
+	
 	private final RestTemplate restTemplate;
 
 	@Override
@@ -45,30 +54,25 @@ public class AuthServiceJwtImpl implements AuthService {
 	@Override
 	public String getServiceToken() {
 		try {
-			// create request body
 			JSONObject request = new JSONObject();
-			request.put("username", blogServiceProperties.getUsername());
-			request.put("password", blogServiceProperties.getPassword());
+			request.put("username", userName);
+			request.put("password", password);
 			request.put("applications", new JSONArray("BLOG_APP"));
-			// set headers
+			
 			HttpHeaders headers = new HttpHeaders();
 			headers.setContentType(MediaType.APPLICATION_JSON);
 			HttpEntity<String> entity = new HttpEntity<>(request.toString(), headers);
 			
-			// send request and parse result
 			ResponseEntity<String> loginResponse = restTemplate
-			  .exchange(getTokenUrl, HttpMethod.POST, entity, String.class);
+					.exchange(getTokenUrl, HttpMethod.POST, entity, String.class);
 			JSONObject responseBody = (new JSONObject(loginResponse.getBody()));
+			
 			if (loginResponse.getStatusCode() == HttpStatus.OK) {
-				//return 
 				JSONObject responseData = responseBody.getJSONObject("data");
 				return responseData.getString("token");
-			} else if (loginResponse.getStatusCode() == HttpStatus.UNAUTHORIZED) {
-				// bad credentials
-				// TODO return error
+			} else {
+				throw new Exception("Service unauthorized or remote server is not accessible.");
 			}
-			return "";
-			
 		} catch (Exception e) {
 			throw new MicroServiceIntegrationException("It was not posssible to validate the user.", e);
 		}

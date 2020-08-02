@@ -29,6 +29,7 @@ import com.blog.model.Post;
 import com.blog.model.dto.PostDTO;
 import com.blog.model.form.PostForm;
 import com.blog.model.mapper.PostMapper;
+import com.blog.model.mapper.PostMapperImpl;
 import com.blog.repositories.PostRepository;
 import com.blog.services.ImageService;
 import com.blog.services.PostService;
@@ -37,7 +38,7 @@ import com.blog.services.PostService;
 @RunWith(SpringRunner.class)
 @SpringBootTest
 @ActiveProfiles("test")
-public class BlogServiceTest {
+public class PostServiceTest {
 
 	@Autowired
 	private PostService postService;
@@ -60,19 +61,19 @@ public class BlogServiceTest {
 	}
 	
 	@Test
-	public void deleteExistentPost() {
+	public void testDeleteExistentPost() {
 		when(postRepository.findById(1L)).thenReturn(Optional.of(ScenarioFactory.getPostJava()));
 		assertThatCode(() -> postService.deleteByPostId(1L)).doesNotThrowAnyException();
 	}
 	
 	@Test(expected =  NotFoundException.class)
-	public void deleteInexistentPost() {
+	public void testDeleteInexistentPost() {
 		when(postRepository.findById(2L)).thenReturn(Optional.empty());
 		postService.deleteByPostId(2L);
 	}
 	
 	@Test
-	public void createPost() {
+	public void testCreatePost() {
 		Post post = ScenarioFactory.getPostJava();
 		PostForm postForm = ScenarioFactory.getPostJavaForm();
 		Image banner = ScenarioFactory.getDecompressedImage();
@@ -99,18 +100,7 @@ public class BlogServiceTest {
 			@Override
 			public PostDTO answer(InvocationOnMock invocation) throws Throwable {
 				Post post = (Post) invocation.getArgument(0);
-				return PostDTO.builder()
-						.bannerId(post.getBanner().getId())
-						.id(post.getId())
-						.body(post.getBody())
-						.creationDate(post.getCreationDate())
-						.lastUpdateDate(post.getLastUpdateDate())
-						.likes(post.getLikes())
-						.userName(post.getAuthor().getUserName())
-						.summary(post.getSummary())
-						.tags(post.getTags())
-						.title(post.getTitle())
-						.build();
+				return (new PostMapperImpl()).postToPostDto(post);
 			}
 		});
 		
@@ -124,7 +114,7 @@ public class BlogServiceTest {
 	}
 	
 	@Test
-	public void updateExistentPost() {
+	public void testUpdateExistentPost() {
 
 		Image banner = ScenarioFactory.getDecompressedImage();
 		Post receivedPost = ScenarioFactory.getPostJava();
@@ -141,18 +131,7 @@ public class BlogServiceTest {
 			@Override
 			public PostDTO answer(InvocationOnMock invocation) throws Throwable {
 				Post post = invocation.getArgument(0);
-				return PostDTO.builder()
-						.bannerId(post.getBanner().getId())
-						.id(post.getId())
-						.body(post.getBody())
-						.creationDate(post.getCreationDate())
-						.lastUpdateDate(post.getLastUpdateDate())
-						.likes(post.getLikes())
-						.userName(post.getAuthor().getUserName())
-						.summary(post.getSummary())
-						.tags(post.getTags())
-						.title(post.getTitle())
-						.build();
+				return (new PostMapperImpl()).postToPostDto(post);
 			}
 		});
 		
@@ -165,7 +144,7 @@ public class BlogServiceTest {
 	}
 	
 	@Test
-	public void updateExistentPostWithoutSendBanner() {
+	public void testUpdateExistentPostWithoutSendBanner() {
 		Post receivedPost = ScenarioFactory.getPostJava();
 		PostForm postForm = ScenarioFactory.getPostJavaForm();
 		
@@ -177,18 +156,7 @@ public class BlogServiceTest {
 			@Override
 			public PostDTO answer(InvocationOnMock invocation) throws Throwable {
 				Post post = invocation.getArgument(0);
-				return PostDTO.builder()
-						.bannerId(post.getBanner().getId())
-						.id(post.getId())
-						.body(post.getBody())
-						.creationDate(post.getCreationDate())
-						.lastUpdateDate(post.getLastUpdateDate())
-						.likes(post.getLikes())
-						.userName(post.getAuthor().getUserName())
-						.summary(post.getSummary())
-						.tags(post.getTags())
-						.title(post.getTitle())
-						.build();
+				return (new PostMapperImpl()).postToPostDto(post);
 			}
 		});
 		
@@ -201,7 +169,7 @@ public class BlogServiceTest {
 	}
 	
 	@Test(expected = NotFoundException.class)
-	public void updateInexistentPost() {
+	public void testUpdateInexistentPost() {
 		Post post = ScenarioFactory.getPostJava();
 		PostForm postForm = ScenarioFactory.getPostJavaForm();
 		
@@ -210,5 +178,6 @@ public class BlogServiceTest {
 	
 		postService.update(1L, postForm, null);	
 	}
+	
 
 }

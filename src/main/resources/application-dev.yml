@@ -29,3 +29,7 @@ urls:
     check-token: http://127.0.0.1:8083/token/check
     get-token: http://127.0.0.1:8083/token
   search: http://127.0.0.1:4567/search
+
+blog-api:
+  username: ${BLOG_SERVICE_USERNAME:BLOG}
+  password: ${BLOG_SERVICE_PASSWORD:123456}

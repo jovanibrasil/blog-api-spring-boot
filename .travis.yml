@@ -4,8 +4,7 @@ jdk:
 addons:
   sonarcloud:
     organization: $SONAR_ORGANIZATION
-    token:
-      secure: $SONAR_LOGIN
+    token: $SONAR_LOGIN
 before_install:
   - chmod +x mvnw
 script:

@@ -29,7 +29,7 @@ spring:
 urls:
   auth:
     check-token: http://auth-api:8080/auth-api/auth/checkToken
-    get-token: http://auth-api:8080/auth-api/auth/login
+    create-token: http://auth-api:8080/auth-api/auth/login
   search: 'http://search-api:4567/search '
   
 blog-api:

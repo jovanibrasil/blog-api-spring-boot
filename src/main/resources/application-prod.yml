@@ -3,9 +3,6 @@ blog:
     page-size: 6
     top-list:
       page-size: 10
-blog-api:
-  password: ${BLOG_API_PASSWORD}
-  username: ${BLOG_API_USERNAME}
 spring:
   datasource:
     plataform: postgres
@@ -23,12 +20,13 @@ spring:
     properties:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
+        temp:
+          use_jdbc_metadata_defaults: false
 urls:
   auth:
-    check-token: http://apps-server:8080/auth-api/token/check
-    get-token: http://apps-server:8080/auth-api/token
+    check-token: ${AUTH_API_URL}/token/check
+    create-token: ${AUTH_API_URL}/token
   search: http://search-api:4567/search
-  
 blog-api:
   username: ${BLOG_SERVICE_USERNAME}
   password: ${BLOG_SERVICE_PASSWORD}

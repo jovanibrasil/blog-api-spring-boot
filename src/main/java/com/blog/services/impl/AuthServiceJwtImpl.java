@@ -26,7 +26,7 @@ public class AuthServiceJwtImpl implements AuthService {
 	@Value("${urls.auth.check-token}")
 	private String checkTokenUrl;
 	
-	@Value("${urls.auth.get-token}")
+	@Value("${urls.auth.create-token}")
 	private String getTokenUrl;
 	
 	@Value("${blog-api.username}")

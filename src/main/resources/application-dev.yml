@@ -27,7 +27,7 @@ blog:
 urls:
   auth:
     check-token: http://127.0.0.1:8083/token/check
-    get-token: http://127.0.0.1:8083/token
+    create-token: http://127.0.0.1:8083/token
   search: http://127.0.0.1:4567/search
 
 blog-api:

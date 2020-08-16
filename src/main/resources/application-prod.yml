@@ -22,11 +22,6 @@ spring:
         dialect: org.hibernate.dialect.PostgreSQLDialect
         temp:
           use_jdbc_metadata_defaults: false
-urls:
-  auth:
-    check-token: ${AUTH_API_URL}/token/check
-    create-token: ${AUTH_API_URL}/token
-  search: http://search-api:4567/search
 blog-api:
   username: ${BLOG_SERVICE_USERNAME}
   password: ${BLOG_SERVICE_PASSWORD}

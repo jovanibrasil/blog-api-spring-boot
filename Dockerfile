@@ -7,17 +7,18 @@ ARG BLOG_DB_URL
 ARG BLOG_DB_USERNAME 
 ARG BLOG_DB_PASSWORD
 ARG ENVIRONMENT
-ARG FILE_NAME
+ARG VERSION
 
 ENV BLOG_DB_URL=$BLOG_DB_URL
 ENV BLOG_DB_USERNAME=$BLOG_DB_USERNAME
 ENV BLOG_DB_PASSWORD=$BLOG_DB_PASSWORD
 ENV ENVIRONMENT=$ENVIRONMENT
-ENV FILE_NAME=${FILE_NAME}
 
 RUN mkdir -p /apps/blog/
 
-COPY ./target/${FILE_NAME} /usr/local/tomcat/webapps/${FILE_NAME}
+COPY ./target/blog-api##${VERSION}.war /usr/local/tomcat/webapps/ROOT##${VERSION}.war
+COPY ./target/blog-api##${VERSION} /usr/local/tomcat/webapps/ROOT##${VERSION}
+
 COPY ./scripts ./scripts
 RUN if [ "$ENVIRONMENT" = "dev" ]; \
 	   	then cp ./scripts/startup-dev.sh /startup.sh; \

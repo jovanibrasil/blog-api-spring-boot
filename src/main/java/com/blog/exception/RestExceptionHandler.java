@@ -62,7 +62,7 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler  {
 	public ResponseEntity<ErrorDetail> handleInvalidInformationException(InvalidInformationException invalidInformationException){
 		log.info("Invalid information. Sending response ...");
 		ErrorDetail errorDetail = new ErrorDetail.Builder()
-				.message(invalidInformationException.getMessage())
+				.message(getMessage(invalidInformationException.getLocalizedMessage()))
 				.build();
 		return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).body(errorDetail);
 	}

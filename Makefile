@@ -1,3 +1,7 @@
+PKG_VERSION_PATH := "./src/main/resources/buildNumber.properties"
+LAST_VERSION := $(shell (grep buildNumber= | cut -d= -f2) < $(PKG_VERSION_PATH))
+$(eval VERSION=$(shell echo $$(($(LAST_VERSION)+1))))
+
 run-tests:
 	mvn clean test -Ptest
 
@@ -6,18 +10,14 @@ stop:
 clean: stop
 	- docker rm blog-api
 
-build-maven:
-	rm libs/ -rf
+build:
 	mvn clean package
-	mvn dependency:copy-dependencies
-	FILE_NAME=blog-api\#\#$(shell find target/*.war -type f | grep -Eo '[0-9]+)
-	
-build: clean build-maven
-	docker build --build-arg ENVIRONMENT=dev --build-arg FILE_NAME -t blog-api .
+	mvn dependency:copy-dependencies	
+	docker build --build-arg ENVIRONMENT=dev --build-arg VERSION=$(VERSION) -t blog-api .
 	chmod -R ugo+rw target/
 
 run: clean
-	docker run -d -p 8081:8080 -m 256m --memory-swap 512m --env-file ./.env \
+	docker run -m 256m --memory-swap 512m --env-file ./.env \
 		--name=blog-api --network net blog-api
 
 start: stop

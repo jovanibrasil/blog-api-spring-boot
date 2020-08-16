@@ -1,5 +1,5 @@
 server:
-  port: 8081
+    port: ${PORT:8081}
 spring:
   datasource:
     plataform: postgres
@@ -24,11 +24,6 @@ blog:
     page-size: 6
     top-list:
       page-size: 10
-urls:
-  auth:
-    check-token: http://127.0.0.1:8083/token/check
-    create-token: http://127.0.0.1:8083/token
-  search: http://127.0.0.1:4567/search
 
 blog-api:
   username: ${BLOG_SERVICE_USERNAME:BLOG}

@@ -14,6 +14,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import com.blog.ScenarioFactory;
 import com.blog.model.User;
+import com.blog.repositories.UserRepository;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest

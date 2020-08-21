@@ -1,19 +1,16 @@
 package com.blog.model.form;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
+import java.util.List;
+
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
-
-import java.time.LocalDateTime;
-import java.util.List;
 
 @Getter @Setter
 @Builder
@@ -35,9 +32,5 @@ public class PostForm {
 	
 	@NotNull(message="{error.post.tags.notnull}")
 	private List<String> tags;
-	@JsonFormat(pattern="yyyy-MM-dd HH:mm:ss")
-	private LocalDateTime creationDate;
-	@JsonFormat(pattern="yyyy-MM-dd HH:mm:ss")
-	private LocalDateTime lastUpdateDate;
 	
 }

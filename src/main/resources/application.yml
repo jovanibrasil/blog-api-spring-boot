@@ -24,6 +24,6 @@ management:
         include: '*'
 urls:
   auth:
-    check-token: ${AUTH_API_URL:http://auth-api:8080}/token/check
-    create-token: ${AUTH_API_URL:http://auth-api:8080}/token
+    check-token: ${AUTH_API_URL:http://127.0.0.1:8083}/token/check
+    create-token: ${AUTH_API_URL:http://127.0.0.1:8083}/token
   search: http://search-api/search

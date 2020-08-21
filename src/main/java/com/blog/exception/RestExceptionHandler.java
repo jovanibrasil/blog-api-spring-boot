@@ -1,10 +1,10 @@
 package com.blog.exception;
 
-import com.blog.response.ErrorDetail;
-import com.blog.response.ValidationError;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
+import javax.validation.ValidationException;
 
 import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
@@ -15,11 +15,14 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
+import org.springframework.web.multipart.support.MissingServletRequestPartException;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
-import javax.validation.ValidationException;
-import java.util.List;
-import java.util.stream.Collectors;
+import com.blog.response.ErrorDetail;
+import com.blog.response.ValidationError;
+
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @RestControllerAdvice
 @RequiredArgsConstructor
@@ -32,30 +35,46 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler  {
 		return messageSource.getMessage(message, null, LocaleContextHolder.getLocale());
 	}
 	
-	@ExceptionHandler(NotFoundException.class)
-	public ResponseEntity<ErrorDetail> handleNotFoundException(NotFoundException notFoundException){
-		log.info("NotFoundException. Sending response ...");
-		ErrorDetail errorDetail = new ErrorDetail.Builder()
-				.message(getMessage(notFoundException.getMessage()))
-				.build();
-		return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorDetail);
-	}
-		
 	@Override
 	protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex,
 			HttpHeaders headers, HttpStatus status, WebRequest request) {
-
+		
 		List<ValidationError> fieldErrors = ex.getBindingResult().getFieldErrors()
 				.stream().map(e -> new ValidationError(e.getDefaultMessage(),
-				e.getField(), e.getRejectedValue())).collect(Collectors.toList());
-
+						e.getField(), e.getRejectedValue())).collect(Collectors.toList());
+		
 		ErrorDetail errorDetail = new ErrorDetail.Builder()
 				.message("Invalid field values")
 				.code(status.value())
 				.status(status.getReasonPhrase())
 				.objectName(ex.getBindingResult().getObjectName())
 				.errors(fieldErrors).build();
-		return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).body(errorDetail);
+		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorDetail);
+	}
+
+	@ExceptionHandler(NotFoundException.class)
+	public ResponseEntity<ErrorDetail> handleNotFoundException(NotFoundException notFoundException){
+		log.info("NotFoundException. Sending response ...");
+		List<ValidationError> fieldErrors = new ArrayList<>();
+		fieldErrors.add(new ValidationError(getMessage(notFoundException.getMessage()), "", "null"));
+		ErrorDetail errorDetail = new ErrorDetail.Builder()
+				.message("Invalid field values")
+				.errors(fieldErrors)
+				.build();
+		return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorDetail);
+	}
+	
+	@Override
+	protected ResponseEntity<Object> handleMissingServletRequestPart(MissingServletRequestPartException ex,
+			HttpHeaders headers, HttpStatus status, WebRequest request) {
+		log.info("NotFoundException. Sending response ...");
+		List<ValidationError> fieldErrors = new ArrayList<>();
+		fieldErrors.add(new ValidationError(ex.getMessage(), ex.getRequestPartName(), "null"));
+		ErrorDetail errorDetail = new ErrorDetail.Builder()
+				.message("Invalid field values")
+				.errors(fieldErrors)
+				.build();
+		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorDetail);
 	}
 
 	@ExceptionHandler(InvalidInformationException.class)

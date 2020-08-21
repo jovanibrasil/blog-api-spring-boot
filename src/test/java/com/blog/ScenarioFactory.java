@@ -88,8 +88,6 @@ public class ScenarioFactory {
 				.summary(post.getSummary())
 				.body(post.getBody())
 				.tags(post.getTags())
-				.creationDate(post.getCreationDate())
-				.lastUpdateDate(post.getLastUpdateDate())
 				.build();
 	}
 

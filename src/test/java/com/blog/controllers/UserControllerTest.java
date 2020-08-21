@@ -48,7 +48,7 @@ public class UserControllerTest {
 	public void setUp() {
 		userDTO = ScenarioFactory.getUserDTO();
 		when(authClient.checkToken(Mockito.anyString()))
-			.thenReturn(new UserDetailsDTO("jovanibrasil", ProfileTypeEnum.ROLE_USER));
+			.thenReturn(new UserDetailsDTO("jovanibrasil", ProfileTypeEnum.ROLE_SERVICE));
 	}
 	
 	@Test
@@ -59,7 +59,7 @@ public class UserControllerTest {
 			.header("Authorization", "x.x.x.x")
 			.accept(MediaType.APPLICATION_JSON))
 			.andExpect(status().isNotFound())
-			.andExpect(jsonPath("$.message").value("It was not possible to find the specified user."));
+			.andExpect(jsonPath("$.errors[0].message", equalTo("It was not possible to find the specified user.")));
 	}
 	
 	@Test

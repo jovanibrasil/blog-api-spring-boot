@@ -27,10 +27,12 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import com.blog.model.Subscription;
+import com.blog.model.dto.SubscriptionForm;
 import com.blog.model.dto.UserDetailsDTO;
 import com.blog.model.enums.ProfileTypeEnum;
 import com.blog.services.SubscriptionService;
 import com.blog.services.impl.AuthServiceJwtImpl;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -83,9 +85,20 @@ public class SubscriptionControllerTest {
 	public void testSubscribe() throws Exception {
 		Subscription subscription = new Subscription(1L, "test0@gmail.com", LocalDateTime.now());
 		when(subscriptionService.saveSubscription(Mockito.any())).thenReturn(subscription);
-		mvc.perform(MockMvcRequestBuilders.post("/subscriptions/test0@gmail.com")
+		mvc.perform(MockMvcRequestBuilders.post("/subscriptions")
+			.content(asJsonString(new SubscriptionForm("test0@gmail.com")))
 			.contentType(MediaType.APPLICATION_JSON))			
 			.andExpect(status().isCreated());
+	}
+	
+	public static String asJsonString(final Object obj) {
+		try {
+			final ObjectMapper mapper = new ObjectMapper();
+			final String jsonContent = mapper.writeValueAsString(obj);
+			return jsonContent;
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
 	}
 	
 }

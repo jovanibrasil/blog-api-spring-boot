@@ -1,0 +1,802 @@
+swagger: '2.0'
+info:
+  description: 'Documentação de uma API para blogs. Este projeto está em desenvolvimento, qualquer problema ou dúvida entre em contato.'
+  version: '1.0'
+  title: Blog API
+  contact:
+    name: Jovani Brasil
+    url: http://jovanibrasil.com
+    email: jovanibrasil@gmail.com
+host: 'localhost:8081'
+basePath: /
+tags:
+  - name: image-controller
+    description: Image Controller
+  - name: search-controller
+    description: Search Controller
+  - name: subscription-controller
+    description: Subscription Controller
+  - name: user-controller
+    description: User Controller
+  - name: post-controller
+    description: Post Controller
+paths:
+  '/images/{imageId}':
+    get:
+      tags:
+        - image-controller
+      summary: Busca imagem por ID.
+      operationId: getImageUsingGET
+      consumes:
+        - application/json
+      produces:
+        - '*/*'
+      parameters:
+        - name: Authorization
+          in: header
+          description: Header para JWT
+          required: false
+          type: string
+        - name: imageId
+          in: path
+          description: imageId
+          required: true
+          type: integer
+          format: int64
+      responses:
+        '200':
+          description: Imagem encontrada e retornado.
+          schema:
+            type: string
+            format: byte
+        '404':
+          description: Imagem não encontrada.
+  /posts:
+    get:
+      tags:
+        - post-controller
+      summary: Busca todos os posts por um critério.
+      operationId: getPostsUsingGET
+      consumes:
+        - application/json
+      produces:
+        - '*/*'
+      parameters:
+        - name: Authorization
+          in: header
+          description: Header para JWT
+          required: false
+          type: string
+        - name: username
+          in: query
+          description: username
+          required: true
+          type: string
+      responses:
+        '200':
+          description: Resultado da busca.
+          schema:
+            $ref: '#/definitions/PostDTO'
+        '400':
+          description: Requisição inválida.
+    post:
+      tags:
+        - post-controller
+      summary: Cria um post.
+      operationId: createPostUsingPOST
+      consumes:
+        - multipart/form-data
+      produces:
+        - '*/*'
+      parameters:
+        - name: Authorization
+          in: header
+          description: Header para JWT
+          required: false
+          type: string
+        - name: postForm
+          in: formData
+          description: postForm
+          required: true
+          type: file
+        - name: banner
+          in: formData
+          description: banner
+          required: true
+          type: file
+      responses:
+        '200':
+          description: Post criado com sucesso.
+          schema:
+            $ref: '#/definitions/PostDTO'
+  /posts/summaries:
+    get:
+      tags:
+        - post-controller
+      summary: Busca sumários dos posts.
+      description: Sumários são objetos com menos informações.do que o post completo. Usados na listagem dos posts.
+      operationId: getPostSummaryListUsingGET
+      consumes:
+        - application/json
+      produces:
+        - '*/*'
+      parameters:
+        - name: Authorization
+          in: header
+          description: Header para JWT
+          required: false
+          type: string
+        - name: category
+          in: query
+          description: category
+          required: false
+          type: string
+          default: all
+      responses:
+        '200':
+          description: Resultado da busca.
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/PostSummaryDTO'
+  '/posts/{postId}':
+    get:
+      tags:
+        - post-controller
+      summary: Busca post por ID.
+      operationId: getPostUsingGET
+      consumes:
+        - application/json
+      produces:
+        - '*/*'
+      parameters:
+        - name: Authorization
+          in: header
+          description: Header para JWT
+          required: false
+          type: string
+        - name: postId
+          in: path
+          description: postId
+          required: true
+          type: integer
+          format: int64
+      responses:
+        '200':
+          description: Post encontrado e retornado.
+          schema:
+            $ref: '#/definitions/PostDTO'
+        '404':
+          description: Post não encontrado.
+    put:
+      tags:
+        - post-controller
+      summary: Atualiza post.
+      operationId: updatePostUsingPUT
+      consumes:
+        - multipart/form-data
+      produces:
+        - '*/*'
+      parameters:
+        - name: Authorization
+          in: header
+          description: Header para JWT
+          required: false
+          type: string
+        - name: postId
+          in: path
+          description: postId
+          required: true
+          type: integer
+          format: int64
+        - name: postForm
+          in: formData
+          description: postForm
+          required: true
+          type: file
+        - name: banner
+          in: formData
+          description: banner
+          required: true
+          type: file
+      responses:
+        '200':
+          description: Post atualizado com sucesso.
+          schema:
+            $ref: '#/definitions/PostDTO'
+        '404':
+          description: Post não encontrado.
+    delete:
+      tags:
+        - post-controller
+      summary: Remove um post.
+      operationId: deletePostUsingDELETE
+      consumes:
+        - application/json
+      produces:
+        - '*/*'
+      parameters:
+        - name: Authorization
+          in: header
+          description: Header para JWT
+          required: false
+          type: string
+        - name: postId
+          in: path
+          description: postId
+          required: true
+          type: integer
+          format: int64
+      responses:
+        '204':
+          description: Post removido.
+        '404':
+          description: Post não encontrado.
+  '/posts/{postId}/likes':
+    patch:
+      tags:
+        - post-controller
+      summary: Incrementa o contador de likes de um post.
+      operationId: likePostUsingPATCH
+      consumes:
+        - application/json
+      produces:
+        - '*/*'
+      parameters:
+        - name: Authorization
+          in: header
+          description: Header para JWT
+          required: false
+          type: string
+        - name: postId
+          in: path
+          description: postId
+          required: true
+          type: integer
+          format: int64
+      responses:
+        '200':
+          description: Incremento realizado
+  /search:
+    get:
+      tags:
+        - search-controller
+      summary: Busca post por um termo qualquer.
+      operationId: getSearchSummariesUsingGET
+      consumes:
+        - application/json
+      produces:
+        - '*/*'
+      parameters:
+        - name: Authorization
+          in: header
+          description: Header para JWT
+          required: false
+          type: string
+        - name: q
+          in: query
+          description: q
+          required: true
+          type: string
+        - name: page
+          in: query
+          description: page
+          required: false
+          type: integer
+          default: 0
+          format: int32
+      responses:
+        '200':
+          description: Resultado encontrado.
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/PostDTO'
+  /subscriptions:
+    get:
+      tags:
+        - subscription-controller
+      summary: Busca por todas as inscrições no blog.
+      operationId: findAllSubscriptionsUsingGET
+      consumes:
+        - application/json
+      produces:
+        - '*/*'
+      parameters:
+        - name: Authorization
+          in: header
+          description: Header para JWT
+          required: false
+          type: string
+      responses:
+        '200':
+          description: Resultado da busca.
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Subscription'
+    post:
+      tags:
+        - subscription-controller
+      summary: Cria inscrição de um usuário.
+      operationId: subscribeUsingPOST
+      consumes:
+        - application/json
+      produces:
+        - '*/*'
+      parameters:
+        - name: Authorization
+          in: header
+          description: Header para JWT
+          required: false
+          type: string
+        - name: email
+          in: query
+          required: false
+          type: string
+      responses:
+        '200':
+          description: Inscrição criada com sucesso.
+          schema:
+            type: object
+  /users:
+    post:
+      tags:
+        - user-controller
+      summary: Cria um usuário.
+      operationId: saveUserUsingPOST
+      consumes:
+        - application/json
+      produces:
+        - '*/*'
+      parameters:
+        - name: Authorization
+          in: header
+          description: Header para JWT
+          required: false
+          type: string
+        - in: body
+          name: userForm
+          description: userForm
+          required: true
+          schema:
+            $ref: '#/definitions/UserForm'
+      responses:
+        '200':
+          description: Usuário criado com sucesso.
+          schema:
+            type: object
+  '/users/{userName}':
+    get:
+      tags:
+        - user-controller
+      summary: Busca usuário por nome.
+      operationId: getUserUsingGET
+      consumes:
+        - application/json
+      produces:
+        - '*/*'
+      parameters:
+        - name: Authorization
+          in: header
+          description: Header para JWT
+          required: false
+          type: string
+        - name: userName
+          in: path
+          description: userName
+          required: true
+          type: string
+      responses:
+        '200':
+          description: Usuario encontrado e retornado.
+          schema:
+            $ref: '#/definitions/UserDTO'
+        '404':
+          description: Usuário não encontrado.
+    delete:
+      tags:
+        - user-controller
+      summary: Remove um usuário.
+      operationId: deleteUserUsingDELETE
+      consumes:
+        - application/json
+      produces:
+        - '*/*'
+      parameters:
+        - name: Authorization
+          in: header
+          description: Header para JWT
+          required: false
+          type: string
+        - name: userName
+          in: path
+          description: userName
+          required: true
+          type: string
+      responses:
+        '204':
+          description: Usuário removido.
+        '404':
+          description: Usuário não encontrado.
+definitions:
+  File:
+    type: object
+    properties:
+      absolute:
+        type: boolean
+      absoluteFile:
+        $ref: '#/definitions/File'
+      absolutePath:
+        type: string
+      canonicalFile:
+        $ref: '#/definitions/File'
+      canonicalPath:
+        type: string
+      directory:
+        type: boolean
+      executable:
+        type: boolean
+      file:
+        type: boolean
+      freeSpace:
+        type: integer
+        format: int64
+      hidden:
+        type: boolean
+      lastModified:
+        type: integer
+        format: int64
+      name:
+        type: string
+      parent:
+        type: string
+      parentFile:
+        $ref: '#/definitions/File'
+      path:
+        type: string
+      readable:
+        type: boolean
+      totalSpace:
+        type: integer
+        format: int64
+      usableSpace:
+        type: integer
+        format: int64
+      writable:
+        type: boolean
+  InputStream:
+    type: object
+  Pageable:
+    type: object
+    properties:
+      offset:
+        type: integer
+        format: int64
+      pageNumber:
+        type: integer
+        format: int32
+      pageSize:
+        type: integer
+        format: int32
+      paged:
+        type: boolean
+      sort:
+        $ref: '#/definitions/Sort'
+      unpaged:
+        type: boolean
+  Page«PostDTO»:
+    type: object
+    properties:
+      content:
+        type: array
+        items:
+          $ref: '#/definitions/PostDTO'
+      empty:
+        type: boolean
+      first:
+        type: boolean
+      last:
+        type: boolean
+      number:
+        type: integer
+        format: int32
+      numberOfElements:
+        type: integer
+        format: int32
+      pageable:
+        $ref: '#/definitions/Pageable'
+      size:
+        type: integer
+        format: int32
+      sort:
+        $ref: '#/definitions/Sort'
+      totalElements:
+        type: integer
+        format: int64
+      totalPages:
+        type: integer
+        format: int32
+  Page«PostSummaryDTO»:
+    type: object
+    properties:
+      content:
+        type: array
+        items:
+          $ref: '#/definitions/PostSummaryDTO'
+      empty:
+        type: boolean
+      first:
+        type: boolean
+      last:
+        type: boolean
+      number:
+        type: integer
+        format: int32
+      numberOfElements:
+        type: integer
+        format: int32
+      pageable:
+        $ref: '#/definitions/Pageable'
+      size:
+        type: integer
+        format: int32
+      sort:
+        $ref: '#/definitions/Sort'
+      totalElements:
+        type: integer
+        format: int64
+      totalPages:
+        type: integer
+        format: int32
+  Page«Subscription»:
+    type: object
+    properties:
+      content:
+        type: array
+        items:
+          $ref: '#/definitions/Subscription'
+      empty:
+        type: boolean
+      first:
+        type: boolean
+      last:
+        type: boolean
+      number:
+        type: integer
+        format: int32
+      numberOfElements:
+        type: integer
+        format: int32
+      pageable:
+        $ref: '#/definitions/Pageable'
+      size:
+        type: integer
+        format: int32
+      sort:
+        $ref: '#/definitions/Sort'
+      totalElements:
+        type: integer
+        format: int64
+      totalPages:
+        type: integer
+        format: int32
+  PostDTO:
+    type: object
+    properties:
+      bannerId:
+        type: integer
+        format: int64
+      body:
+        type: string
+      creationDate:
+        type: string
+        format: date-time
+      id:
+        type: integer
+        format: int64
+      lastUpdateDate:
+        type: string
+        format: date-time
+      likes:
+        type: integer
+        format: int32
+      summary:
+        type: string
+      tags:
+        type: array
+        items:
+          type: string
+      title:
+        type: string
+      userName:
+        type: string
+  PostForm:
+    type: object
+    properties:
+      body:
+        type: string
+      summary:
+        type: string
+      tags:
+        type: array
+        items:
+          type: string
+      title:
+        type: string
+  PostSummaryDTO:
+    type: object
+    properties:
+      bannerUrl:
+        type: string
+      creationDate:
+        type: string
+        format: date-time
+      id:
+        type: integer
+        format: int64
+      lastUpdateDate:
+        type: string
+        format: date-time
+      likes:
+        type: integer
+        format: int32
+      summary:
+        type: string
+      tags:
+        type: array
+        items:
+          type: string
+      title:
+        type: string
+      userName:
+        type: string
+  Resource:
+    type: object
+    properties:
+      description:
+        type: string
+      file:
+        $ref: '#/definitions/File'
+      filename:
+        type: string
+      inputStream:
+        $ref: '#/definitions/InputStream'
+      open:
+        type: boolean
+      readable:
+        type: boolean
+      uri:
+        $ref: '#/definitions/URI'
+      url:
+        $ref: '#/definitions/URL'
+  Sort:
+    type: object
+    properties:
+      empty:
+        type: boolean
+      sorted:
+        type: boolean
+      unsorted:
+        type: boolean
+  Subscription:
+    type: object
+    properties:
+      email:
+        type: string
+      id:
+        type: integer
+        format: int64
+      subscriptionDate:
+        type: string
+        format: date-time
+  URI:
+    type: object
+    properties:
+      absolute:
+        type: boolean
+      authority:
+        type: string
+      fragment:
+        type: string
+      host:
+        type: string
+      opaque:
+        type: boolean
+      path:
+        type: string
+      port:
+        type: integer
+        format: int32
+      query:
+        type: string
+      rawAuthority:
+        type: string
+      rawFragment:
+        type: string
+      rawPath:
+        type: string
+      rawQuery:
+        type: string
+      rawSchemeSpecificPart:
+        type: string
+      rawUserInfo:
+        type: string
+      scheme:
+        type: string
+      schemeSpecificPart:
+        type: string
+      userInfo:
+        type: string
+  URL:
+    type: object
+    properties:
+      authority:
+        type: string
+      defaultPort:
+        type: integer
+        format: int32
+      deserializedFields:
+        $ref: '#/definitions/URLStreamHandler'
+      file:
+        type: string
+      host:
+        type: string
+      path:
+        type: string
+      port:
+        type: integer
+        format: int32
+      protocol:
+        type: string
+      query:
+        type: string
+      ref:
+        type: string
+      serializedHashCode:
+        type: integer
+        format: int32
+      userInfo:
+        type: string
+  URLStreamHandler:
+    type: object
+  UserDTO:
+    type: object
+    properties:
+      email:
+        type: string
+      fullUserName:
+        type: string
+      githubUserName:
+        type: string
+      googlescholarLink:
+        type: string
+      linkedinUserName:
+        type: string
+      phone:
+        type: string
+      userId:
+        type: integer
+        format: int64
+      userName:
+        type: string
+  UserForm:
+    type: object
+    properties:
+      email:
+        type: string
+      fullUserName:
+        type: string
+      githubUserName:
+        type: string
+      googlescholarLink:
+        type: string
+      linkedinUserName:
+        type: string
+      phone:
+        type: string
+      userId:
+        type: integer
+        format: int64
+      userName:
+        type: string

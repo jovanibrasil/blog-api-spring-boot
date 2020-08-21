@@ -3,6 +3,7 @@ package com.blog.services.impl;
 import com.blog.exception.ExceptionMessages;
 import com.blog.exception.InvalidInformationException;
 import com.blog.model.Subscription;
+import com.blog.model.dto.SubscriptionForm;
 import com.blog.repositories.SubscriptionRepository;
 import com.blog.services.SubscriptionService;
 import lombok.RequiredArgsConstructor;
@@ -22,8 +23,8 @@ public class SubscriptionServiceImpl implements SubscriptionService {
 	private final SubscriptionRepository subscriptionRepository;
 
 	@Override
-	public Subscription saveSubscription(String email) {
-		Subscription subscription = new Subscription(email);
+	public Subscription saveSubscription(SubscriptionForm subscriptionDTO) {
+		Subscription subscription = new Subscription(subscriptionDTO.getEmail());
 		Optional<Subscription> optSubscription = subscriptionRepository.findByEmail(subscription.getEmail());
 		if(!optSubscription.isPresent()) {
 			return this.subscriptionRepository.save(subscription);

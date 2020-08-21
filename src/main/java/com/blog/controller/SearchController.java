@@ -12,13 +12,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.blog.model.dto.PostDTO;
 import com.blog.model.dto.PostSummaryDTO;
 import com.blog.services.SearchService;
 
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiResponse;
-import io.swagger.annotations.ApiResponses;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -33,8 +29,6 @@ public class SearchController {
 	@Value("${blog.posts.page-size}")
 	private int postsListSize;
 
-	@ApiOperation(value = "Busca post por um termo qualquer.")
-	@ApiResponses({@ApiResponse(code = 200, message = "Resultado encontrado.", response = PostDTO.class, responseContainer = "List")})
 	@ResponseStatus(HttpStatus.OK)
 	@GetMapping
 	public Page<PostSummaryDTO> getSearchSummaries(

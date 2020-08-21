@@ -6,4 +6,4 @@
 
 Esta API permite operações básicas de um blog. 
 
-Para rodar o projeto você deve primeiro subir o Mysql. Para tanto basta ir ao diretório /mysql no projeto e executar o comando make start. Então basta executa o comando mvn -pl web spring-boot:run na raíz do projeto e a aplicação deve iniciar. Uma vez rodando é possível acessar a documentação Swagger em http://localhost:8081/api/swagger-ui.html.
+Para rodar este projeto primeiramente você deve subir o ambiente executando ```make compose-up-dev``` (roda um docker-compose com um postgres e um json-server-mock com a dependência da API de autenticação). Então basta executar ```mvn spring-boot:run``` (roda a aplicação localmente) ou ```make build && make run``` (roda a aplicação em um container).

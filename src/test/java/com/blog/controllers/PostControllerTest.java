@@ -90,7 +90,7 @@ public class PostControllerTest {
 		when(postService.findPostById(10L)).thenThrow(new NotFoundException("error.post.find"));
 		mvc.perform(MockMvcRequestBuilders.get("/posts/10"))
 			.andExpect(status().isNotFound())
-			.andExpect(jsonPath("$.message").value("It was not possible to find the specified post."));
+			.andExpect(jsonPath("$.errors[0].message").value("It was not possible to find the specified post."));
 	}
 	
 	/*
@@ -211,7 +211,7 @@ public class PostControllerTest {
 		mvc.perform(MockMvcRequestBuilders.delete("/posts/50")
 				.header("Authorization", "x.x.x.x"))
 				.andExpect(status().isNotFound())
-				.andExpect(jsonPath("$.message", equalTo("It was not possible to find the specified post.")));
+				.andExpect(jsonPath("$.errors[0].message", equalTo("It was not possible to find the specified post.")));
 	}
 	
 	public static String asJsonString(final Object obj) {

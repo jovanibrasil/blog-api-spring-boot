@@ -12,7 +12,7 @@ public abstract class SummaryMapperDecorator implements SummaryMapper {
 	@Override
 	public PostSummaryDTO postToSummaryDto(Post post) {
 		PostSummaryDTO summaryDto = summaryMapper.postToSummaryDto(post);
-		summaryDto.setBannerUrl("http://localhost:8081/images/" + post.getBanner().getId());
+		summaryDto.setBannerUrl("/images/" + post.getBanner().getId());
 		return summaryDto;
 	}	
 	

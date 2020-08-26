@@ -35,19 +35,20 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	protected void configure(HttpSecurity http) throws Exception {
 		
 		http.authorizeRequests()
-			.antMatchers("/search","/posts/top", "/posts/summaries", 
-					"/posts", "/posts/byuser/*").permitAll()
-			.antMatchers(HttpMethod.POST, "/posts").hasRole("ADMIN")
-			.antMatchers(HttpMethod.PATCH, "/posts/*/likes").permitAll()
-			.antMatchers(HttpMethod.DELETE, "/posts/*").hasRole("ADMIN")
-			.antMatchers(HttpMethod.PUT, "/posts").hasRole("ADMIN")
 			.antMatchers(HttpMethod.GET, "/subscriptions", "/feedbacks").hasRole("ADMIN")
-			.antMatchers("/users").hasRole("SERVICE")
+			.antMatchers(HttpMethod.PATCH, "/posts/likes").permitAll()
+			.antMatchers("/search", "/posts/summaries").permitAll()
+			.antMatchers(HttpMethod.GET, "/posts", "/posts/*").permitAll()
+			.antMatchers("/posts", "/posts/**").hasRole("ADMIN")
+			.antMatchers("/users", "/users/**").hasRole("SERVICE")
 			.and()
 			.addFilterAfter(authenticationTokenFilterBean(), UsernamePasswordAuthenticationFilter.class) // set token verification filter
 			.csrf().disable() // disable CSRF (cross-site request forgery) 
-			.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS); // set session police stateless (no states)
-		
+			.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS) // set session police stateless (no states)
+			.and()
+			.exceptionHandling()
+			.authenticationEntryPoint(new JwtAuthenticationEntryPoint())
+			.accessDeniedHandler(new JwtAccessDeniedHandler());
 	}
 	
 	/**

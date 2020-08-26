@@ -10,9 +10,6 @@ import org.springframework.web.bind.annotation.RestController;
 import com.blog.model.Image;
 import com.blog.services.ImageService;
 
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiResponse;
-import io.swagger.annotations.ApiResponses;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -24,10 +21,6 @@ public class ImageController {
 
 	private final ImageService imageService;
 	
-	@ApiOperation(value = "Busca imagem por ID.")
-	@ApiResponses({
-		@ApiResponse(code = 200, message = "Imagem encontrada e retornado."),
-		@ApiResponse(code = 404, message = "Imagem não encontrada.")})
 	@GetMapping("/{imageId}")
 	public ResponseEntity<byte[]> getImage(@PathVariable Long imageId) { 
 		log.info("Getting image {}", imageId);

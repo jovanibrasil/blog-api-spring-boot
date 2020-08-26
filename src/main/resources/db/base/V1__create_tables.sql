@@ -40,7 +40,7 @@ create table feedbacks (
 	primary key (id)
 );
 
-create table subscription (
+create table subscriptions (
 	id serial not null, 
 	email varchar(255) not null, 
 	subscription_date timestamp, 

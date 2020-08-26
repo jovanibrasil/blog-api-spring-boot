@@ -34,7 +34,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 				JwtAuthentication auth = new JwtAuthentication(token); 
 				SecurityContextHolder.getContext().setAuthentication(auth);	
 			} catch (Exception e) {
-				log.error("User not found. Error: {}", e.getMessage());
+				log.error("Invalid authentication. Error: {}", e.getMessage());
 				response.sendError(401);
 			}
 		}

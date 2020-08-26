@@ -6,6 +6,8 @@ import java.util.Objects;
 
 import org.junit.Test;
 
+import com.blog.utils.ImageUtils;
+
 public class ImageUtilsTest {
 	
 	private final byte[] compressedImageExpected = { 120, -100, 51, 48, 52, 48, 52, 64, 1, -122, 0, 35, -42, 3, -108 };

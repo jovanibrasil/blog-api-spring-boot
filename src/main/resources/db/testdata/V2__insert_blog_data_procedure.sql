@@ -4,10 +4,10 @@ BEGIN
 	IF (NOT EXISTS(SELECT post_id FROM posts)) then
 		INSERT INTO users
 			(user_id, user_name, full_user_name, last_update_date, creation_date, profile_type, email)
-			VALUES (0, 'jovanibrasil', 'Jovani Brasil', NOW(), NOW(), 'ROLE_ADMIN', 'jovanibrasil@gmail.com');
+			VALUES (0, 'admin', 'Admin User', NOW(), NOW(), 'ROLE_ADMIN', 'adminuser@email.com');
 		INSERT INTO users
 			(user_id, user_name, full_user_name, last_update_date, creation_date, profile_type, email)
-			VALUES (1, 'fakeuser', 'Fake user', NOW(), NOW(), 'ROLE_USER', 'fakeuser@gmail.com');
+			VALUES (1, 'fakeuser', 'Fake user', NOW(), NOW(), 'ROLE_USER', 'fakeuser@email.com');
 		INSERT INTO posts
 			(body, creation_date, last_update_date, summary, title, user_id)
 			VALUES ('Configurar um blog é uma tarefa que pode ser complexa, dependendo de que tipo de blog você tem e qual é o seu público.', 

@@ -25,6 +25,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import com.blog.exception.InvalidInformationException;
 import com.blog.model.Subscription;
+import com.blog.model.dto.SubscriptionForm;
 import com.blog.repositories.SubscriptionRepository;
 import com.blog.services.SubscriptionService;
 
@@ -53,7 +54,7 @@ public class SubscriptionServiceTest {
 		BDDMockito.given(subscriptionRepository.findByEmail("test@gmail.com")).willReturn(Optional.empty());
 		BDDMockito.given(subscriptionRepository.save(any())).willReturn(subscription);
 		subscription = subscriptionService
-				.saveSubscription("test@gmail.com");
+				.saveSubscription(new SubscriptionForm("test@gmail.com"));
 		assertNotNull(subscription);
 	}
 	
@@ -61,7 +62,7 @@ public class SubscriptionServiceTest {
 	public void testSaveSubscriptionEmailAlreadyExist() {
 		BDDMockito.given(subscriptionRepository.findByEmail("test@gmail.com"))
 			.willReturn(Optional.of(new Subscription("test@gmail.com")));
-		subscriptionService.saveSubscription("test@gmail.com");
+		subscriptionService.saveSubscription(new SubscriptionForm("test@gmail.com"));
 	}
 	
 	@Test

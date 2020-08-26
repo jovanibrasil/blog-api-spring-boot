@@ -10,6 +10,7 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import com.blog.model.Subscription;
+import com.blog.repositories.SubscriptionRepository;
 
 import java.time.ZoneId;
 import java.util.Calendar;

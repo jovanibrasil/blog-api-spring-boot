@@ -40,7 +40,9 @@ public class ImageUtils {
 			}
 			outputStream.close();
 		} catch (IOException ioe) {
+			
 		} catch (DataFormatException e) {
+			return data;
 		}
 		return outputStream.toByteArray();
 	}

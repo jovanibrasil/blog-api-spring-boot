@@ -19,6 +19,9 @@ import com.blog.ScenarioFactory;
 import com.blog.model.Image;
 import com.blog.model.Post;
 import com.blog.model.User;
+import com.blog.repositories.ImageRepository;
+import com.blog.repositories.PostRepository;
+import com.blog.repositories.UserRepository;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest

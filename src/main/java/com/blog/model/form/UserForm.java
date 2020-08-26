@@ -1,16 +1,24 @@
 package com.blog.model.form;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.validator.constraints.Length;
 import org.springframework.lang.NonNull;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Positive;
 
-@Getter @Setter @NoArgsConstructor
+@Getter @Setter 
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class UserForm {
 	
 	@NonNull @Positive

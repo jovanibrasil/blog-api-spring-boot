@@ -1,25 +1,26 @@
-FROM tomcat
+FROM tomcat:9.0.37-jdk11-openjdk
 LABEL maintainer="jovanibrasil@gmail.com"
 USER root
 RUN apt-get -y update && apt-get -y install netcat
 
-ARG BLOG_MYSQL_URL 
-ARG BLOG_MYSQL_USERNAME 
-ARG BLOG_MYSQL_PASSWORD
+ARG BLOG_DB_URL 
+ARG BLOG_DB_USERNAME 
+ARG BLOG_DB_PASSWORD
 ARG ENVIRONMENT
-ARG FILE_NAME
+ARG VERSION
 
-ENV BLOG_MYSQL_URL=$BLOG_MYSQL_URL
-ENV BLOG_MYSQL_USERNAME=$BLOG_MYSQL_USERNAME
-ENV BLOG_MYSQL_PASSWORD=$BLOG_MYSQL_PASSWORD
+ENV BLOG_DB_URL=$BLOG_DB_URL
+ENV BLOG_DB_USERNAME=$BLOG_DB_USERNAME
+ENV BLOG_DB_PASSWORD=$BLOG_DB_PASSWORD
 ENV ENVIRONMENT=$ENVIRONMENT
-ENV FILE_NAME=${FILE_NAME}
 
 RUN mkdir -p /apps/blog/
 
-COPY ./target/${FILE_NAME} /usr/local/tomcat/webapps/${FILE_NAME}
+COPY ./target/blog-api##${VERSION}.war /usr/local/tomcat/webapps/ROOT##${VERSION}.war
+COPY ./target/blog-api##${VERSION} /usr/local/tomcat/webapps/ROOT##${VERSION}
+
 COPY ./scripts ./scripts
-RUN if [ "$ENVIRONMENT" = "stage" ]; \
+RUN if [ "$ENVIRONMENT" = "dev" ]; \
 	   	then cp ./scripts/startup-dev.sh /startup.sh; \
    		else cp ./scripts/startup-prod.sh /startup.sh;\
   	fi
@@ -29,6 +30,5 @@ EXPOSE 8080
 RUN groupadd -g 1024 datag
 RUN adduser --disabled-password --gecos "" --force-badname --ingroup datag myuser 
 USER myuser
-
 
 CMD ["/bin/bash", "/startup.sh"]

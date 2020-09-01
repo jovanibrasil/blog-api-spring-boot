@@ -1,0 +1,30 @@
+server:
+    port: ${PORT:8081}
+spring:
+  datasource:
+    plataform: postgres
+    url: ${BLOG_DB_URL:jdbc:postgresql://127.0.0.1:5432/blogdb}
+    username: ${BLOG_DB_USERNAME:postgres}
+    password: ${BLOG_DB_PASSWORD:postgres}
+    testWhileIdle: true
+    test-on-borrow: true
+  flyway:
+    enabled: true
+    locations: classpath:/db/base,classpath:/db/testdata,classpath:/db/migration
+  jpa:
+    hibernate:
+      ddl-auto: none
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        temp:
+          use_jdbc_metadata_defaults: false
+blog:
+  posts:
+    page-size: 6
+    top-list:
+      page-size: 10
+
+blog-api:
+  username: ${BLOG_SERVICE_USERNAME:BLOG}
+  password: ${BLOG_SERVICE_PASSWORD:123456}

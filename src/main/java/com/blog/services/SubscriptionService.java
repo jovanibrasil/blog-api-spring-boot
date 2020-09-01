@@ -1,11 +1,12 @@
 package com.blog.services;
 
-import com.blog.models.Subscription;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
-import java.util.List;
-import java.util.Optional;
+import com.blog.model.Subscription;
+import com.blog.model.dto.SubscriptionForm;
 
 public interface SubscriptionService {
-	Optional<Subscription> saveSubscription(Subscription subscription);
-	List<Subscription> findAllSubscriptions();
+	Subscription saveSubscription(SubscriptionForm subscriptionDTO);
+	Page<Subscription> findAllSubscriptions(Pageable page);
 }

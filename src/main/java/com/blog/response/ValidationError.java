@@ -17,4 +17,16 @@ public class ValidationError {
 		this.parameter = parameter;
 	}
 
+	public String getMessage() {
+		return message;
+	}
+
+	public String getField() {
+		return field;
+	}
+
+	public Object getParameter() {
+		return parameter;
+	}
+	
 }

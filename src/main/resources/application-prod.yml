@@ -1,0 +1,27 @@
+blog:
+  posts:
+    page-size: 6
+    top-list:
+      page-size: 10
+spring:
+  datasource:
+    plataform: postgres
+    url: ${BLOG_DB_URL}
+    username: ${BLOG_DB_USERNAME}
+    password: ${BLOG_DB_PASSWORD}
+    testWhileIdle: true
+    validationQuery: SELECT 1
+  flyway:
+    enabled: true
+    locations: classpath:/db/base,classpath:/db/migration
+  jpa:
+    hibernate:
+      ddl-auto: none
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        temp:
+          use_jdbc_metadata_defaults: false
+blog-api:
+  username: ${BLOG_SERVICE_USERNAME}
+  password: ${BLOG_SERVICE_PASSWORD}

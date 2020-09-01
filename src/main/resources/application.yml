@@ -1,0 +1,29 @@
+spring:
+  application:
+    name: blog-api
+  datasource:
+    tomcat:
+      max-wait: 100000
+  flyway:
+    baseline-on-migrate: true
+    clean-on-validation-error: true
+  profiles:
+    active: '@activeProfile@'
+  boot:
+    admin:
+      client:
+        url: http://localhost:8090
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://eureka-server:8761/eureka/  
+management:
+  endpoints:
+    web:
+      exposure:
+        include: '*'
+urls:
+  auth:
+    check-token: ${AUTH_API_URL:http://127.0.0.1:8083}/token/check
+    create-token: ${AUTH_API_URL:http://127.0.0.1:8083}/token
+  search: http://search-api/search

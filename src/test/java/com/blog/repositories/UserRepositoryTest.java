@@ -1,58 +1,45 @@
 package com.blog.repositories;
 
-import com.blog.enums.ProfileTypeEnum;
-import com.blog.models.User;
-import org.junit.After;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
+import com.blog.ScenarioFactory;
+import com.blog.model.User;
+import com.blog.repositories.UserRepository;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
 @ActiveProfiles("test")
+@DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 public class UserRepositoryTest {
 
 	@Autowired
-	UserRepository userRepository;
+	private UserRepository userRepository;
+	private User user;
 	
 	@Before
 	public void setUp() {
-		List<String> tags = new ArrayList<>();
-		tags.add("Tag");
-		User user = new User();
-		user.setFullUserName("User Name");
-		user.setLastUpdateDate(LocalDateTime.now());
-		user.setProfileType(ProfileTypeEnum.ROLE_USER);
-		user.setUserName("jovanibrasil");
-		user.setEmail("user@gmail.com");
+		user = ScenarioFactory.getUser();
 		userRepository.save(user);
-	}
-	
-	@After
-	public void tearDown() {
-		this.userRepository.deleteAll();
 	}
 	
 	@Test
 	public void testFindUserByName() {
-		User user = this.userRepository.findUserByName("jovanibrasil");
-		assertNotNull(user);
+		assertTrue(userRepository.findByName(user.getUserName()).isPresent());
 	}
 	
 	@Test
 	public void testFindUserByNameInvalidUserName() {
-		User user = this.userRepository.findUserByName("jovani");
-		assertNull(user);
+		assertFalse(userRepository.findByName("invalid_name").isPresent());
 	}
+	
 }

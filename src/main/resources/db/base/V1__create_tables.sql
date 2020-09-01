@@ -7,43 +7,43 @@ create table users (
 	github_user_name varchar(20),
 	linkedin_user_name varchar(20),
 	google_scholar_link varchar(100),
-	last_update_date datetime not null,
-	creation_date datetime not null,
+	last_update_date timestamp not null,
+	creation_date timestamp not null,
 	profile_type varchar(255) not null, 
 	primary key (user_id)
-) engine=MyISAM;
+);
 
 create table posts (
-	post_id bigint not null auto_increment, 
-	body longtext not null, 
-	creation_date datetime not null, 
-	last_update_date datetime not null, 
+	post_id serial not null, 
+	body text not null, 
+	creation_date timestamp not null, 
+	last_update_date timestamp not null, 
 	summary varchar(1000) not null, 
 	title varchar(255) not null, 
-	user_id bigint not null, 
+	user_id integer not null, 
 	primary key (post_id),
 	constraint fk_user foreign key (user_id) references users (user_id)
-) engine=MyISAM;
+);
 
 create table post_tags (
-	post_id bigint not null, 
+	post_id integer not null, 
 	tag varchar(255) not null,
 	constraint fk_post foreign key (post_id) references posts (post_id)
-) engine=MyISAM;
+);
 
 create table feedbacks (
-	id bigint not null auto_increment, 
+	id serial not null, 
 	content varchar(255) not null, 
 	email varchar(255) not null, 
-	feedback_date datetime, 
+	feedback_date timestamp, 
 	name varchar(255) not null, 
 	primary key (id)
-) engine=MyISAM;
+);
 
-create table subscription (
-	id bigint not null auto_increment, 
+create table subscriptions (
+	id serial not null, 
 	email varchar(255) not null, 
-	subscription_date datetime, 
+	subscription_date timestamp, 
 	primary key (id)
-) engine=MyISAM;
+);
 

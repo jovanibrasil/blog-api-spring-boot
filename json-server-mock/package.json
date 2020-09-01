@@ -1,0 +1,10 @@
+{
+    "main": "index.js",
+    "scripts": {
+        "start": "node index.js"
+    },
+    "dependencies": {
+        "cors": "^2.8.5",
+        "json-server": "0.16.0"
+    }
+}

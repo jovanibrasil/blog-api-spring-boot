@@ -33,6 +33,7 @@
 				<activeByDefault>true</activeByDefault>
 			</activation>
 			<properties>
+				<spring.profiles.active>dev</spring.profiles.active>
 				<activeProfile>dev</activeProfile>
 				<maven.test.skip>true</maven.test.skip>
 			</properties>
@@ -41,11 +42,13 @@
 			<id>test</id>
 			<properties>
 				<activeProfile>test</activeProfile>
+				<vaultHost>vault-server</vaultHost>
 			</properties>
 		</profile>
 		<profile>
 			<id>prod</id>
 			<properties>
+				<spring.profiles.active>prod</spring.profiles.active>
 				<activeProfile>prod</activeProfile>
 				<maven.test.skip>true</maven.test.skip>
 			</properties>
